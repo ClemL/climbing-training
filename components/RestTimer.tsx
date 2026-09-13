@@ -2,9 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useBeep, useTick } from "@/lib/hooks";
+import { useSettings } from "@/lib/use-settings";
 import { formatClock } from "@/lib/storage";
 
 const PRESETS = [30, 60, 90, 120, 180];
+
+const NO_SOUND = () => {};
 
 export default function RestTimer({
   suggestion,
@@ -23,7 +26,9 @@ export default function RestTimer({
   // correct across a backgrounded tab, a locked screen, or a dropped frame.
   const [deadline, setDeadline] = useState<number | null>(initialDeadline ?? null);
   const [total, setTotal] = useState(initialTotal);
-  const beep = useBeep();
+  const { sounds } = useSettings();
+  const beepRaw = useBeep();
+  const beep = sounds ? beepRaw : NO_SOUND;
   const lastBeep = useRef<number>(-1);
 
   const now = useTick(deadline !== null, 100);

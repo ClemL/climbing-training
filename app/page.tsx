@@ -5,6 +5,7 @@ import ExerciseIndex from "@/components/ExerciseIndex";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
 import PlanPreview from "@/components/PlanPreview";
+import SettingsView from "@/components/SettingsView";
 import WeekView from "@/components/WeekView";
 import SessionView from "@/components/SessionView";
 import { planById, PLANS } from "@/lib/plans";
@@ -24,7 +25,7 @@ import {
 } from "@/lib/storage";
 import type { Plan } from "@/lib/types";
 
-type View = "plans" | "preview" | "session" | "history" | "library" | "week";
+type View = "plans" | "preview" | "session" | "history" | "library" | "week" | "settings";
 
 export default function Home() {
   const [view, setView] = useState<View>("plans");
@@ -127,6 +128,14 @@ export default function Home() {
             </span>
           </div>
           <div className="spacer" />
+          <button
+            className="icon-btn"
+            aria-pressed={view === "settings"}
+            aria-label="Settings"
+            onClick={() => setView(view === "settings" ? "plans" : "settings")}
+          >
+            &#9881;
+          </button>
         </div>
         <div className="tabs">
           <button className="tab" aria-pressed={view === "plans"} onClick={() => setView("plans")}>
@@ -165,6 +174,7 @@ export default function Home() {
       {view === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
       {view === "week" ? <WeekView onPick={openPreview} /> : null}
       {view === "library" ? <ExerciseIndex /> : null}
+      {view === "settings" ? <SettingsView /> : null}
       {view === "history" ? <HistoryView history={history} /> : null}
 
       <p className="footer">

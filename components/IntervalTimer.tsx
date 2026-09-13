@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useBeep, useTick } from "@/lib/hooks";
+import { useSettings } from "@/lib/use-settings";
 import type { IntervalSpec } from "@/lib/types";
 import { formatClock } from "@/lib/storage";
 
@@ -44,9 +45,13 @@ function buildTimeline(spec: IntervalSpec, t0: number): Segment[] {
   return segs;
 }
 
+const NO_SOUND = () => {};
+
 export default function IntervalTimer({ spec }: { spec: IntervalSpec }) {
   const [timeline, setTimeline] = useState<Segment[] | null>(null);
-  const beep = useBeep();
+  const { sounds } = useSettings();
+  const beepRaw = useBeep();
+  const beep = sounds ? beepRaw : NO_SOUND;
   const lastSegment = useRef<number>(-1);
   const lastTick = useRef<number>(-1);
 

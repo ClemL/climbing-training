@@ -6,6 +6,7 @@ import IntervalTimer from "./IntervalTimer";
 import LoadLog from "./LoadLog";
 import RestTimer from "./RestTimer";
 import { useTick, useWakeLock } from "@/lib/hooks";
+import { useSettings } from "@/lib/use-settings";
 import { elapsedMs, formatClock, slotKey, type ActiveSession } from "@/lib/storage";
 import type { Block, Plan } from "@/lib/types";
 
@@ -85,8 +86,9 @@ export default function SessionView({
   onExit: () => void;
 }) {
   const [cue, setCue] = useState<Cue | null>(null);
+  const settings = useSettings();
   const now = useTick(session.running);
-  useWakeLock(session.running);
+  useWakeLock(session.running && settings.keepAwake);
 
   const { checked, total } = progressOf(plan, session);
   const pct = total ? Math.round((checked / total) * 100) : 0;
@@ -259,7 +261,7 @@ export default function SessionView({
               <>
                 {block.note ? <div className="block-note">{block.note}</div> : null}
                 {block.interval ? <IntervalTimer spec={{ ...block.interval, sets: rounds }} /> : null}
-                {block.interval ? <LoadLog planId={plan.id} blockId={block.id} /> : null}
+                {block.interval && settings.logHangboardWeight ? <LoadLog planId={plan.id} blockId={block.id} /> : null}
 
                 {compact ? (
                   <div className="round">

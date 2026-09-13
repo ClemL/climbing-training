@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import ExerciseFigure from "./ExerciseFigure";
-import { EXERCISES, searchUrl } from "@/lib/exercises";
+import { useExerciseSheet } from "./ExerciseSheet";
+import { EXERCISES } from "@/lib/exercises";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
 
 export default function ExerciseIndex() {
   const [q, setQ] = useState("");
-  const [open, setOpen] = useState<string | null>(null);
+  const { open } = useExerciseSheet();
 
   const entries = useMemo(() => {
     const all = Object.entries(EXERCISES).sort((a, b) => a[1].name.localeCompare(b[1].name));
@@ -25,8 +25,8 @@ export default function ExerciseIndex() {
     <>
       <h1>Exercise library</h1>
       <p className="lede">
-        Every movement used across the plans, with form cues and a demo link. Also the substitution list when a
-        prescribed exercise is not available.
+        Every movement used across the plans, with form cues, illustrations where they exist, and the substitution
+        list when a prescribed exercise is not available.
       </p>
       <input
         className="search"
@@ -37,28 +37,14 @@ export default function ExerciseIndex() {
       {entries.length === 0 ? <div className="empty">No matches.</div> : null}
       {entries.map(([key, ex]) => (
         <div key={key} className="lib-item">
-          <button className="lib-head" aria-expanded={open === key} onClick={() => setOpen(open === key ? null : key)}>
+          <button className="lib-head" onClick={() => open(key)}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="ex-name">{ex.name}</div>
               <div className="ex-pres">{ex.target}</div>
             </div>
-            <span className="info-btn">{open === key ? "×" : "?"}</span>
+            {IMAGE_KEYS.has(key) ? <span className="chip">illustrated</span> : null}
+            <span className="info-btn">?</span>
           </button>
-          {open === key ? (
-            <div className="detail" style={{ marginLeft: 13 }}>
-              <ExerciseFigure exKey={key} />
-              <ul>
-                {ex.cues.map((c) => (
-                  <li key={c}>{c}</li>
-                ))}
-              </ul>
-              {IMAGE_KEYS.has(key) ? null : (
-                <a className="btn sm" href={searchUrl(key)} target="_blank" rel="noopener noreferrer">
-                  Search the web &#8599;
-                </a>
-              )}
-            </div>
-          ) : null}
         </div>
       ))}
     </>

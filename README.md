@@ -26,8 +26,9 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   boulder attempts) collapse into numbered set buttons.
 - **Superset and circuit grouping**, marked with a badge and a colored rail so paired work is
   obvious at a glance.
-- **Illustrations** on 52 of 98 movements: two frames, start and end position, animated inline.
-  No network, no leaving the app.
+- **Exercise overlay** with a large illustration, Play/Start/End frame controls, form cues and
+  step-by-step instructions. Opens from a session, the library, or a plan you have not started
+  yet, and never reflows the page behind it.
 - **Rest timer** in a fixed bottom bar, with the current block's prescribed rest preselected.
   Audio countdown on the last three seconds.
 - **Interval timer** for hangboard protocols (7s on / 3s off x 6) and timed circuits (40/20),
@@ -36,8 +37,9 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   dead hangs, carries. One tap starts it in the bottom bar.
 - **Session customization**: skip a block or change its round count mid-session. Progress
   recalculates against what you are actually doing.
-- **Added-weight log** on hangboard blocks only, prefilled with last session's number. Finger
-  strength moves in 2-5 lb steps over weeks, which is invisible without a record.
+- **Added-weight log** on hangboard blocks, off by default and enabled in settings. Prefilled with
+  last session's number, in lb or kg.
+- **Settings** for weight logging and unit, timer sounds, screen wake lock and figure animation.
 - **Week structure** with four rotations and the spacing rules behind them, plus a recovery
   warning if you open a finger-intensive plan within 48 hours of the last one.
 - **Exercise library** with search across 98 movements, usable as a substitution reference.
@@ -96,6 +98,7 @@ both shapes. A block declaring an `interval` spec automatically renders an inter
 | `ct.active.v2` | The in-progress session: plan id, elapsed time, checked slots, skipped blocks, round overrides |
 | `ct.history.v2` | Last 60 finished sessions |
 | `ct.loads.v1` | Added weight per hangboard block, last 8 entries each |
+| `ct.settings.v1` | Preferences, merged over defaults so new settings are not undefined |
 
 Clearing site data resets both. History is disposable by design.
 
@@ -105,6 +108,14 @@ Illustrations come from [free-exercise-db](https://github.com/yuhonas/free-exerc
 into the public domain under the Unlicense. Each entry provides a start and an end frame; the app
 crossfades them, which reads like a GIF at about 11 KB per frame — 1.1 MB for all 104 frames,
 small enough to precache entirely for offline use.
+
+**Two frames is the ceiling, not a shortcut.** All 873 dataset entries have exactly two images —
+there are no exceptions in the data. wger is unreachable behind some network policies and its
+imagery is CC-BY-SA rather than public domain; everkinetic is an abandoned migration with no
+declared license. Generating intermediate frames from two stills would be a cross-dissolve, which
+is what the animation already does and adds no information. What the dataset does carry, and the
+app now uses, is a step-by-step instruction list per exercise — bundled for 50 of the 52
+illustrated movements and shown in the overlay under the cues.
 
 `scripts/exercise-image-map.json` maps exercise keys to dataset ids by hand. Automatic name
 matching produces confident nonsense (it pairs "Barbell Row" with "Barbell Curl"), and an image

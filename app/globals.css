@@ -1089,3 +1089,242 @@ a.btn.primary {
   font-size: 13px;
   color: #e8c9c9;
 }
+
+/* ---------- exercise sheet ---------- */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(3, 6, 10, 0.72);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade-in 0.14s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(14px);
+  }
+}
+
+.sheet {
+  width: 100%;
+  max-width: 620px;
+  max-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.55);
+  animation: sheet-up 0.18s ease-out;
+}
+
+.sheet-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 14px 11px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.sheet-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.sheet-target {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cat, var(--accent));
+  margin-top: 3px;
+}
+
+.sheet-body {
+  padding: 14px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+.sheet-h {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin: 16px 0 7px;
+}
+
+.sheet-h:first-child {
+  margin-top: 0;
+}
+
+.sheet-cues {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.sheet-cues li {
+  margin-bottom: 6px;
+}
+
+.sheet-steps {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+
+.sheet-steps li {
+  margin-bottom: 8px;
+}
+
+.exfig.large {
+  max-width: 100%;
+  aspect-ratio: 3 / 2;
+  margin-bottom: 10px;
+}
+
+.exfig img.b.static {
+  animation: none;
+  transition: opacity 0.18s ease;
+}
+
+.frame-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.frame-controls .btn[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #05121f;
+}
+
+@media (min-width: 700px) {
+  .sheet-backdrop {
+    align-items: center;
+  }
+  .sheet {
+    border-radius: 16px;
+    border-bottom: 1px solid var(--border);
+    max-height: 84dvh;
+  }
+}
+
+/* ---------- settings ---------- */
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 12px 13px;
+  margin-bottom: 8px;
+}
+
+.setting-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.setting-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.setting-why {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.switch {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-raised-2);
+  position: relative;
+  transition: background 0.14s, border-color 0.14s;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--text-faint);
+  transition: transform 0.14s, background 0.14s;
+}
+
+.switch[aria-checked="true"] {
+  background: color-mix(in srgb, var(--good) 32%, transparent);
+  border-color: var(--good);
+}
+
+.switch[aria-checked="true"]::after {
+  transform: translateX(20px);
+  background: var(--good);
+}
+
+.seg {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-raised-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.seg button {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #05121f;
+}
+
+.icon-btn {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--border-soft);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  color: var(--text-dim);
+}
+
+.icon-btn[aria-pressed="true"] {
+  background: var(--bg-raised-2);
+  color: var(--text);
+  border-color: var(--border);
+}

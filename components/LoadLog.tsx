@@ -9,12 +9,14 @@ import {
   subscribe,
   formatDate,
 } from "@/lib/storage";
+import { useSettings } from "@/lib/use-settings";
 
 /**
  * Added-weight entry for hangboard blocks. The previous value is prefilled,
  * because the useful question at the board is "what did I hang last time".
  */
 export default function LoadLog({ planId, blockId }: { planId: string; blockId: string }) {
+  const { unit } = useSettings();
   const loads = useSyncExternalStore(subscribe, getLoadsSnapshot, getLoadsServerSnapshot);
   const history = loads[loadKey(planId, blockId)] ?? [];
   const last = history[0];
@@ -41,7 +43,7 @@ export default function LoadLog({ planId, blockId }: { planId: string; blockId: 
           onChange={(e) => setDraft(e.target.value)}
         />
         <span className="faint" style={{ fontSize: 13 }}>
-          lb
+          {unit}
         </span>
         <button
           className="btn sm primary"

@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { PLANS } from "../lib/plans.ts";
 import { EXERCISES } from "../lib/exercises.ts";
 import { IMAGE_KEYS } from "../lib/exercise-images.ts";
+import { EXERCISE_STEPS } from "../lib/exercise-steps.ts";
 import { CATEGORIES } from "../lib/types.ts";
 import { TEMPLATES } from "../lib/week.ts";
 
@@ -173,5 +174,14 @@ test("no template schedules finger-intensive sessions on consecutive days", () =
     }
     const count = fingers.filter(Boolean).length;
     assert.ok(count <= 2, `${tpl.id}: ${count} finger-intensive days, the ceiling is 2`);
+  }
+});
+
+test("bundled step-by-step instructions belong to real, illustrated exercises", () => {
+  for (const [key, steps] of Object.entries(EXERCISE_STEPS)) {
+    assert.ok(EXERCISES[key], `steps bundled for unknown exercise "${key}"`);
+    assert.ok(IMAGE_KEYS.has(key), `"${key}" has steps but no illustration; they ship together`);
+    assert.ok(steps.length > 0, `"${key}": empty step list`);
+    for (const s of steps) assert.ok(s.trim().length > 0, `"${key}": blank step`);
   }
 });
