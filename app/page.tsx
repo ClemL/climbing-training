@@ -1,0 +1,180 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import ExerciseIndex from "@/components/ExerciseIndex";
+import HistoryView from "@/components/HistoryView";
+import PlanLibrary from "@/components/PlanLibrary";
+import PlanPreview from "@/components/PlanPreview";
+import SessionView from "@/components/SessionView";
+import { planById, PLANS } from "@/lib/plans";
+import {
+  clearActive,
+  elapsedMs,
+  formatClock,
+  loadActive,
+  loadHistory,
+  pushHistory,
+  saveActive,
+  type ActiveSession,
+  type HistoryEntry,
+} from "@/lib/storage";
+import type { Plan } from "@/lib/types";
+
+type View = "plans" | "preview" | "session" | "history" | "library";
+
+export default function Home() {
+  const [view, setView] = useState<View>("plans");
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const [active, setActive] = useState<ActiveSession | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [ready, setReady] = useState(false);
+
+  // localStorage is read after mount so server and client markup match.
+  useEffect(() => {
+    setActive(loadActive());
+    setHistory(loadHistory());
+    setReady(true);
+  }, []);
+
+  const update = useCallback((next: ActiveSession) => {
+    setActive(next);
+    saveActive(next);
+  }, []);
+
+  const start = useCallback((plan: Plan) => {
+    const fresh: ActiveSession = {
+      planId: plan.id,
+      startedAt: Date.now(),
+      accumulatedMs: 0,
+      running: true,
+      resumedAt: Date.now(),
+      done: {},
+    };
+    setActive(fresh);
+    saveActive(fresh);
+    setView("session");
+    window.scrollTo({ top: 0 });
+  }, []);
+
+  const finish = useCallback(() => {
+    if (!active) return;
+    const plan = planById(active.planId);
+    if (!plan) return;
+    const total = plan.blocks.reduce((n, b) => n + b.slots.length * b.rounds, 0);
+    const entry: HistoryEntry = {
+      id: `${active.planId}-${active.startedAt}`,
+      planId: plan.id,
+      planName: plan.name,
+      category: plan.category,
+      finishedAt: Date.now(),
+      durationMs: elapsedMs(active),
+      checked: Object.keys(active.done).length,
+      total,
+    };
+    setHistory(pushHistory(entry));
+    clearActive();
+    setActive(null);
+    setView("history");
+    window.scrollTo({ top: 0 });
+  }, [active]);
+
+  const discard = useCallback(() => {
+    if (!window.confirm("Discard the session in progress?")) return;
+    clearActive();
+    setActive(null);
+    setView("plans");
+  }, []);
+
+  const activePlan = active ? planById(active.planId) : undefined;
+  const previewPlan = previewId ? planById(previewId) : undefined;
+
+  if (view === "session" && active && activePlan) {
+    return (
+      <SessionView
+        plan={activePlan}
+        session={active}
+        onChange={update}
+        onFinish={finish}
+        onExit={() => {
+          setView("plans");
+          window.scrollTo({ top: 0 });
+        }}
+      />
+    );
+  }
+
+  if (view === "preview" && previewPlan) {
+    return (
+      <PlanPreview
+        plan={previewPlan}
+        hasActiveOther={!!active && active.planId !== previewPlan.id}
+        onBack={() => setView("plans")}
+        onStart={() => start(previewPlan)}
+      />
+    );
+  }
+
+  return (
+    <>
+      <div className="topbar stacked">
+        <div className="topbar-row">
+          <div className="brand">
+            <span>&#129506;</span>
+            <span>
+              Training Days
+              <small>{PLANS.length} plans &middot; local only</small>
+            </span>
+          </div>
+          <div className="spacer" />
+        </div>
+        <div className="tabs">
+          <button className="tab" aria-pressed={view === "plans"} onClick={() => setView("plans")}>
+            Plans
+          </button>
+          <button className="tab" aria-pressed={view === "library"} onClick={() => setView("library")}>
+            Exercises
+          </button>
+          <button className="tab" aria-pressed={view === "history"} onClick={() => setView("history")}>
+            History
+          </button>
+        </div>
+      </div>
+
+      {ready && active && activePlan ? (
+        <div className="resume">
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="t">{activePlan.name} in progress</div>
+            <div className="when faint" style={{ fontSize: 12 }}>
+              {formatClock(elapsedMs(active))} elapsed &middot; {Object.keys(active.done).length} checked
+              {active.running ? "" : " · paused"}
+            </div>
+          </div>
+          <button className="btn good sm" onClick={() => setView("session")}>
+            Resume
+          </button>
+          <button className="btn sm danger" onClick={discard} aria-label="Discard session">
+            &#10005;
+          </button>
+        </div>
+      ) : null}
+
+      {view === "plans" ? (
+        <PlanLibrary
+          onPick={(p) => {
+            setPreviewId(p.id);
+            setView("preview");
+            window.scrollTo({ top: 0 });
+          }}
+        />
+      ) : null}
+      {view === "library" ? <ExerciseIndex /> : null}
+      {view === "history" ? <HistoryView history={history} onChange={() => setHistory(loadHistory())} /> : null}
+
+      <p className="footer">
+        Everything lives in this browser&apos;s localStorage. No account, no sync, no server.
+        <br />
+        Loads are yours to pick. Stop any finger work that produces sharp or localized pain.
+      </p>
+    </>
+  );
+}
