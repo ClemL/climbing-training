@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import ServiceWorker from "@/components/ServiceWorker";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Training Day Plans",
   description:
     "Free weight, bodyweight, climbing gym and warm-up session plans with a session clock, supersets and a checklist. Stored locally, nothing synced.",
-  applicationName: "Training Day Plans",
+  applicationName: "Training Days",
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Training Days" },
+  icons: { icon: "/icon-192.png", apple: "/apple-icon.png" },
 };
 
 export const viewport: Viewport = {
@@ -20,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <div className="shell">{children}</div>
+        <ServiceWorker />
       </body>
     </html>
   );
