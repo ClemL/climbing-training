@@ -2,6 +2,8 @@
 
 import { EXERCISES } from "@/lib/exercises";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
+import { recoveryWarnings } from "@/lib/recovery";
+import type { HistoryEntry } from "@/lib/storage";
 import type { Plan } from "@/lib/types";
 
 const KIND_LABEL: Record<string, string> = {
@@ -16,13 +18,16 @@ export default function PlanPreview({
   onStart,
   onBack,
   hasActiveOther,
+  history,
 }: {
   plan: Plan;
   onStart: () => void;
   onBack: () => void;
   hasActiveOther: boolean;
+  history: readonly HistoryEntry[];
 }) {
   const total = plan.blocks.reduce((n, b) => n + b.slots.length * b.rounds, 0);
+  const warnings = recoveryWarnings(plan, history);
 
   return (
     <div style={{ ["--cat" as string]: `var(--cat-${plan.category})` }}>
@@ -67,6 +72,24 @@ export default function PlanPreview({
           Start session &amp; clock
         </button>
       </div>
+
+      {warnings.length > 0 ? (
+        <div className="warn-box">
+          <div className="warn-title">Recovery warning</div>
+          <div className="warn-body">
+            {warnings.map((w) => (
+              <p key={w.stress} style={{ margin: "0 0 4px" }}>
+                {w.stress === "fingers" ? "Fingers: " : `${w.stress[0].toUpperCase()}${w.stress.slice(1)}: `}
+                {w.lastPlanName} finished {w.hoursAgo === 0 ? "less than an hour" : `${w.hoursAgo}h`} ago.
+                {" "}
+                {w.stress === "fingers"
+                  ? `Give tendons ${w.needHours}h. Run a technique or bodyweight day instead.`
+                  : `${w.needHours}h is the usual minimum.`}
+              </p>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       {plan.notes?.length ? (
         <div className="notes">

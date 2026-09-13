@@ -13,6 +13,10 @@ export type ActiveSession = {
   resumedAt: number | null;
   /** Checked slot keys: `${blockId}:${round}:${slotIndex}`. */
   done: Record<string, true>;
+  /** Blocks the athlete dropped this session. Excluded from progress. */
+  skipped?: Record<string, true>;
+  /** Per-block round count overriding the plan's, when the session ran short or long. */
+  rounds?: Record<string, number>;
 };
 
 export type HistoryEntry = {
@@ -141,6 +145,56 @@ export function pushHistory(entry: HistoryEntry): void {
 export function clearHistory(): void {
   historySnapshot = EMPTY_HISTORY;
   remove(HISTORY_KEY);
+  emit();
+}
+
+/* ---------------------------------------------------------------------------
+ * Added-weight log
+ *
+ * Scoped to interval (hangboard) blocks only. Finger strength progresses in
+ * 2-5 lb steps over weeks, which is invisible without a record - unlike the
+ * barbell work, where the athlete knows the number.
+ * ------------------------------------------------------------------------ */
+
+export type LoadEntry = { at: number; value: number };
+
+const LOADS_KEY = "ct.loads.v1";
+const LOADS_PER_BLOCK = 8;
+
+let loadsSnapshot: Record<string, LoadEntry[]> | undefined;
+
+function loadLoads(): Record<string, LoadEntry[]> {
+  const l = read<Record<string, LoadEntry[]>>(LOADS_KEY);
+  return l && typeof l === "object" ? l : {};
+}
+
+export function getLoadsSnapshot(): Record<string, LoadEntry[]> {
+  if (loadsSnapshot === undefined) loadsSnapshot = loadLoads();
+  return loadsSnapshot;
+}
+
+const EMPTY_LOADS: Record<string, LoadEntry[]> = Object.freeze({});
+
+export function getLoadsServerSnapshot(): Record<string, LoadEntry[]> {
+  return EMPTY_LOADS;
+}
+
+export function loadKey(planId: string, blockId: string): string {
+  return `${planId}:${blockId}`;
+}
+
+export function recordLoad(planId: string, blockId: string, value: number): void {
+  const key = loadKey(planId, blockId);
+  const all = { ...getLoadsSnapshot() };
+  all[key] = [{ at: Date.now(), value }, ...(all[key] ?? [])].slice(0, LOADS_PER_BLOCK);
+  loadsSnapshot = all;
+  write(LOADS_KEY, all);
+  emit();
+}
+
+export function clearLoads(): void {
+  loadsSnapshot = EMPTY_LOADS;
+  remove(LOADS_KEY);
   emit();
 }
 

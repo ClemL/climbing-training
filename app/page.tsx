@@ -5,6 +5,7 @@ import ExerciseIndex from "@/components/ExerciseIndex";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
 import PlanPreview from "@/components/PlanPreview";
+import WeekView from "@/components/WeekView";
 import SessionView from "@/components/SessionView";
 import { planById, PLANS } from "@/lib/plans";
 import {
@@ -23,7 +24,7 @@ import {
 } from "@/lib/storage";
 import type { Plan } from "@/lib/types";
 
-type View = "plans" | "preview" | "session" | "history" | "library";
+type View = "plans" | "preview" | "session" | "history" | "library" | "week";
 
 export default function Home() {
   const [view, setView] = useState<View>("plans");
@@ -72,6 +73,12 @@ export default function Home() {
     window.scrollTo({ top: 0 });
   }, [active]);
 
+  const openPreview = useCallback((p: Plan) => {
+    setPreviewId(p.id);
+    setView("preview");
+    window.scrollTo({ top: 0 });
+  }, []);
+
   const discard = useCallback(() => {
     if (!window.confirm("Discard the session in progress?")) return;
     clearActive();
@@ -101,6 +108,7 @@ export default function Home() {
       <PlanPreview
         plan={previewPlan}
         hasActiveOther={!!active && active.planId !== previewPlan.id}
+        history={history}
         onBack={() => setView("plans")}
         onStart={() => start(previewPlan)}
       />
@@ -123,6 +131,9 @@ export default function Home() {
         <div className="tabs">
           <button className="tab" aria-pressed={view === "plans"} onClick={() => setView("plans")}>
             Plans
+          </button>
+          <button className="tab" aria-pressed={view === "week"} onClick={() => setView("week")}>
+            Week
           </button>
           <button className="tab" aria-pressed={view === "library"} onClick={() => setView("library")}>
             Exercises
@@ -151,15 +162,8 @@ export default function Home() {
         </div>
       ) : null}
 
-      {view === "plans" ? (
-        <PlanLibrary
-          onPick={(p) => {
-            setPreviewId(p.id);
-            setView("preview");
-            window.scrollTo({ top: 0 });
-          }}
-        />
-      ) : null}
+      {view === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
+      {view === "week" ? <WeekView onPick={openPreview} /> : null}
       {view === "library" ? <ExerciseIndex /> : null}
       {view === "history" ? <HistoryView history={history} /> : null}
 

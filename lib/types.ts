@@ -1,5 +1,12 @@
 export type Category = "freeweights" | "bodyweight" | "gym" | "prep";
 
+/**
+ * What a session taxes, for scheduling. `fingers` is the one that matters:
+ * tendon and pulley tissue recovers far slower than muscle, and stacking two
+ * finger-intensive days is the most common way climbers injure themselves.
+ */
+export type Stress = "fingers" | "pull" | "push" | "legs";
+
 export type ExerciseDef = {
   /** Display name. */
   name: string;
@@ -64,6 +71,8 @@ export type Plan = {
   focus: string[];
   /** Safety / programming notes shown above the checklist. */
   notes?: string[];
+  /** Tissues taxed hard enough to constrain what you can do the next day. */
+  stress?: Stress[];
   blocks: Block[];
 };
 

@@ -4,20 +4,26 @@ import { useState } from "react";
 import ExerciseFigure from "./ExerciseFigure";
 import { EXERCISES, searchUrl } from "@/lib/exercises";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
+import { formatDuration, parseDuration } from "@/lib/duration";
 import type { Slot } from "@/lib/types";
 
 export default function ExerciseRow({
   slot,
   checked,
   onToggle,
+  onTimer,
 }: {
   slot: Slot;
   checked: boolean;
   onToggle: () => void;
+  /** Offered only when the prescription is purely a duration. */
+  onTimer?: (seconds: number, label: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const ex = EXERCISES[slot.ex];
   if (!ex) return null;
+
+  const seconds = onTimer ? parseDuration(slot.pres) : null;
 
   return (
     <>
@@ -30,6 +36,15 @@ export default function ExerciseRow({
           <div className="ex-pres">{slot.pres}</div>
           {slot.note ? <div className="ex-note">{slot.note}</div> : null}
         </div>
+        {seconds !== null ? (
+          <button
+            className="timer-btn"
+            aria-label={`Time ${formatDuration(seconds)} for ${ex.name}`}
+            onClick={() => onTimer?.(seconds, ex.name)}
+          >
+            {formatDuration(seconds)}
+          </button>
+        ) : null}
         <button
           className="info-btn"
           aria-expanded={open}

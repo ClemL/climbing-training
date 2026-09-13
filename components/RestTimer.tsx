@@ -6,11 +6,23 @@ import { formatClock } from "@/lib/storage";
 
 const PRESETS = [30, 60, 90, 120, 180];
 
-export default function RestTimer({ suggestion }: { suggestion?: number }) {
+export default function RestTimer({
+  suggestion,
+  initialDeadline,
+  initialTotal = 0,
+  label,
+}: {
+  suggestion?: number;
+  /** Epoch ms. Set by the parent via a changing `key`, which remounts and starts the clock. */
+  initialDeadline?: number;
+  initialTotal?: number;
+  /** Shown while an exercise-triggered countdown runs. */
+  label?: string;
+}) {
   // A wall-clock deadline, not a decrementing counter: the countdown stays
   // correct across a backgrounded tab, a locked screen, or a dropped frame.
-  const [deadline, setDeadline] = useState<number | null>(null);
-  const [total, setTotal] = useState(0);
+  const [deadline, setDeadline] = useState<number | null>(initialDeadline ?? null);
+  const [total, setTotal] = useState(initialTotal);
   const beep = useBeep();
   const lastBeep = useRef<number>(-1);
 
@@ -52,6 +64,7 @@ export default function RestTimer({ suggestion }: { suggestion?: number }) {
         <div className={`rest-display mono${counting ? " active" : ""}`}>
           {counting ? formatClock(remainMs) : expired ? "Go" : "Rest"}
         </div>
+        {counting && label ? <span className="timer-label truncate">{label}</span> : null}
         {counting ? (
           <div className="quick">
             <button className="btn sm" onClick={extend}>

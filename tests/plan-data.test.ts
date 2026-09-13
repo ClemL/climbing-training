@@ -8,6 +8,7 @@ import { PLANS } from "../lib/plans.ts";
 import { EXERCISES } from "../lib/exercises.ts";
 import { IMAGE_KEYS } from "../lib/exercise-images.ts";
 import { CATEGORIES } from "../lib/types.ts";
+import { TEMPLATES } from "../lib/week.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -144,4 +145,33 @@ test("no exercise is defined but unreachable from both plans and search", () => 
     orphans.length <= 12,
     `${orphans.length} exercises are in no plan; trim them or add them: ${orphans.join(", ")}`,
   );
+});
+
+test("every plan referenced by a week template exists", () => {
+  const ids = new Set(PLANS.map((p) => p.id));
+  for (const tpl of TEMPLATES) {
+    assert.equal(tpl.days.length, 7, `${tpl.id}: a week has seven days`);
+    for (const day of tpl.days) {
+      if (day.planId === null) {
+        assert.ok(day.note, `${tpl.id}/${day.day}: a rest day needs a note`);
+        continue;
+      }
+      assert.ok(ids.has(day.planId), `${tpl.id}/${day.day}: unknown plan "${day.planId}"`);
+    }
+  }
+});
+
+test("no template schedules finger-intensive sessions on consecutive days", () => {
+  const byId = new Map(PLANS.map((p) => [p.id, p]));
+  for (const tpl of TEMPLATES) {
+    const fingers = tpl.days.map((d) => (d.planId ? !!byId.get(d.planId)?.stress?.includes("fingers") : false));
+    for (let i = 1; i < fingers.length; i++) {
+      assert.ok(
+        !(fingers[i] && fingers[i - 1]),
+        `${tpl.id}: ${tpl.days[i - 1].day} and ${tpl.days[i].day} both load fingers`,
+      );
+    }
+    const count = fingers.filter(Boolean).length;
+    assert.ok(count <= 2, `${tpl.id}: ${count} finger-intensive days, the ceiling is 2`);
+  }
 });

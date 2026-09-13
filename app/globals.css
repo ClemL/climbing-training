@@ -909,3 +909,183 @@ a.btn.primary {
   color: var(--text-faint);
   margin: 0 0 8px;
 }
+
+/* ---------- load log ---------- */
+.loadlog {
+  margin: 0 13px 12px;
+  padding: 11px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised-2);
+  border: 1px solid var(--border);
+}
+
+.loadlog-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 7px;
+}
+
+.loadlog-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loadlog-input {
+  width: 92px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.loadlog-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.loadlog-hist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ---------- block controls ---------- */
+.block-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.round-step {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg-raised-2);
+  color: var(--text-dim);
+  font-size: 16px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.round-step:disabled {
+  opacity: 0.3;
+}
+
+.block.skipped {
+  opacity: 0.4;
+}
+
+.block.skipped .block-title {
+  text-decoration: line-through;
+}
+
+.timer-btn {
+  flex: 0 0 auto;
+  height: 27px;
+  padding: 0 9px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  color: var(--warn);
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  max-width: 30%;
+}
+
+/* ---------- week view ---------- */
+.weekday {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--cat, var(--border));
+  border-radius: var(--radius);
+  padding: 11px 13px;
+}
+
+.weekday.rest {
+  border-left-color: var(--border);
+  background: transparent;
+  border-style: dashed;
+}
+
+.weekday-name {
+  flex: 0 0 34px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.weekday-meta {
+  display: block;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.rule {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 12px 13px;
+  margin-bottom: 8px;
+}
+
+.rule-head {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  margin-bottom: 5px;
+}
+
+.rule-why {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* ---------- recovery warning ---------- */
+.warn-box {
+  background: color-mix(in srgb, var(--danger) 11%, var(--bg-raised));
+  border: 1px solid color-mix(in srgb, var(--danger) 38%, transparent);
+  border-radius: var(--radius);
+  padding: 12px 13px;
+  margin-bottom: 14px;
+}
+
+.warn-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fca5a5;
+  margin-bottom: 5px;
+}
+
+.warn-body {
+  font-size: 13px;
+  color: #e8c9c9;
+}

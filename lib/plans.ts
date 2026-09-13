@@ -14,6 +14,7 @@ export const PLANS: Plan[] = [
     tagline: "Horizontal and vertical pressing, plus the shoulder and wrist work climbers skip.",
     equipment: ["Barbell + rack", "Dumbbells", "Bench"],
     focus: ["Chest", "Shoulders", "Triceps", "Antagonist balance"],
+    stress: ["push"],
     notes: [
       "Pressing volume is antagonist work for a climber. It keeps the shoulder joint balanced against all that pulling.",
       "Block A is the only true strength block. Everything after it runs as a superset to keep the session under 75 minutes.",
@@ -112,6 +113,7 @@ export const PLANS: Plan[] = [
     tagline: "Heavy pulling strength with grip and elbow work built in.",
     equipment: ["Pull-up bar", "Barbell", "Dumbbells", "Bench"],
     focus: ["Lats", "Mid back", "Biceps", "Grip"],
+    stress: ["pull"],
     notes: [
       "Do not run this within 48 hours of a hard hangboard or limit bouldering session. The fingers and elbows need the gap.",
       "If your bar work is fresh from climbing, drop block A to 3 sets and add a set to block C instead.",
@@ -207,6 +209,7 @@ export const PLANS: Plan[] = [
     tagline: "Squat, hinge, and the single-leg strength that high steps actually require.",
     equipment: ["Barbell + rack", "Dumbbells", "Bench or chair", "Step"],
     focus: ["Quads", "Glutes", "Hamstrings", "Trunk"],
+    stress: ["legs"],
     notes: [
       "Climbers under-train legs and then wonder why rock-overs feel like a bench press. Single-leg work in block C is the highest-transfer item here.",
       "Schedule this the day before a rest day or a technique day, not before limit bouldering.",
@@ -302,6 +305,7 @@ export const PLANS: Plan[] = [
     tagline: "One pair of dumbbells, all supersets, in and out in under an hour.",
     equipment: ["Dumbbells", "Chair or bench"],
     focus: ["Full body", "Time-efficient", "Minimal equipment"],
+    stress: ["push", "pull", "legs"],
     notes: [
       "Everything here is paired. The only rest is between rounds, which is what keeps it under an hour.",
       "This is the fallback session for a week where climbing took priority. Two per week maintains strength without interfering.",
@@ -388,6 +392,7 @@ export const PLANS: Plan[] = [
     tagline: "Floor and one chair. Pressing volume and trunk tension, no equipment.",
     equipment: ["Floor", "One sturdy chair"],
     focus: ["Chest", "Shoulders", "Triceps", "Core"],
+    stress: ["push"],
     notes: [
       "With no external load, difficulty comes from leverage and tempo. Elevating the feet or slowing the lowering is how you progress, not adding reps forever.",
       "Check the chair is stable before block A. A dining chair works; an office chair does not.",
@@ -484,6 +489,7 @@ export const PLANS: Plan[] = [
     tagline: "The honest version of bodyweight pulling: scapular control, posterior chain, isometrics.",
     equipment: ["Floor", "One sturdy chair", "Towel", "Socks or sliders"],
     focus: ["Upper back", "Posterior chain", "Shoulder health"],
+    stress: ["pull"],
     notes: [
       "Straight talk: without a bar, rings or a door pull-up bar you cannot meaningfully load a vertical pull. This session trains scapular control, the posterior chain and isometric pulling instead.",
       "If bodyweight days are a regular part of your week, a $25 doorway pull-up bar changes what is possible here more than any other purchase.",
@@ -571,6 +577,7 @@ export const PLANS: Plan[] = [
     tagline: "Single-leg strength, knee control and hip range. Chair does most of the work.",
     equipment: ["Floor", "One sturdy chair", "Step (optional)"],
     focus: ["Quads", "Glutes", "Single-leg", "Hip mobility"],
+    stress: ["legs"],
     notes: [
       "Bodyweight legs get hard through unilateral loading and tempo, not volume. If a set of 20 feels easy, move to the harder progression instead of doing 30.",
     ],
@@ -655,6 +662,7 @@ export const PLANS: Plan[] = [
     tagline: "Hotel-room session. Six movements, 40 seconds on, 20 off, four rounds.",
     equipment: ["Floor", "One chair"],
     focus: ["Full body", "Travel", "Minimal time"],
+    stress: ["push", "legs"],
     notes: [
       "Timed intervals, not rep targets. Use the interval timer in the session: 40s work, 20s rest.",
       "Four rounds is roughly 24 minutes of work. Three rounds is a legitimate short day.",
@@ -717,6 +725,7 @@ export const PLANS: Plan[] = [
     tagline: "Max hangs, then limit bouldering, then antagonist work. The hardest day of the week.",
     equipment: ["Climbing wall", "Hangboard", "Free weights"],
     focus: ["Finger strength", "Max power", "Recruitment"],
+    stress: ["fingers", "pull"],
     notes: [
       "Prerequisite: roughly a year of consistent climbing before loading a hangboard. Tendons adapt far slower than muscle.",
       "Never start hangboarding cold, and never on consecutive days. Two finger-intensive sessions per week is the ceiling for most people.",
@@ -819,6 +828,7 @@ export const PLANS: Plan[] = [
     tagline: "Four flash-grade boulders back to back, four times. Then pulling and core.",
     equipment: ["Climbing wall", "Pull-up bar", "Free weights"],
     focus: ["Power endurance", "Lactate tolerance", "Mental grit"],
+    stress: ["fingers", "pull"],
     notes: [
       "This session is supposed to feel awful by set 3. That is the training effect, not a sign you picked the wrong problems.",
       "Run it at most once a week, and not within 48 hours of a max strength day.",
@@ -906,6 +916,7 @@ export const PLANS: Plan[] = [
     tagline: "Hangboard repeaters across two grip types, then high-mileage easy climbing.",
     equipment: ["Climbing wall", "Hangboard", "Free weights"],
     focus: ["Finger strength-endurance", "Grip variety", "Mileage"],
+    stress: ["fingers", "pull"],
     notes: [
       "Repeaters are submaximal by design: 7 seconds on, 3 off, six times. Load for RPE 7-8, not failure.",
       "Two grip positions in one session is enough. Half crimp first while you are fresh, then open hand.",
