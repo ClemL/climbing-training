@@ -58,37 +58,90 @@ function remove(key: string): void {
   }
 }
 
-export function loadActive(): ActiveSession | null {
+function loadActive(): ActiveSession | null {
   const s = read<ActiveSession>(ACTIVE_KEY);
   if (!s || typeof s.planId !== "string" || typeof s.accumulatedMs !== "number") return null;
   return { ...s, done: s.done ?? {} };
 }
 
+/* ---------------------------------------------------------------------------
+ * External store
+ *
+ * localStorage does not exist during server rendering, so components read it
+ * through useSyncExternalStore rather than an after-mount effect. Snapshots are
+ * cached to stay referentially stable between calls, which is what the hook
+ * requires to avoid an infinite render loop.
+ * ------------------------------------------------------------------------ */
+
+type Listener = () => void;
+const listeners = new Set<Listener>();
+const EMPTY_HISTORY: readonly HistoryEntry[] = Object.freeze([]);
+
+let activeSnapshot: ActiveSession | null | undefined;
+let historySnapshot: readonly HistoryEntry[] | undefined;
+
+function emit(): void {
+  for (const l of listeners) l();
+}
+
+export function subscribe(cb: Listener): () => void {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
+export function getActiveSnapshot(): ActiveSession | null {
+  if (activeSnapshot === undefined) activeSnapshot = loadActive();
+  return activeSnapshot;
+}
+
+/** Nothing is in progress as far as the server knows. */
+export function getActiveServerSnapshot(): ActiveSession | null {
+  return null;
+}
+
+export function getHistorySnapshot(): readonly HistoryEntry[] {
+  if (historySnapshot === undefined) historySnapshot = loadHistory();
+  return historySnapshot;
+}
+
+export function getHistoryServerSnapshot(): readonly HistoryEntry[] {
+  return EMPTY_HISTORY;
+}
+
 export function saveActive(s: ActiveSession): void {
+  activeSnapshot = s;
   write(ACTIVE_KEY, s);
+  emit();
 }
 
 export function clearActive(): void {
+  activeSnapshot = null;
   remove(ACTIVE_KEY);
+  emit();
 }
 
 export function elapsedMs(s: ActiveSession, now: number = Date.now()): number {
   return s.accumulatedMs + (s.running && s.resumedAt !== null ? now - s.resumedAt : 0);
 }
 
-export function loadHistory(): HistoryEntry[] {
+function loadHistory(): HistoryEntry[] {
   const h = read<HistoryEntry[]>(HISTORY_KEY);
   return Array.isArray(h) ? h : [];
 }
 
-export function pushHistory(entry: HistoryEntry): HistoryEntry[] {
-  const next = [entry, ...loadHistory()].slice(0, HISTORY_CAP);
+export function pushHistory(entry: HistoryEntry): void {
+  const next = [entry, ...getHistorySnapshot()].slice(0, HISTORY_CAP);
+  historySnapshot = next;
   write(HISTORY_KEY, next);
-  return next;
+  emit();
 }
 
 export function clearHistory(): void {
+  historySnapshot = EMPTY_HISTORY;
   remove(HISTORY_KEY);
+  emit();
 }
 
 export function slotKey(blockId: string, round: number, slotIndex: number): string {

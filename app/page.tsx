@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 import ExerciseIndex from "@/components/ExerciseIndex";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
@@ -11,10 +11,13 @@ import {
   clearActive,
   elapsedMs,
   formatClock,
-  loadActive,
-  loadHistory,
+  getActiveServerSnapshot,
+  getActiveSnapshot,
+  getHistoryServerSnapshot,
+  getHistorySnapshot,
   pushHistory,
   saveActive,
+  subscribe,
   type ActiveSession,
   type HistoryEntry,
 } from "@/lib/storage";
@@ -25,33 +28,25 @@ type View = "plans" | "preview" | "session" | "history" | "library";
 export default function Home() {
   const [view, setView] = useState<View>("plans");
   const [previewId, setPreviewId] = useState<string | null>(null);
-  const [active, setActive] = useState<ActiveSession | null>(null);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [ready, setReady] = useState(false);
-
-  // localStorage is read after mount so server and client markup match.
-  useEffect(() => {
-    setActive(loadActive());
-    setHistory(loadHistory());
-    setReady(true);
-  }, []);
+  // localStorage is the source of truth; the server snapshot is the empty case,
+  // so hydration matches without an after-mount effect or a readiness flag.
+  const active = useSyncExternalStore(subscribe, getActiveSnapshot, getActiveServerSnapshot);
+  const history = useSyncExternalStore(subscribe, getHistorySnapshot, getHistoryServerSnapshot);
 
   const update = useCallback((next: ActiveSession) => {
-    setActive(next);
     saveActive(next);
   }, []);
 
   const start = useCallback((plan: Plan) => {
-    const fresh: ActiveSession = {
+    const startedAt = Date.now();
+    saveActive({
       planId: plan.id,
-      startedAt: Date.now(),
+      startedAt,
       accumulatedMs: 0,
       running: true,
-      resumedAt: Date.now(),
+      resumedAt: startedAt,
       done: {},
-    };
-    setActive(fresh);
-    saveActive(fresh);
+    });
     setView("session");
     window.scrollTo({ top: 0 });
   }, []);
@@ -71,9 +66,8 @@ export default function Home() {
       checked: Object.keys(active.done).length,
       total,
     };
-    setHistory(pushHistory(entry));
+    pushHistory(entry);
     clearActive();
-    setActive(null);
     setView("history");
     window.scrollTo({ top: 0 });
   }, [active]);
@@ -81,7 +75,6 @@ export default function Home() {
   const discard = useCallback(() => {
     if (!window.confirm("Discard the session in progress?")) return;
     clearActive();
-    setActive(null);
     setView("plans");
   }, []);
 
@@ -140,7 +133,7 @@ export default function Home() {
         </div>
       </div>
 
-      {ready && active && activePlan ? (
+      {active && activePlan ? (
         <div className="resume">
           <div style={{ flex: 1, minWidth: 0 }}>
             <div className="t">{activePlan.name} in progress</div>
@@ -168,7 +161,7 @@ export default function Home() {
         />
       ) : null}
       {view === "library" ? <ExerciseIndex /> : null}
-      {view === "history" ? <HistoryView history={history} onChange={() => setHistory(loadHistory())} /> : null}
+      {view === "history" ? <HistoryView history={history} /> : null}
 
       <p className="footer">
         Everything lives in this browser&apos;s localStorage. No account, no sync, no server.

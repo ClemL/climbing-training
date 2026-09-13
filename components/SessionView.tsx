@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import ExerciseRow from "./ExerciseRow";
 import IntervalTimer from "./IntervalTimer";
 import RestTimer from "./RestTimer";
@@ -16,6 +16,18 @@ const KIND_LABEL: Record<Block["kind"], string> = {
   straight: "straight sets",
   note: "",
 };
+
+/** Rest prescription of the first block with an unchecked slot, in seconds. */
+function firstUnfinishedRest(plan: Plan, done: Record<string, true>): number | undefined {
+  for (const b of plan.blocks) {
+    for (let r = 1; r <= b.rounds; r++) {
+      for (let i = 0; i < b.slots.length; i++) {
+        if (!done[slotKey(b.id, r, i)]) return restSeconds(b.rest);
+      }
+    }
+  }
+  return undefined;
+}
 
 /** Parses a rest string like "2-3 min" or "90s between rounds" into seconds for the rest-timer preset. */
 function restSeconds(rest?: string): number | undefined {
@@ -40,7 +52,6 @@ export default function SessionView({
   onFinish: () => void;
   onExit: () => void;
 }) {
-  const [suggestion, setSuggestion] = useState<number | undefined>(undefined);
   const now = useTick(session.running);
   useWakeLock(session.running);
 
@@ -48,18 +59,9 @@ export default function SessionView({
   const checkedCount = Object.keys(session.done).length;
   const pct = totalSlots ? Math.round((checkedCount / totalSlots) * 100) : 0;
 
-  // First unfinished block drives the suggested rest interval.
-  useEffect(() => {
-    for (const b of plan.blocks) {
-      const keys: string[] = [];
-      for (let r = 1; r <= b.rounds; r++) for (let i = 0; i < b.slots.length; i++) keys.push(slotKey(b.id, r, i));
-      if (keys.some((k) => !session.done[k])) {
-        setSuggestion(restSeconds(b.rest));
-        return;
-      }
-    }
-    setSuggestion(undefined);
-  }, [plan, session.done]);
+  // The first unfinished block decides which rest preset is highlighted. Cheap
+  // enough to compute every render; memoizing it only obscures the dependency.
+  const suggestion = firstUnfinishedRest(plan, session.done);
 
   const toggle = useCallback(
     (key: string) => {

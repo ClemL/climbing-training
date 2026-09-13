@@ -1,146 +1,145 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useBeep, useTick } from "@/lib/hooks";
 import type { IntervalSpec } from "@/lib/types";
 import { formatClock } from "@/lib/storage";
 
-type Phase = "idle" | "ready" | "work" | "rest" | "setrest" | "done";
+type Phase = "ready" | "work" | "rest" | "setrest";
+
+type Segment = {
+  phase: Phase;
+  rep: number;
+  set: number;
+  /** Wall-clock ms. */
+  start: number;
+  end: number;
+};
+
+const LEAD_IN_SECONDS = 5;
 
 /**
- * Work/rest interval timer. Covers hangboard repeaters (7s on / 3s off x 6)
- * and timed circuits (40s on / 20s off) from the same spec.
+ * Expands a spec into the full wall-clock schedule up front. Nothing mutates
+ * as the timer runs: the current segment is derived from the clock, so a
+ * throttled background tab or a locked screen cannot desynchronize it, and a
+ * hangboard set resumes at the right rep when you look back at the phone.
  */
-export default function IntervalTimer({ spec }: { spec: IntervalSpec }) {
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [rep, setRep] = useState(1);
-  const [set, setSet] = useState(1);
-  const [endsAt, setEndsAt] = useState(0);
-  const beep = useBeep();
-  const lastBeep = useRef(-1);
+function buildTimeline(spec: IntervalSpec, t0: number): Segment[] {
+  const segs: Segment[] = [];
+  let t = t0;
+  const push = (phase: Phase, seconds: number, rep: number, set: number) => {
+    if (seconds <= 0) return;
+    segs.push({ phase, rep, set, start: t, end: t + seconds * 1000 });
+    t += seconds * 1000;
+  };
 
-  const active = phase !== "idle" && phase !== "done";
-  const now = useTick(active, 100);
-  const remainMs = active ? Math.max(0, endsAt - now) : 0;
+  push("ready", LEAD_IN_SECONDS, 1, 1);
+  for (let set = 1; set <= spec.sets; set++) {
+    for (let rep = 1; rep <= spec.reps; rep++) {
+      push("work", spec.work, rep, set);
+      if (rep < spec.reps) push("rest", spec.rest, rep, set);
+    }
+    if (set < spec.sets) push("setrest", spec.setRest, spec.reps, set);
+  }
+  return segs;
+}
+
+export default function IntervalTimer({ spec }: { spec: IntervalSpec }) {
+  const [timeline, setTimeline] = useState<Segment[] | null>(null);
+  const beep = useBeep();
+  const lastSegment = useRef<number>(-1);
+  const lastTick = useRef<number>(-1);
+
+  const now = useTick(timeline !== null, 100);
+  const finishesAt = timeline ? timeline[timeline.length - 1].end : 0;
+  const running = timeline !== null && now < finishesAt;
+  const done = timeline !== null && now >= finishesAt;
+
+  const index = useMemo(() => {
+    if (!timeline || !running) return -1;
+    return timeline.findIndex((s) => now < s.end);
+  }, [timeline, now, running]);
+
+  const current = index >= 0 ? timeline![index] : null;
+  const remainMs = current ? Math.max(0, current.end - now) : 0;
   const remainSec = Math.ceil(remainMs / 1000);
 
-  const go = (next: Phase, secs: number) => {
-    lastBeep.current = -1;
-    setPhase(next);
-    setEndsAt(Date.now() + secs * 1000);
-  };
-
-  const reset = () => {
-    setPhase("idle");
-    setRep(1);
-    setSet(1);
-  };
-
-  // Countdown chirps on the last 3 seconds of every phase.
+  // Audio only; the schedule itself never changes here.
   useEffect(() => {
-    if (!active) return;
-    if (remainSec <= 3 && remainSec > 0 && lastBeep.current !== remainSec) {
-      lastBeep.current = remainSec;
+    if (!timeline) return;
+    if (done) {
+      if (lastSegment.current !== -2) {
+        lastSegment.current = -2;
+        beep("done");
+      }
+      return;
+    }
+    if (index >= 0 && index !== lastSegment.current) {
+      lastSegment.current = index;
+      lastTick.current = -1;
+      const phase = timeline[index].phase;
+      if (phase === "work") beep("go");
+      else if (phase === "rest" || phase === "setrest") beep("stop");
+    }
+    if (remainSec > 0 && remainSec <= 3 && lastTick.current !== remainSec) {
+      lastTick.current = remainSec;
       beep("tick");
     }
-  }, [remainSec, active, beep]);
+  }, [index, done, remainSec, timeline, beep]);
 
-  // Phase transitions.
-  useEffect(() => {
-    if (!active || remainMs > 0) return;
+  const start = () => {
+    lastSegment.current = -1;
+    lastTick.current = -1;
+    setTimeline(buildTimeline(spec, Date.now()));
+  };
 
-    if (phase === "ready") {
-      beep("go");
-      go("work", spec.work);
-      return;
-    }
-    if (phase === "work") {
-      const lastRep = rep >= spec.reps;
-      if (!lastRep && spec.rest > 0) {
-        beep("stop");
-        setRep(rep + 1);
-        go("rest", spec.rest);
-        return;
-      }
-      if (!lastRep) {
-        beep("go");
-        setRep(rep + 1);
-        go("work", spec.work);
-        return;
-      }
-      if (set >= spec.sets) {
-        beep("done");
-        setPhase("done");
-        return;
-      }
-      beep("done");
-      setRep(1);
-      setSet(set + 1);
-      go("setrest", spec.setRest);
-      return;
-    }
-    if (phase === "rest") {
-      beep("go");
-      go("work", spec.work);
-      return;
-    }
-    if (phase === "setrest") {
-      beep("go");
-      go("work", spec.work);
-    }
-  }, [remainMs, phase, rep, set, spec, active, beep]);
+  /** Ends the current segment now and pulls everything after it forward. */
+  const skip = () => {
+    if (!timeline || !current) return;
+    const delta = current.end - Date.now();
+    setTimeline(timeline.map((s) => (s.end <= current.start ? s : { ...s, start: s.start - delta, end: s.end - delta })));
+    lastTick.current = -1;
+  };
 
   const label: Record<Phase, string> = {
-    idle: "Interval timer",
     ready: "Get ready",
     work: spec.work >= 20 ? "Work" : "Hang",
     rest: "Rest",
     setrest: "Set rest",
-    done: "Complete",
   };
+
+  const phaseClass = current?.phase === "work" ? "work" : current ? "rest" : "";
 
   return (
     <div className="interval-panel">
-      <div className={`interval-phase ${phase === "work" ? "work" : phase === "rest" || phase === "setrest" ? "rest" : ""}`}>
-        {label[phase]}
+      <div className={`interval-phase ${phaseClass}`}>
+        {current ? label[current.phase] : done ? "Complete" : "Interval timer"}
       </div>
       <div className="interval-count mono">
-        {phase === "idle" ? `${spec.work}s / ${spec.rest}s` : phase === "done" ? "✓" : formatClock(remainMs)}
+        {current ? formatClock(remainMs) : done ? "✓" : `${spec.work}s / ${spec.rest}s`}
       </div>
       <div className="interval-sub">
-        {spec.reps > 1 ? `Rep ${rep} of ${spec.reps} · ` : ""}Set {set} of {spec.sets}
+        {spec.reps > 1 ? `Rep ${current?.rep ?? 1} of ${spec.reps} · ` : ""}
+        Set {current?.set ?? 1} of {spec.sets}
         {" · "}
         {spec.work}s on{spec.rest > 0 ? ` / ${spec.rest}s off` : ""}
         {" · "}
         {spec.setRest}s between sets
       </div>
       <div className="interval-controls">
-        {phase === "idle" || phase === "done" ? (
-          <button
-            className="btn primary sm"
-            onClick={() => {
-              setRep(1);
-              if (phase === "done") setSet(1);
-              go("ready", 5);
-            }}
-          >
-            {phase === "done" ? "Run again" : "Start intervals"}
-          </button>
-        ) : (
+        {running ? (
           <>
-            <button
-              className="btn sm"
-              onClick={() => {
-                // Skip to the end of the current phase.
-                setEndsAt(Date.now());
-              }}
-            >
+            <button className="btn sm" onClick={skip}>
               Skip phase
             </button>
-            <button className="btn sm danger" onClick={reset}>
+            <button className="btn sm danger" onClick={() => setTimeline(null)}>
               Stop
             </button>
           </>
+        ) : (
+          <button className="btn primary sm" onClick={start}>
+            {done ? "Run again" : "Start intervals"}
+          </button>
         )}
       </div>
     </div>

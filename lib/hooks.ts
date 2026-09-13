@@ -2,15 +2,23 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-/** Ticks `on` at ~4Hz so clocks stay smooth without re-rendering constantly when idle. */
+/**
+ * Current wall-clock time, refreshed on an interval while `on`.
+ *
+ * The value comes from state rather than a `Date.now()` call during render, so
+ * a component rendering twice in one commit sees one consistent timestamp.
+ * Everything downstream derives from wall-clock deadlines, which means a
+ * backgrounded tab - where browsers throttle timers to about once a minute -
+ * shows the correct time the moment it is foregrounded again.
+ */
 export function useTick(on: boolean, intervalMs = 250): number {
-  const [, setN] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     if (!on) return;
-    const t = window.setInterval(() => setN((n) => n + 1), intervalMs);
+    const t = window.setInterval(() => setNow(Date.now()), intervalMs);
     return () => window.clearInterval(t);
   }, [on, intervalMs]);
-  return Date.now();
+  return now;
 }
 
 /**

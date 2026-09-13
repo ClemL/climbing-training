@@ -2,7 +2,7 @@
 
 import { clearHistory, formatClock, formatDate, type HistoryEntry } from "@/lib/storage";
 
-export default function HistoryView({ history, onChange }: { history: HistoryEntry[]; onChange: () => void }) {
+export default function HistoryView({ history }: { history: readonly HistoryEntry[] }) {
   const totalMs = history.reduce((n, h) => n + h.durationMs, 0);
 
   return (
@@ -40,7 +40,6 @@ export default function HistoryView({ history, onChange }: { history: HistoryEnt
             onClick={() => {
               if (window.confirm("Delete all training history from this browser?")) {
                 clearHistory();
-                onChange();
               }
             }}
           >
