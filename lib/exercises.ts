@@ -820,8 +820,13 @@ export const EXERCISES: Record<string, ExerciseDef> = {
   },
 };
 
-export function demoUrl(key: string): string {
+/**
+ * Web search for exercises with no bundled imagery. Deliberately not a
+ * youtube.com URL: on Android that gets handed to the YouTube app, and the
+ * point of the bundled images is to stay inside this app.
+ */
+export function searchUrl(key: string): string {
   const ex = EXERCISES[key];
   const q = ex?.demo ?? `${ex?.name ?? key} proper form`;
-  return `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+  return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
 }

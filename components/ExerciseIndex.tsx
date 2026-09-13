@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { EXERCISES, demoUrl } from "@/lib/exercises";
+import ExerciseFigure from "./ExerciseFigure";
+import { EXERCISES, searchUrl } from "@/lib/exercises";
+import { IMAGE_KEYS } from "@/lib/exercise-images";
 
 export default function ExerciseIndex() {
   const [q, setQ] = useState("");
@@ -44,14 +46,17 @@ export default function ExerciseIndex() {
           </button>
           {open === key ? (
             <div className="detail" style={{ marginLeft: 13 }}>
+              <ExerciseFigure exKey={key} />
               <ul>
                 {ex.cues.map((c) => (
                   <li key={c}>{c}</li>
                 ))}
               </ul>
-              <a className="btn sm" href={demoUrl(key)} target="_blank" rel="noopener noreferrer">
-                Watch demo &#8599;
-              </a>
+              {IMAGE_KEYS.has(key) ? null : (
+                <a className="btn sm" href={searchUrl(key)} target="_blank" rel="noopener noreferrer">
+                  Search the web &#8599;
+                </a>
+              )}
             </div>
           ) : null}
         </div>

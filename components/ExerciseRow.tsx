@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { EXERCISES, demoUrl } from "@/lib/exercises";
+import ExerciseFigure from "./ExerciseFigure";
+import { EXERCISES, searchUrl } from "@/lib/exercises";
+import { IMAGE_KEYS } from "@/lib/exercise-images";
 import type { Slot } from "@/lib/types";
 
 export default function ExerciseRow({
@@ -40,14 +42,17 @@ export default function ExerciseRow({
       {open ? (
         <div className="detail">
           <div className="target">{ex.target}</div>
+          <ExerciseFigure exKey={slot.ex} />
           <ul>
             {ex.cues.map((c) => (
               <li key={c}>{c}</li>
             ))}
           </ul>
-          <a className="btn sm" href={demoUrl(slot.ex)} target="_blank" rel="noopener noreferrer">
-            Watch demo &#8599;
-          </a>
+          {IMAGE_KEYS.has(slot.ex) ? null : (
+            <a className="btn sm" href={searchUrl(slot.ex)} target="_blank" rel="noopener noreferrer">
+              Search the web &#8599;
+            </a>
+          )}
         </div>
       ) : null}
     </>

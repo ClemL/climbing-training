@@ -1,6 +1,7 @@
 "use client";
 
-import { EXERCISES, demoUrl } from "@/lib/exercises";
+import { EXERCISES } from "@/lib/exercises";
+import { IMAGE_KEYS } from "@/lib/exercise-images";
 import type { Plan } from "@/lib/types";
 
 const KIND_LABEL: Record<string, string> = {
@@ -103,9 +104,11 @@ export default function PlanPreview({
                   <div className="ex-pres">{s.pres}</div>
                   {s.note ? <div className="ex-note">{s.note}</div> : null}
                 </div>
-                <a className="info-btn" href={demoUrl(s.ex)} target="_blank" rel="noopener noreferrer" aria-label="Demo video">
-                  &#9654;
-                </a>
+                {IMAGE_KEYS.has(s.ex) ? (
+                  <span className="info-btn" aria-label="Has illustration" title="Illustrated">
+                    &#9635;
+                  </span>
+                ) : null}
               </div>
             );
           })}
