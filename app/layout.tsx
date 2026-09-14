@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { ExerciseSheetProvider } from "@/components/ExerciseSheet";
+import ExerciseSheet from "@/components/ExerciseSheet";
+import NavigationSync from "@/components/NavigationSync";
 import ServiceWorker from "@/components/ServiceWorker";
 import "./globals.css";
 
@@ -23,9 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <ExerciseSheetProvider>
-          <div className="shell">{children}</div>
-        </ExerciseSheetProvider>
+        <div className="shell">{children}</div>
+        <ExerciseSheet />
+        <NavigationSync />
         <ServiceWorker />
       </body>
     </html>

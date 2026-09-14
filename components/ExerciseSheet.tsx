@@ -1,17 +1,16 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import ExerciseFigure, { type FrameMode } from "./ExerciseFigure";
+import { useCallback, useEffect } from "react";
+import ExerciseFigure from "./ExerciseFigure";
 import { EXERCISES, searchUrl } from "@/lib/exercises";
 import { EXERCISE_STEPS } from "@/lib/exercise-steps";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
+import { back, getNav, navigate } from "@/lib/navigation";
+import { useNav } from "@/lib/use-navigation";
 
-type Ctx = { open: (exKey: string) => void };
-
-const ExerciseSheetContext = createContext<Ctx>({ open: () => {} });
-
-export function useExerciseSheet(): Ctx {
-  return useContext(ExerciseSheetContext);
+/** Opens the exercise overlay as a history entry, so back closes it. */
+export function openExercise(exKey: string): void {
+  navigate({ ...getNav(), ex: exKey });
 }
 
 /**
@@ -21,23 +20,18 @@ export function useExerciseSheet(): Ctx {
  * push the rest of the checklist down the page, which loses your place between
  * sets. The overlay leaves the card exactly where it was.
  */
-export function ExerciseSheetProvider({ children }: { children: React.ReactNode }) {
-  const [exKey, setExKey] = useState<string | null>(null);
-  const [frame, setFrame] = useState<FrameMode>("auto");
+export default function ExerciseSheet() {
+  const nav = useNav();
+  const exKey = nav.ex;
 
-  const open = useCallback((key: string) => {
-    setFrame("auto");
-    setExKey(key);
-  }, []);
+  // Closing always goes through history, so the entry the overlay pushed is
+  // consumed rather than stranded behind the user.
+  const close = useCallback(() => back(), []);
 
-  const close = useCallback(() => setExKey(null), []);
-  const value = useMemo(() => ({ open }), [open]);
-
-  // Escape closes; the page behind must not scroll while the sheet is up.
   useEffect(() => {
     if (!exKey) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+      if (e.key === "Escape") back();
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -46,86 +40,56 @@ export function ExerciseSheetProvider({ children }: { children: React.ReactNode 
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [exKey, close]);
+  }, [exKey]);
 
-  const ex = exKey ? EXERCISES[exKey] : null;
-  const steps = exKey ? EXERCISE_STEPS[exKey] : undefined;
-  const hasImage = exKey ? IMAGE_KEYS.has(exKey) : false;
+  if (!exKey) return null;
+  const ex = EXERCISES[exKey];
+  if (!ex) return null;
+
+  const steps = EXERCISE_STEPS[exKey];
+  const hasImage = IMAGE_KEYS.has(exKey);
 
   return (
-    <ExerciseSheetContext.Provider value={value}>
-      {children}
-      {exKey && ex ? (
-        <div className="sheet-backdrop" role="presentation" onClick={close}>
-          <div
-            className="sheet"
-            role="dialog"
-            aria-modal="true"
-            aria-label={ex.name}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="sheet-head">
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="sheet-title">{ex.name}</div>
-                <div className="sheet-target">{ex.target}</div>
-              </div>
-              <button className="btn sm" onClick={close} aria-label="Close">
-                &#10005;
-              </button>
-            </div>
-
-            <div className="sheet-body">
-              {hasImage ? (
-                <>
-                  <ExerciseFigure exKey={exKey} mode={frame} large />
-                  <div className="frame-controls">
-                    {(
-                      [
-                        ["auto", "Play"],
-                        [0, "Start"],
-                        [1, "End"],
-                      ] as [FrameMode, string][]
-                    ).map(([m, label]) => (
-                      <button
-                        key={String(m)}
-                        className="btn sm"
-                        aria-pressed={frame === m}
-                        onClick={() => setFrame(m)}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : null}
-
-              <h3 className="sheet-h">Form cues</h3>
-              <ul className="sheet-cues">
-                {ex.cues.map((c) => (
-                  <li key={c}>{c}</li>
-                ))}
-              </ul>
-
-              {steps?.length ? (
-                <>
-                  <h3 className="sheet-h">Step by step</h3>
-                  <ol className="sheet-steps">
-                    {steps.map((s, i) => (
-                      <li key={i}>{s}</li>
-                    ))}
-                  </ol>
-                </>
-              ) : null}
-
-              {!hasImage ? (
-                <a className="btn sm" href={searchUrl(exKey)} target="_blank" rel="noopener noreferrer">
-                  Search the web &#8599;
-                </a>
-              ) : null}
-            </div>
+    <div className="sheet-backdrop" role="presentation" onClick={close}>
+      <div className="sheet" role="dialog" aria-modal="true" aria-label={ex.name} onClick={(e) => e.stopPropagation()}>
+        <div className="sheet-head">
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="sheet-title">{ex.name}</div>
+            <div className="sheet-target">{ex.target}</div>
           </div>
+          <button className="btn sm" onClick={close} aria-label="Close">
+            &#10005;
+          </button>
         </div>
-      ) : null}
-    </ExerciseSheetContext.Provider>
+
+        <div className="sheet-body">
+          {hasImage ? <ExerciseFigure exKey={exKey} large /> : null}
+
+          <h3 className="sheet-h">Form cues</h3>
+          <ul className="sheet-cues">
+            {ex.cues.map((c) => (
+              <li key={c}>{c}</li>
+            ))}
+          </ul>
+
+          {steps?.length ? (
+            <>
+              <h3 className="sheet-h">Step by step</h3>
+              <ol className="sheet-steps">
+                {steps.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ol>
+            </>
+          ) : null}
+
+          {!hasImage ? (
+            <a className="btn sm" href={searchUrl(exKey)} target="_blank" rel="noopener noreferrer">
+              Search the web &#8599;
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useExerciseSheet } from "./ExerciseSheet";
+import { openExercise } from "./ExerciseSheet";
 import { EXERCISES } from "@/lib/exercises";
 import { formatDuration, parseDuration } from "@/lib/duration";
 import type { Slot } from "@/lib/types";
@@ -17,7 +17,6 @@ export default function ExerciseRow({
   /** Offered only when the prescription is purely a duration. */
   onTimer?: (seconds: number, label: string) => void;
 }) {
-  const { open } = useExerciseSheet();
   const ex = EXERCISES[slot.ex];
   if (!ex) return null;
 
@@ -42,7 +41,7 @@ export default function ExerciseRow({
           {formatDuration(seconds)}
         </button>
       ) : null}
-      <button className="info-btn" aria-label={`How to do ${ex.name}`} onClick={() => open(slot.ex)}>
+      <button className="info-btn" aria-label={`How to do ${ex.name}`} onClick={() => openExercise(slot.ex)}>
         ?
       </button>
     </div>

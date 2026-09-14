@@ -1,6 +1,6 @@
 "use client";
 
-import { useExerciseSheet } from "./ExerciseSheet";
+import { openExercise } from "./ExerciseSheet";
 import { EXERCISES } from "@/lib/exercises";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
 import { recoveryWarnings } from "@/lib/recovery";
@@ -29,7 +29,6 @@ export default function PlanPreview({
 }) {
   const total = plan.blocks.reduce((n, b) => n + b.slots.length * b.rounds, 0);
   const warnings = recoveryWarnings(plan, history);
-  const { open } = useExerciseSheet();
 
   return (
     <div style={{ ["--cat" as string]: `var(--cat-${plan.category})` }}>
@@ -124,7 +123,7 @@ export default function PlanPreview({
             const ex = EXERCISES[s.ex];
             return (
               <div className="ex" key={`${b.id}-${i}`} style={{ paddingLeft: 13 }}>
-                <div className="ex-main" role="presentation" onClick={() => open(s.ex)}>
+                <div className="ex-main" role="presentation" onClick={() => openExercise(s.ex)}>
                   <div className="ex-name">{ex?.name ?? s.ex}</div>
                   <div className="ex-pres">{s.pres}</div>
                   {s.note ? <div className="ex-note">{s.note}</div> : null}
@@ -133,7 +132,7 @@ export default function PlanPreview({
                 <button
                   className="info-btn"
                   aria-label={`How to do ${ex?.name ?? s.ex}`}
-                  onClick={() => open(s.ex)}
+                  onClick={() => openExercise(s.ex)}
                 >
                   ?
                 </button>

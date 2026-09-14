@@ -1,13 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useExerciseSheet } from "./ExerciseSheet";
+import { openExercise } from "./ExerciseSheet";
 import { EXERCISES } from "@/lib/exercises";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
 
 export default function ExerciseIndex() {
   const [q, setQ] = useState("");
-  const { open } = useExerciseSheet();
 
   const entries = useMemo(() => {
     const all = Object.entries(EXERCISES).sort((a, b) => a[1].name.localeCompare(b[1].name));
@@ -37,7 +36,7 @@ export default function ExerciseIndex() {
       {entries.length === 0 ? <div className="empty">No matches.</div> : null}
       {entries.map(([key, ex]) => (
         <div key={key} className="lib-item">
-          <button className="lib-head" onClick={() => open(key)}>
+          <button className="lib-head" onClick={() => openExercise(key)}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="ex-name">{ex.name}</div>
               <div className="ex-pres">{ex.target}</div>

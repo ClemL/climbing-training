@@ -26,9 +26,12 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   boulder attempts) collapse into numbered set buttons.
 - **Superset and circuit grouping**, marked with a badge and a colored rail so paired work is
   obvious at a glance.
-- **Exercise overlay** with a large illustration, Play/Start/End frame controls, form cues and
-  step-by-step instructions. Opens from a session, the library, or a plan you have not started
-  yet, and never reflows the page behind it.
+- **Exercise overlay** with a large illustration, form cues and step-by-step instructions. Opens
+  from a session, the library, or a plan you have not started yet, and never reflows the page
+  behind it.
+- **Back button works.** Every view and every overlay is a history entry, so the Android back
+  gesture walks back through the app instead of leaving it. Views are URLs, so a session survives
+  a reload and a plan can be linked to directly.
 - **Rest timer** in a fixed bottom bar, with the current block's prescribed rest preselected.
   Audio countdown on the last three seconds.
 - **Interval timer** for hangboard protocols (7s on / 3s off x 6) and timed circuits (40/20),
@@ -51,7 +54,12 @@ Next.js 16 (App Router), React 19, TypeScript, hand-written CSS. No UI framework
 library, no analytics, three runtime dependencies.
 
 Session state is read through `useSyncExternalStore` over `localStorage`, so there is no
-after-mount hydration flicker. Both timers expand their schedule into wall-clock deadlines and
+after-mount hydration flicker. Navigation is a fourth store of the same shape, backed by the
+History API: `lib/navigation.ts` owns which view and which overlay are showing, and the URL is
+the source of truth (`?v=week`, `?v=preview&p=fw-push`, `?...&ex=bench-press`). Real Next routes
+would give back/forward for free, but each route would be another document the service worker
+has to precache, and the overlay is a layer over a view rather than a view of its own — so one
+document with explicit history entries handles both uniformly and keeps offline simple. Both timers expand their schedule into wall-clock deadlines and
 derive the current phase from the clock, which means a backgrounded tab or a locked screen —
 where browsers throttle timers to roughly once a minute — cannot desynchronize a hangboard set.
 
@@ -99,6 +107,8 @@ both shapes. A block declaring an `interval` spec automatically renders an inter
 | `ct.history.v2` | Last 60 finished sessions |
 | `ct.loads.v1` | Added weight per hangboard block, last 8 entries each |
 | `ct.settings.v1` | Preferences, merged over defaults so new settings are not undefined |
+
+Navigation is not stored: it lives in the URL and the browser's history stack.
 
 Clearing site data resets both. History is disposable by design.
 

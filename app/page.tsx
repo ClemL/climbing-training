@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import ExerciseIndex from "@/components/ExerciseIndex";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
@@ -23,13 +23,22 @@ import {
   type ActiveSession,
   type HistoryEntry,
 } from "@/lib/storage";
+import { navigate, type View } from "@/lib/navigation";
+import { useNav } from "@/lib/use-navigation";
 import type { Plan } from "@/lib/types";
 
-type View = "plans" | "preview" | "session" | "history" | "library" | "week" | "settings";
-
 export default function Home() {
-  const [view, setView] = useState<View>("plans");
-  const [previewId, setPreviewId] = useState<string | null>(null);
+  // The URL owns which view is showing, so the hardware back button walks back
+  // through the app instead of leaving it.
+  const nav = useNav();
+  const view = nav.view;
+  const previewId = nav.planId ?? null;
+
+  const setView = useCallback((next: View) => {
+    navigate({ view: next });
+    window.scrollTo({ top: 0 });
+  }, []);
+
   // localStorage is the source of truth; the server snapshot is the empty case,
   // so hydration matches without an after-mount effect or a readiness flag.
   const active = useSyncExternalStore(subscribe, getActiveSnapshot, getActiveServerSnapshot);
@@ -49,7 +58,7 @@ export default function Home() {
       resumedAt: startedAt,
       done: {},
     });
-    setView("session");
+    navigate({ view: "session" });
     window.scrollTo({ top: 0 });
   }, []);
 
@@ -70,24 +79,28 @@ export default function Home() {
     };
     pushHistory(entry);
     clearActive();
-    setView("history");
+    navigate({ view: "history" });
     window.scrollTo({ top: 0 });
   }, [active]);
 
   const openPreview = useCallback((p: Plan) => {
-    setPreviewId(p.id);
-    setView("preview");
+    navigate({ view: "preview", planId: p.id });
     window.scrollTo({ top: 0 });
   }, []);
 
   const discard = useCallback(() => {
     if (!window.confirm("Discard the session in progress?")) return;
     clearActive();
-    setView("plans");
+    navigate({ view: "plans" });
   }, []);
 
   const activePlan = active ? planById(active.planId) : undefined;
   const previewPlan = previewId ? planById(previewId) : undefined;
+
+  // A URL can name a view that no longer has anything to show - going back to
+  // v=session after finishing, or a stale plan id in a bookmark. Both fall back
+  // to the plan list rather than rendering an empty shell.
+  const shellView: View = view === "session" || view === "preview" ? "plans" : view;
 
   if (view === "session" && active && activePlan) {
     return (
@@ -96,10 +109,7 @@ export default function Home() {
         session={active}
         onChange={update}
         onFinish={finish}
-        onExit={() => {
-          setView("plans");
-          window.scrollTo({ top: 0 });
-        }}
+        onExit={() => setView("plans")}
       />
     );
   }
@@ -110,7 +120,7 @@ export default function Home() {
         plan={previewPlan}
         hasActiveOther={!!active && active.planId !== previewPlan.id}
         history={history}
-        onBack={() => setView("plans")}
+        onBack={() => window.history.back()}
         onStart={() => start(previewPlan)}
       />
     );
@@ -130,24 +140,24 @@ export default function Home() {
           <div className="spacer" />
           <button
             className="icon-btn"
-            aria-pressed={view === "settings"}
+            aria-pressed={shellView === "settings"}
             aria-label="Settings"
-            onClick={() => setView(view === "settings" ? "plans" : "settings")}
+            onClick={() => setView(shellView === "settings" ? "plans" : "settings")}
           >
             &#9881;
           </button>
         </div>
         <div className="tabs">
-          <button className="tab" aria-pressed={view === "plans"} onClick={() => setView("plans")}>
+          <button className="tab" aria-pressed={shellView === "plans"} onClick={() => setView("plans")}>
             Plans
           </button>
-          <button className="tab" aria-pressed={view === "week"} onClick={() => setView("week")}>
+          <button className="tab" aria-pressed={shellView === "week"} onClick={() => setView("week")}>
             Week
           </button>
-          <button className="tab" aria-pressed={view === "library"} onClick={() => setView("library")}>
+          <button className="tab" aria-pressed={shellView === "library"} onClick={() => setView("library")}>
             Exercises
           </button>
-          <button className="tab" aria-pressed={view === "history"} onClick={() => setView("history")}>
+          <button className="tab" aria-pressed={shellView === "history"} onClick={() => setView("history")}>
             History
           </button>
         </div>
@@ -171,11 +181,11 @@ export default function Home() {
         </div>
       ) : null}
 
-      {view === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
-      {view === "week" ? <WeekView onPick={openPreview} /> : null}
-      {view === "library" ? <ExerciseIndex /> : null}
-      {view === "settings" ? <SettingsView /> : null}
-      {view === "history" ? <HistoryView history={history} /> : null}
+      {shellView === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
+      {shellView === "week" ? <WeekView onPick={openPreview} /> : null}
+      {shellView === "library" ? <ExerciseIndex /> : null}
+      {shellView === "settings" ? <SettingsView /> : null}
+      {shellView === "history" ? <HistoryView history={history} /> : null}
 
       <p className="footer">
         Everything lives in this browser&apos;s localStorage. No account, no sync, no server.

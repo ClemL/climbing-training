@@ -4,30 +4,19 @@ import { EXERCISES } from "@/lib/exercises";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
 import { useSettings } from "@/lib/use-settings";
 
-export type FrameMode = "auto" | 0 | 1;
-
 /**
- * Start/end position pair for an exercise.
+ * Start/end position pair for an exercise, crossfaded.
  *
  * The source dataset provides exactly two frames per movement - there is no
- * public-domain set with more - so "auto" crossfades between them and the
- * explicit modes hold one position for a closer look.
+ * public-domain set with more. Animation can be turned off in settings, which
+ * holds the start position.
  */
-export default function ExerciseFigure({
-  exKey,
-  mode = "auto",
-  large = false,
-}: {
-  exKey: string;
-  mode?: FrameMode;
-  large?: boolean;
-}) {
+export default function ExerciseFigure({ exKey, large = false }: { exKey: string; large?: boolean }) {
   const { animateFigures } = useSettings();
   if (!IMAGE_KEYS.has(exKey)) return null;
 
   const name = EXERCISES[exKey]?.name ?? exKey;
-  const animate = mode === "auto" && animateFigures;
-  const showSecond = mode === 1;
+  const animate = animateFigures;
 
   return (
     <figure className={`exfig${large ? " large" : ""}`}>
@@ -36,7 +25,6 @@ export default function ExerciseFigure({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className={animate ? "b" : "b static"}
-        style={animate ? undefined : { opacity: showSecond ? 1 : 0 }}
         src={`/ex/${exKey}-1.webp`}
         alt={`${name}, end position`}
         loading="lazy"
