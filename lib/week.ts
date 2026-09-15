@@ -69,15 +69,31 @@ export const TEMPLATES: Template[] = [
   {
     id: "travel",
     name: "Travel week",
-    forWho: "Hotel room, no equipment. Maintenance, not progress.",
+    forWho:
+      "Hotel rooms and airports, no equipment at all. Standing sessions on the transit days, floor work on the hotel days. Maintenance, not progress.",
     days: [
       { day: "Mon", planId: "bw-push" },
-      { day: "Tue", planId: "bw-legs" },
-      { day: "Wed", planId: null, note: "Rest or walk" },
-      { day: "Thu", planId: "bw-pull" },
-      { day: "Fri", planId: "bw-express" },
-      { day: "Sat", planId: null, note: "Rest" },
-      { day: "Sun", planId: "bw-express" },
+      { day: "Tue", planId: "st-gate" },
+      { day: "Wed", planId: "bw-legs" },
+      { day: "Thu", planId: "st-longhaul" },
+      { day: "Fri", planId: "bw-pull" },
+      { day: "Sat", planId: "st-prehab" },
+      { day: "Sun", planId: null, note: "Rest" },
+    ],
+  },
+  {
+    id: "bands-only",
+    name: "Bands and a door",
+    forWho:
+      "A band set and no gym: a long work trip, a house move, a winter without a membership. Closer to a full programme than bodyweight alone.",
+    days: [
+      { day: "Mon", planId: "bd-upper" },
+      { day: "Tue", planId: null, note: "Rest or cardio" },
+      { day: "Wed", planId: "bd-legs" },
+      { day: "Thu", planId: "bd-prehab" },
+      { day: "Fri", planId: "bd-express" },
+      { day: "Sat", planId: null, note: "Rest, or climb if there is a wall nearby" },
+      { day: "Sun", planId: "cool-recovery" },
     ],
   },
 ];

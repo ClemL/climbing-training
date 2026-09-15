@@ -1,4 +1,4 @@
-export type Category = "freeweights" | "bodyweight" | "gym" | "prep";
+export type Category = "freeweights" | "bands" | "bodyweight" | "gym" | "standing" | "prep";
 
 /**
  * What a session taxes, for scheduling. `fingers` is the one that matters:
@@ -91,6 +91,12 @@ export const CATEGORIES: CategoryMeta[] = [
     icon: "\u{1F3CB}",
   },
   {
+    id: "bands",
+    label: "Elastic Bands",
+    blurb: "A set of bands and a door. Packs into a jacket pocket and covers most of a gym.",
+    icon: "\u{1F9F5}",
+  },
+  {
     id: "bodyweight",
     label: "Bodyweight",
     blurb: "Floor and one chair. Nothing else. Works in a hotel room or a living room.",
@@ -101,6 +107,12 @@ export const CATEGORIES: CategoryMeta[] = [
     label: "Climbing Gym",
     blurb: "Wall, hangboard and free weights. Strength, power endurance and skill days.",
     icon: "\u{1F9BE}",
+  },
+  {
+    id: "standing",
+    label: "Standing Only",
+    blurb: "Airports, gate areas, hotel corridors. Nothing touches the floor, no chair, one square metre.",
+    icon: "\u{2708}",
   },
   {
     id: "prep",

@@ -1,8 +1,9 @@
 # Training Days
 
-A phone-first training app: pick a session, hit start, work the checklist. Sixteen plans across
-free weights, bodyweight, climbing-gym days and warm-ups, with a session clock, superset grouping,
-a rest timer, a hangboard interval timer, and form cues on every exercise.
+A phone-first training app: pick a session, hit start, work the checklist. Twenty-three plans
+across free weights, elastic bands, bodyweight, climbing-gym days, standing-only travel sessions
+and warm-ups, with a session clock, superset grouping, a rest timer, a hangboard interval timer,
+and form cues on every exercise.
 
 Everything is stored in `localStorage`. No account, no database, no server calls.
 
@@ -11,9 +12,19 @@ Everything is stored in `localStorage`. No account, no database, no server calls
 | Category | Plans | Length |
 | --- | --- | --- |
 | Free Weights | Push Day, Pull Day, Legs & Core, Dumbbell Express | 40-75 min |
+| Elastic Bands (bands + a door) | Upper Body, Legs & Glutes, Full-Body Express, Shoulder & Elbow Prehab | 15-60 min |
 | Bodyweight (floor + one chair) | Push & Core, Pull & Posterior, Legs, Express Circuit | 25-55 min |
 | Climbing Gym (wall, hangboard, weights) | Hangboard & Limit Boulders, Power Endurance 4x4s, Repeaters & Volume, Technique & Movement | 60-120 min |
+| Standing Only (nothing, one square metre) | Gate Area Reset, Long-Haul Recovery, Standing Climber Prehab | 8-20 min |
 | Warm-Up & Recovery | Express Warm-Up, Full Warm-Up, Pre-Gym Activation, Post-Session Recovery | 10-30 min |
+
+**Elastic Bands** exists because bands load the opposite way to free weights — hardest at the end
+of the range, easiest at the start — which makes them better than dumbbells for shoulder, rotator
+cuff and glute-medius work and worse for anything you want heavy. Rep ranges run higher to match.
+
+**Standing Only** has a hard constraint: nothing touches the floor, no chair, no kneeling, and it
+fits in about one square metre. Built for a gate area or a hotel corridor. A wall is used only for
+balance and every exercise that mentions one works without it.
 
 Loads are left to the athlete. Plans prescribe reps, rest and intent only.
 
@@ -43,9 +54,9 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
 - **Added-weight log** on hangboard blocks, off by default and enabled in settings. Prefilled with
   last session's number, in lb or kg.
 - **Settings** for weight logging and unit, timer sounds, screen wake lock and figure animation.
-- **Week structure** with four rotations and the spacing rules behind them, plus a recovery
+- **Week structure** with five rotations and the spacing rules behind them, plus a recovery
   warning if you open a finger-intensive plan within 48 hours of the last one.
-- **Exercise library** with search across 98 movements, usable as a substitution reference.
+- **Exercise library** with search across 139 movements, usable as a substitution reference.
 - **Screen wake lock** while a session runs, so the phone does not sleep between sets.
 
 ## Stack
@@ -116,7 +127,7 @@ Clearing site data resets both. History is disposable by design.
 
 Illustrations come from [free-exercise-db](https://github.com/yuhonas/free-exercise-db), released
 into the public domain under the Unlicense. Each entry provides a start and an end frame; the app
-crossfades them, which reads like a GIF at about 11 KB per frame — 1.1 MB for all 104 frames,
+crossfades them, which reads like a GIF at about 10 KB per frame — 1.4 MB for all 140 frames,
 small enough to precache entirely for offline use.
 
 **Two frames is the ceiling, not a shortcut.** All 873 dataset entries have exactly two images —
@@ -124,15 +135,17 @@ there are no exceptions in the data. wger is unreachable behind some network pol
 imagery is CC-BY-SA rather than public domain; everkinetic is an abandoned migration with no
 declared license. Generating intermediate frames from two stills would be a cross-dissolve, which
 is what the animation already does and adds no information. What the dataset does carry, and the
-app now uses, is a step-by-step instruction list per exercise — bundled for 50 of the 52
+app now uses, is a step-by-step instruction list per exercise — bundled for 68 of the 70
 illustrated movements and shown in the overlay under the cues.
 
 `scripts/exercise-image-map.json` maps exercise keys to dataset ids by hand. Automatic name
 matching produces confident nonsense (it pairs "Barbell Row" with "Barbell Curl"), and an image
 that teaches the wrong movement is worse than no image, so every pair was checked by eye.
 
-The remaining 46 movements are climbing-specific — hangboard grips, limit bouldering, footwork
-drills — and have no honest match in any public-domain dataset. Those keep their text cues plus a
+The movements with no illustration are climbing-specific (hangboard grips, limit bouldering,
+footwork drills) or standing-only variants with no equipment-free match in the dataset — the
+dataset's calf raise is on a machine and its quad stretch needs a box, which contradicts the whole
+premise of the standing plans. Those keep their text cues plus a
 plain web search link. That link deliberately does not point at youtube.com, because Android hands
 those URLs to the YouTube app.
 

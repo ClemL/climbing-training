@@ -818,6 +818,398 @@ export const EXERCISES: Record<string, ExerciseDef> = {
     ],
     demo: "box breathing recovery after workout",
   },
+
+  /* ---------- Elastic bands ---------- */
+  "band-pull-apart": {
+    name: "Band Pull-Apart",
+    target: "Rear delts, mid back, scapular control",
+    cues: [
+      "Arms straight out front at chest height, light band, palms down.",
+      "Pull the band apart until it touches the chest, squeezing the shoulder blades.",
+      "Slow return. If you can snap it apart, the band is too light.",
+    ],
+  },
+  "band-row": {
+    name: "Band Row",
+    target: "Lats, mid back, biceps",
+    cues: [
+      "Band anchored at chest height, or looped around both feet while seated.",
+      "Elbows drive back past the ribs, not out to the sides.",
+      "Squeeze for a beat at the end, then resist the band on the way out.",
+    ],
+    demo: "resistance band row proper form",
+  },
+  "band-pulldown": {
+    name: "Band Lat Pulldown",
+    target: "Lats, scapular depression",
+    cues: [
+      "Band over a door anchor or bar above you. Kneel or stand tall.",
+      "Pull the elbows down to the ribs, chest up, ribs down.",
+      "The lats finish the rep, not the arms.",
+    ],
+    demo: "resistance band lat pulldown form",
+  },
+  "band-straight-arm-pulldown": {
+    name: "Band Straight-Arm Pulldown",
+    target: "Lats, shoulder extension",
+    cues: [
+      "High anchor, arms straight the entire rep.",
+      "Sweep the hands from overhead down to the thighs in an arc.",
+      "The closest thing to a pull-up pattern you can load with a band.",
+    ],
+    demo: "band straight arm pulldown lats",
+  },
+  "band-chest-press": {
+    name: "Band Chest Press",
+    target: "Chest, front delts, triceps",
+    cues: [
+      "Band behind the back at armpit height, or anchored behind you.",
+      "Press forward and slightly together, elbows at about 45 degrees.",
+      "Step further from the anchor to make it harder.",
+    ],
+    demo: "standing resistance band chest press",
+  },
+  "band-ohp": {
+    name: "Band Overhead Press",
+    target: "Shoulders, triceps, trunk",
+    cues: [
+      "Stand on the middle of the band, handles at the shoulders.",
+      "Ribs down, glutes tight, press straight overhead.",
+      "Widen the stance on the band to increase tension.",
+    ],
+  },
+  "band-lateral-raise": {
+    name: "Band Lateral Raise",
+    target: "Side delts",
+    cues: [
+      "Stand on the band, arms at the sides.",
+      "Lead with the elbows, stop at shoulder height.",
+      "No shrugging, no swinging.",
+    ],
+  },
+  "band-rear-fly": {
+    name: "Band Reverse Fly",
+    target: "Rear delts, upper back",
+    cues: [
+      "Band anchored in front at chest height, arms crossed to start.",
+      "Sweep the arms wide and back, thumbs slightly up.",
+      "Light tension, high reps. This is postural work.",
+    ],
+  },
+  "band-face-pull": {
+    name: "Band Face Pull",
+    target: "Rear delts, rotator cuff, upper back",
+    cues: [
+      "Anchor at forehead height. Pull the band toward the eyebrows.",
+      "Elbows stay high and finish behind the shoulders, hands wide.",
+      "Rotate the knuckles back at the end. Best single antagonist exercise for a climber.",
+    ],
+  },
+  "band-curl": {
+    name: "Band Curl",
+    target: "Biceps, brachialis",
+    cues: [
+      "Stand on the band, elbows pinned to the ribs.",
+      "Curl to the shoulders, resist the band down over 3 seconds.",
+      "Tension peaks at the top, which the dumbbell version lacks.",
+    ],
+    demo: "resistance band bicep curl form",
+  },
+  "band-pushdown": {
+    name: "Band Triceps Pushdown",
+    target: "Triceps",
+    cues: [
+      "High anchor, elbows pinned at the ribs.",
+      "Extend to a full lockout, then control the return.",
+      "Only the forearms move.",
+    ],
+  },
+  "band-pallof": {
+    name: "Band Pallof Press",
+    target: "Anti-rotation core, obliques",
+    cues: [
+      "Band anchored at chest height to your side. Stand side-on, feet planted.",
+      "Press the hands straight out from the sternum and hold 2 seconds.",
+      "The band wants to twist you. Do not let it. That resistance is the exercise.",
+    ],
+  },
+  "band-squat": {
+    name: "Band Squat",
+    target: "Quads, glutes",
+    cues: [
+      "Stand on the band, handles at the shoulders.",
+      "Sit down and back, knees tracking over the toes.",
+      "Band tension peaks at the top, so pause and squeeze there.",
+    ],
+  },
+  "band-rdl": {
+    name: "Band Romanian Deadlift",
+    target: "Hamstrings, glutes",
+    cues: [
+      "Stand on the band, handles at the thighs.",
+      "Push the hips back, soft knees, flat back.",
+      "Stand tall against the band, squeezing the glutes.",
+    ],
+    demo: "resistance band romanian deadlift",
+  },
+  "band-good-morning": {
+    name: "Band Good Morning",
+    target: "Hamstrings, glutes, erectors",
+    cues: [
+      "Band under the feet and around the back of the neck or shoulders.",
+      "Hinge forward with a flat back until you feel the hamstrings.",
+      "Light band. This is a hinge pattern drill, not a max lift.",
+    ],
+  },
+  "band-pull-through": {
+    name: "Band Pull-Through",
+    target: "Glutes, hamstrings",
+    cues: [
+      "Band anchored low behind you, passed between the legs.",
+      "Hinge, then snap the hips forward to standing. Squeeze the glutes hard.",
+      "Arms are just hooks. The hips do the work.",
+    ],
+  },
+  "band-monster-walk": {
+    name: "Monster Walk",
+    target: "Glute medius, hip stability",
+    cues: [
+      "Loop band above the knees or around the ankles. Quarter squat.",
+      "Step wide and forward, keeping constant tension. Knees never collapse in.",
+      "10-12 steps each direction. It should burn on the side of the hip.",
+    ],
+  },
+  "band-hip-adduction": {
+    name: "Band Hip Adduction",
+    target: "Adductors (inner thigh)",
+    cues: [
+      "Band anchored at ankle height to your side, looped on the inside ankle.",
+      "Pull the working leg across the body against the band, then resist back.",
+      "Directly relevant to drop knees and heel hooks.",
+    ],
+  },
+  "band-calf-raise": {
+    name: "Band Calf Raise",
+    target: "Calves",
+    cues: [
+      "Band under the ball of the foot, held at the hips or shoulders.",
+      "Full stretch at the bottom, full extension at the top.",
+      "Pause a second at the top, lower for three.",
+    ],
+  },
+  "band-y-raise": {
+    name: "Band Y Raise",
+    target: "Lower traps, shoulder health",
+    cues: [
+      "Light band under both feet, arms sweep overhead into a Y.",
+      "Thumbs up, arms at about 45 degrees from the midline.",
+      "Go light and slow. The lower trap is small and easy to bully past.",
+    ],
+    demo: "band Y raise lower trap exercise",
+  },
+  "band-wrist-ext": {
+    name: "Band Wrist Extension",
+    target: "Wrist extensors, elbow health",
+    cues: [
+      "Band under the foot, palm down, forearm supported on the thigh.",
+      "Curl the wrist up against the band, lower over 3 seconds.",
+      "Same job as the dumbbell version and easier to pack.",
+    ],
+    demo: "band wrist extension forearm elbow",
+  },
+
+  /* ---------- Standing only: no floor, no chair, minimal space ---------- */
+  "standing-march": {
+    name: "High Knee March",
+    target: "Circulation, hip flexors",
+    cues: [
+      "March in place, driving each knee to hip height.",
+      "Tall posture, arms swinging naturally.",
+      "Slow enough to be discreet in a gate area, brisk enough to feel it.",
+    ],
+    demo: "high knee march in place warm up",
+  },
+  "calf-pump": {
+    name: "Standing Calf Pump",
+    target: "Calf pump, venous return",
+    cues: [
+      "Both feet flat, rise onto the balls of the feet, lower under control.",
+      "20-30 continuous reps.",
+      "The calf pushes blood back up the leg. This is the most useful single thing to do after hours of sitting.",
+    ],
+  },
+  "ankle-circles": {
+    name: "Ankle Circles",
+    target: "Ankle mobility, circulation",
+    cues: [
+      "One foot off the floor, draw slow circles with the toes.",
+      "10 each direction, each foot.",
+      "Hold a rail or wall if balance is awkward.",
+    ],
+  },
+  "heel-toe-rocks": {
+    name: "Heel-to-Toe Rocks",
+    target: "Ankles, feet, balance",
+    cues: [
+      "Rock back onto the heels, then forward onto the toes.",
+      "Slow, 15 reps, staying tall.",
+      "Wakes up feet that have been in shoes for eight hours.",
+    ],
+    demo: "heel toe rocking ankle mobility standing",
+  },
+  "single-leg-balance": {
+    name: "Single-Leg Balance",
+    target: "Ankle and hip stability",
+    cues: [
+      "Stand on one leg, other foot off the floor, hands off the wall.",
+      "30-45 seconds per side. Close your eyes to make it genuinely hard.",
+      "Occupies one square foot and trains what standing on a small foothold requires.",
+    ],
+  },
+  "shoulder-rolls": {
+    name: "Shoulder Rolls",
+    target: "Upper traps, shoulder girdle",
+    cues: [
+      "Big slow circles, shoulders up, back, and down.",
+      "10 each direction.",
+      "Exhale as the shoulders drop; that is where the tension leaves.",
+    ],
+  },
+  "chin-tuck": {
+    name: "Chin Tuck",
+    target: "Deep neck flexors, posture",
+    cues: [
+      "Stand tall, draw the chin straight back to make a double chin. Do not tip the head down.",
+      "Hold 3 seconds, 10 reps.",
+      "The direct antidote to a head craned over a phone or a seatback screen.",
+    ],
+    demo: "chin tuck neck exercise posture",
+  },
+  "standing-twist": {
+    name: "Standing Thoracic Twist",
+    target: "Thoracic rotation",
+    cues: [
+      "Feet planted hip width, hands at the chest or crossed on the shoulders.",
+      "Rotate from the ribcage, keeping hips facing forward. Hold the end range 2 seconds.",
+      "8 per side. Rotation, not momentum.",
+    ],
+    demo: "standing thoracic rotation stretch",
+  },
+  "overhead-side-reach": {
+    name: "Overhead Reach & Side Bend",
+    target: "Lats, obliques, side body",
+    cues: [
+      "Reach both arms overhead, then lean to one side, ribs stacked.",
+      "Reach long through the top arm rather than crunching down.",
+      "Hold 20-30 seconds per side.",
+    ],
+    demo: "standing side bend overhead reach stretch",
+  },
+  "standing-hip-flexor": {
+    name: "Standing Hip Flexor Stretch",
+    target: "Hip flexors, quads",
+    cues: [
+      "Split stance, back leg straight behind you. Tuck the pelvis under and squeeze that glute.",
+      "The stretch is in the front of the back hip. Do not arch the low back to chase it.",
+      "45-60 seconds per side. This is what eight hours in a seat shortens most.",
+    ],
+  },
+  "standing-quad-stretch": {
+    name: "Standing Quad Stretch",
+    target: "Quads",
+    cues: [
+      "Hold the ankle behind you, knees together, pelvis tucked.",
+      "Hold a wall or rail for balance rather than wobbling.",
+      "30-45 seconds per side.",
+    ],
+  },
+  "standing-figure-four": {
+    name: "Standing Figure Four",
+    target: "Glutes, hip external rotation",
+    cues: [
+      "Ankle across the opposite thigh, sit back into a shallow single-leg squat.",
+      "Chest up, sink until the glute of the crossed leg stretches.",
+      "45-60 seconds per side. The standing version of pigeon, with no floor needed.",
+    ],
+    demo: "standing figure four glute stretch",
+  },
+  "standing-forward-fold": {
+    name: "Standing Forward Fold",
+    target: "Hamstrings, low back",
+    cues: [
+      "Feet hip width, soft knees, hinge and let the head hang heavy.",
+      "Bend the knees as much as needed; the point is to decompress the back, not touch the floor.",
+      "45-60 seconds, breathing slowly.",
+    ],
+  },
+  "standing-calf-stretch": {
+    name: "Standing Calf Stretch",
+    target: "Calves, achilles",
+    cues: [
+      "Hands on a wall or pillar, back leg straight, heel driven down.",
+      "Then bend the back knee slightly to shift it into the lower calf.",
+      "30 seconds in each position, each side.",
+    ],
+  },
+  "standing-scap-squeeze": {
+    name: "Standing Scapular Squeeze",
+    target: "Mid back, rear delts",
+    cues: [
+      "Arms bent at 90 degrees, elbows at the ribs, palms forward.",
+      "Squeeze the shoulder blades together and hold 3 seconds.",
+      "12 reps. No equipment, no space, and it undoes a plane seat.",
+    ],
+    demo: "standing scapular retraction posture exercise",
+  },
+  "self-resisted-er": {
+    name: "Self-Resisted External Rotation",
+    target: "Rotator cuff",
+    cues: [
+      "Elbow tucked at the ribs, bent 90 degrees. Press the back of that hand into the other palm.",
+      "Push outward against your own resistance for 10 seconds, about half effort.",
+      "6 holds per side. Isometric, so it needs no band and no room.",
+    ],
+    demo: "isometric external rotation shoulder no equipment",
+  },
+  "self-resisted-finger-ext": {
+    name: "Self-Resisted Finger Extension",
+    target: "Finger extensors (antagonist)",
+    cues: [
+      "Bunch the fingertips together and open them against the other hand cupped over them.",
+      "20-25 slow reps per hand.",
+      "A hair tie or rubber band works better, but this needs nothing at all.",
+    ],
+    demo: "finger extensor exercise no equipment climbers",
+  },
+  "standing-wrist-stretch": {
+    name: "Standing Wrist Stretch",
+    target: "Forearm flexors and extensors",
+    cues: [
+      "Arm straight out, palm up, gently pull the fingers back with the other hand.",
+      "Then flip the palm down and pull the hand toward you for the extensors.",
+      "30 seconds each position, each arm.",
+    ],
+    demo: "standing wrist flexor extensor stretch",
+  },
+  "wall-pushup": {
+    name: "Wall Push-Up",
+    target: "Chest, triceps, serratus",
+    cues: [
+      "Hands on a wall or pillar at chest height, feet a stride back.",
+      "Lower the chest to the wall, elbows at 45 degrees, body in one line.",
+      "Step the feet further back to make it harder. 15-20 reps.",
+    ],
+  },
+  "standing-breathing": {
+    name: "Standing Down-Regulation Breathing",
+    target: "Parasympathetic recovery",
+    cues: [
+      "Stand tall, one hand on the ribs. Inhale through the nose for 4, exhale for 6-8.",
+      "Feel the ribs widen sideways rather than the shoulders lifting.",
+      "2 minutes. Useful before a flight as well as after one.",
+    ],
+    demo: "diaphragmatic breathing standing",
+  },
 };
 
 /**
