@@ -1,4 +1,4 @@
-export type Category = "freeweights" | "bands" | "bodyweight" | "gym" | "standing" | "prep";
+export type Category = "freeweights" | "bands" | "bodyweight" | "gym" | "soccer" | "standing" | "prep";
 
 /**
  * What a session taxes, for scheduling. `fingers` is the one that matters:
@@ -107,6 +107,12 @@ export const CATEGORIES: CategoryMeta[] = [
     label: "Climbing Gym",
     blurb: "Wall, hangboard and free weights. Strength, power endurance and skill days.",
     icon: "\u{1F9BE}",
+  },
+  {
+    id: "soccer",
+    label: "Soccer",
+    blurb: "Prevention, speed, power and solo ball work. The prevention session is the one with real evidence behind it.",
+    icon: "\u{26BD}",
   },
   {
     id: "standing",

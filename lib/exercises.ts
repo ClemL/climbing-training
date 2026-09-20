@@ -1210,6 +1210,255 @@ export const EXERCISES: Record<string, ExerciseDef> = {
     ],
     demo: "diaphragmatic breathing standing",
   },
+
+  /* ---------- Soccer: speed, agility, plyometrics ---------- */
+  "accelerations": {
+    name: "Sprint Accelerations",
+    target: "Acceleration, top-end speed",
+    cues: [
+      "20-30 m efforts from a standing or rolling start, at full effort.",
+      "Walk back for a full 60-90 seconds between reps. This is speed work, not conditioning.",
+      "Stop the set the moment reps get slower. Sprinting tired trains slow.",
+    ],
+    demo: "sprint acceleration technique drill soccer",
+  },
+  "deceleration-drill": {
+    name: "Deceleration Drill",
+    target: "Eccentric braking, knee and hamstring control",
+    cues: [
+      "Sprint 10-15 m, then stop dead in three steps and hold a balanced athletic position.",
+      "Chest up, hips back, knees soft and tracking over the feet.",
+      "Most non-contact knee and hamstring injuries happen while braking or cutting, not while accelerating. Train the brakes.",
+    ],
+    demo: "deceleration drill soccer stopping mechanics",
+  },
+  "pro-agility": {
+    name: "5-10-5 Shuttle",
+    target: "Change of direction",
+    cues: [
+      "Three cones five yards apart. Start at the middle, sprint 5 to one side, 10 across, 5 back.",
+      "Plant on the outside foot, drop the hips, and drive out low.",
+      "6 reps with 45-60 seconds between. Alternate which way you open first.",
+    ],
+    demo: "5-10-5 pro agility shuttle drill",
+  },
+  "lateral-shuffle": {
+    name: "Lateral Shuffle",
+    target: "Lateral movement, hip abductors",
+    cues: [
+      "Athletic stance, hips low, shuffle sideways without the feet clicking together.",
+      "Chest square and level. The head should not bob up and down.",
+      "10-15 m each direction.",
+    ],
+    demo: "defensive lateral shuffle drill footwork",
+  },
+  "backpedal": {
+    name: "Backpedal",
+    target: "Reverse running mechanics",
+    cues: [
+      "Hips low, weight on the balls of the feet, short quick steps.",
+      "Do not reach backwards with the foot; push the ground behind you.",
+      "Finish each rep by transitioning into a forward sprint.",
+    ],
+    demo: "backpedal drill technique soccer",
+  },
+  "carioca": {
+    name: "Carioca",
+    target: "Hip mobility, coordination",
+    cues: [
+      "Travel sideways, alternately crossing the trail leg in front of and behind the lead leg.",
+      "Rotate through the hips, keeping the shoulders relatively square.",
+      "15-20 m each direction. Standard in every warm-up for a reason.",
+    ],
+  },
+  "a-skip": {
+    name: "A-Skip",
+    target: "Sprint mechanics, elastic ankles",
+    cues: [
+      "Skip driving the knee to hip height, opposite arm forward, foot dorsiflexed.",
+      "Strike the ground under the hip, not out in front.",
+      "2 x 20 m. Rhythm matters more than height.",
+    ],
+    demo: "A skip sprint drill technique",
+  },
+  "pogo-hops": {
+    name: "Pogo Hops",
+    target: "Ankle stiffness, elastic return",
+    cues: [
+      "Small fast hops on the balls of both feet, knees nearly straight.",
+      "Minimum ground contact time. Think of the ankles as springs, not shock absorbers.",
+      "20-30 contacts. This is where most sprint speed is stored.",
+    ],
+    demo: "pogo hops ankle stiffness plyometric",
+  },
+  "lateral-bound": {
+    name: "Lateral Bound",
+    target: "Lateral power, hip and knee stability",
+    cues: [
+      "Push off one leg sideways, land on the other, and stick the landing for a full second.",
+      "Land with the knee tracking over the foot. If it dives inward, shorten the bound.",
+      "The sticking is the exercise. Anyone can jump sideways.",
+    ],
+  },
+  "box-jump": {
+    name: "Box Jump",
+    target: "Concentric leg power",
+    cues: [
+      "Swing the arms, jump onto the box, land softly in a quarter squat.",
+      "Step down, never jump down. That is where achilles injuries come from.",
+      "5 reps, full rest. Quality over height.",
+    ],
+  },
+  "broad-jump": {
+    name: "Standing Broad Jump",
+    target: "Horizontal power",
+    cues: [
+      "Both feet, swing the arms, jump forward as far as you can.",
+      "Land with soft knees and hold the landing for a second.",
+      "4-5 reps with full recovery. Horizontal power transfers to sprinting better than vertical.",
+    ],
+    demo: "standing broad jump technique",
+  },
+  "hurdle-hops": {
+    name: "Hurdle Hops",
+    target: "Reactive strength",
+    cues: [
+      "Low hurdles, cones or a line. Hop over with both feet, minimum ground contact.",
+      "Land and leave. Any pause on the ground turns it into a strength exercise.",
+      "6-8 contacts per set.",
+    ],
+  },
+  "lateral-cone-hops": {
+    name: "Lateral Cone Hops",
+    target: "Frontal plane reactive strength",
+    cues: [
+      "Hop side to side over a low cone or line, both feet together.",
+      "Fast and rhythmic, staying on the balls of the feet.",
+      "15-20 contacts.",
+    ],
+  },
+  "groiners": {
+    name: "Groiners",
+    target: "Hips, adductors, dynamic warm-up",
+    cues: [
+      "From a push-up position, hop both feet up outside the hands, then back.",
+      "Sink the hips low on each rep.",
+      "10 reps. The most efficient dynamic hip opener there is.",
+    ],
+  },
+
+  /* ---------- Soccer: prevention and strength ---------- */
+  "nordic-curl": {
+    name: "Nordic Hamstring Curl",
+    target: "Hamstrings (eccentric)",
+    cues: [
+      "Kneel with the ankles anchored under a couch, a loaded bar, or a partner's hands.",
+      "Lower the torso forward as slowly as you can, staying rigid from knee to shoulder. Catch yourself with the hands.",
+      "3-6 reps is a full set. If you drop after 30 degrees, that is fine; the top range is the hard part.",
+      "Meta-analyses of football squads put the reduction in hamstring injury rates at roughly half. Almost nothing else in this app has that evidence base.",
+    ],
+    demo: "nordic hamstring curl technique",
+  },
+  "groin-squeeze": {
+    name: "Isometric Groin Squeeze",
+    target: "Adductors",
+    cues: [
+      "Ball, rolled towel or fist between the knees. Squeeze hard for 10 seconds.",
+      "5-6 holds. Should be a firm, controlled effort rather than a maximal strain.",
+      "Also works as a self-test: if squeezing reproduces groin pain, back off the volume that week.",
+    ],
+    demo: "isometric adductor squeeze test groin",
+  },
+  "single-leg-rdl-balance": {
+    name: "Single-Leg RDL with Reach",
+    target: "Hamstrings, balance, hip control",
+    cues: [
+      "Stand on one leg, hinge forward reaching for the floor, back leg extending behind.",
+      "Hips stay level. Do not let the free hip open to the ceiling.",
+      "8 slow reps per side. Balance and hamstring length in one movement.",
+    ],
+    demo: "single leg romanian deadlift bodyweight balance",
+  },
+  "russian-twist": {
+    name: "Russian Twist",
+    target: "Obliques, rotational core",
+    cues: [
+      "Seated, heels light or lifted, rotate the torso side to side.",
+      "Rotate from the ribcage, not by swinging the arms.",
+      "20 total touches. Slow beats fast here.",
+    ],
+  },
+  "wood-chop": {
+    name: "Wood Chop",
+    target: "Rotational power, obliques",
+    cues: [
+      "Band or cable anchored high. Pull diagonally across the body from high to low.",
+      "Pivot the back foot and rotate through the hips, arms nearly straight.",
+      "12 per side. The pattern every shot and long pass runs on.",
+    ],
+  },
+
+  /* ---------- Soccer: ball work ---------- */
+  "juggling": {
+    name: "Juggling",
+    target: "First touch, coordination",
+    cues: [
+      "Feet, thighs, head. Keep the ball below chest height and the ankle locked.",
+      "Count your record, then try to beat it on the weak foot only.",
+      "5 minutes. The cheapest touch work that exists.",
+    ],
+    demo: "soccer juggling technique practice",
+  },
+  "sole-rolls": {
+    name: "Sole Rolls & Toe Taps",
+    target: "Close control, foot speed",
+    cues: [
+      "Roll the ball side to side with the sole, then tap the top alternating feet.",
+      "30 seconds each, staying on the balls of the feet, eyes up.",
+      "Speed comes from small touches, not big ones.",
+    ],
+    demo: "soccer sole rolls toe taps ball mastery",
+  },
+  "cone-dribble": {
+    name: "Cone Dribbling",
+    target: "Close control under change of direction",
+    cues: [
+      "5-6 cones or any markers a metre apart. Weave through using both feet.",
+      "Touch with the inside and outside of each foot; no touch bigger than a stride.",
+      "Two passes slow and clean, then two at speed.",
+    ],
+    demo: "cone dribbling drill soccer close control",
+  },
+  "wall-pass": {
+    name: "Wall Passing",
+    target: "Passing weight and accuracy",
+    cues: [
+      "Pass firmly against a wall, control the return, pass again.",
+      "Sets of two-touch, then one-touch. Lock the ankle and follow through at the target.",
+      "Alternate feet every 10 passes. A wall is the most patient teammate you will find.",
+    ],
+    demo: "wall passing drill soccer solo training",
+  },
+  "first-touch-wall": {
+    name: "First Touch off the Wall",
+    target: "Receiving, directional touch",
+    cues: [
+      "Throw or pass the ball into the wall and take the return with one touch into space.",
+      "Take it away from where an imaginary defender is, not straight down.",
+      "Inside, outside, sole and thigh. Both feet.",
+    ],
+    demo: "first touch drill wall soccer control",
+  },
+  "weak-foot-drill": {
+    name: "Weak Foot Block",
+    target: "Weak foot competence",
+    cues: [
+      "Ten minutes where the strong foot is not allowed to touch the ball.",
+      "Passing, control, dribbling, striking, all on the weak side.",
+      "Uncomfortable by design. It is also the fastest improvement available to most amateur players.",
+    ],
+    demo: "weak foot training drills soccer",
+  },
 };
 
 /**

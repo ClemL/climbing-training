@@ -185,3 +185,14 @@ test("bundled step-by-step instructions belong to real, illustrated exercises", 
     for (const s of steps) assert.ok(s.trim().length > 0, `"${key}": blank step`);
   }
 });
+
+test("soccer prevention work is not scheduled as an afterthought", () => {
+  // The evidence-backed movements must appear in the prevention plan itself,
+  // not only as optional extras elsewhere.
+  const prevention = PLANS.find((p) => p.id === "sc-prevention");
+  assert.ok(prevention, "sc-prevention plan is missing");
+  const used = new Set(prevention.blocks.flatMap((b) => b.slots.map((s) => s.ex)));
+  for (const key of ["nordic-curl", "copenhagen", "groin-squeeze"]) {
+    assert.ok(used.has(key), `sc-prevention must include "${key}"`);
+  }
+});
