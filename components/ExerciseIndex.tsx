@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import FavoriteButton from "./FavoriteButton";
 import { openExercise } from "./ExerciseSheet";
 import { EXERCISES } from "@/lib/exercises";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
@@ -36,14 +37,18 @@ export default function ExerciseIndex() {
       {entries.length === 0 ? <div className="empty">No matches.</div> : null}
       {entries.map(([key, ex]) => (
         <div key={key} className="lib-item">
-          <button className="lib-head" onClick={() => openExercise(key)}>
-            <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lib-head">
+            <button
+              style={{ flex: 1, minWidth: 0, textAlign: "left" }}
+              onClick={() => openExercise(key)}
+              aria-label={`Open ${ex.name}`}
+            >
               <div className="ex-name">{ex.name}</div>
               <div className="ex-pres">{ex.target}</div>
-            </div>
+            </button>
             {IMAGE_KEYS.has(key) ? <span className="chip">illustrated</span> : null}
-            <span className="info-btn">?</span>
-          </button>
+            <FavoriteButton exKey={key} />
+          </div>
         </div>
       ))}
     </>

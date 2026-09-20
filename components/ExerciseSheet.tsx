@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect } from "react";
 import ExerciseFigure from "./ExerciseFigure";
+import FavoriteButton from "./FavoriteButton";
 import { EXERCISES, searchUrl } from "@/lib/exercises";
 import { EXERCISE_STEPS } from "@/lib/exercise-steps";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
@@ -57,6 +58,7 @@ export default function ExerciseSheet() {
             <div className="sheet-title">{ex.name}</div>
             <div className="sheet-target">{ex.target}</div>
           </div>
+          <FavoriteButton exKey={exKey} className="star sheet-star" />
           <button className="btn sm" onClick={close} aria-label="Close">
             &#10005;
           </button>

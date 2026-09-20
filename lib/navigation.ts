@@ -14,9 +14,9 @@
  * history entries keeps offline behavior simple and treats both uniformly.
  */
 
-export type View = "plans" | "preview" | "session" | "history" | "library" | "week" | "settings";
+export type View = "plans" | "preview" | "session" | "history" | "library" | "saved" | "week" | "settings";
 
-const VIEWS: readonly View[] = ["plans", "preview", "session", "history", "library", "week", "settings"];
+const VIEWS: readonly View[] = ["plans", "preview", "session", "history", "library", "saved", "week", "settings"];
 
 export type NavState = {
   view: View;

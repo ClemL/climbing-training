@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import DensitySync from "@/components/DensitySync";
 import ExerciseSheet from "@/components/ExerciseSheet";
 import NavigationSync from "@/components/NavigationSync";
 import ServiceWorker from "@/components/ServiceWorker";
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="shell">{children}</div>
         <ExerciseSheet />
         <NavigationSync />
+        <DensitySync />
         <ServiceWorker />
       </body>
     </html>

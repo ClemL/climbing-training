@@ -1,8 +1,8 @@
 # Training Days
 
-A phone-first training app: pick a session, hit start, work the checklist. Twenty-three plans
-across free weights, elastic bands, bodyweight, climbing-gym days, standing-only travel sessions
-and warm-ups, with a session clock, superset grouping, a rest timer, a hangboard interval timer,
+A phone-first training app: pick a session, hit start, work the checklist. Twenty-eight plans
+across free weights, elastic bands, bodyweight, climbing-gym days, soccer, standing-only travel
+sessions and warm-ups, with a session clock, superset grouping, a rest timer, a hangboard interval timer,
 and form cues on every exercise.
 
 Everything is stored in `localStorage`. No account, no database, no server calls.
@@ -15,12 +15,20 @@ Everything is stored in `localStorage`. No account, no database, no server calls
 | Elastic Bands (bands + a door) | Upper Body, Legs & Glutes, Full-Body Express, Shoulder & Elbow Prehab | 15-60 min |
 | Bodyweight (floor + one chair) | Push & Core, Pull & Posterior, Legs, Express Circuit | 25-55 min |
 | Climbing Gym (wall, hangboard, weights) | Hangboard & Limit Boulders, Power Endurance 4x4s, Repeaters & Volume, Technique & Movement | 60-120 min |
+| Soccer | Injury Prevention, Strength & Power, Speed & Agility, Ball Skills & Touch, Match Day Warm-Up | 20-65 min |
 | Standing Only (nothing, one square metre) | Gate Area Reset, Long-Haul Recovery, Standing Climber Prehab | 8-20 min |
 | Warm-Up & Recovery | Express Warm-Up, Full Warm-Up, Pre-Gym Activation, Post-Session Recovery | 10-30 min |
 
 **Elastic Bands** exists because bands load the opposite way to free weights — hardest at the end
 of the range, easiest at the start — which makes them better than dumbbells for shoulder, rotator
 cuff and glute-medius work and worse for anything you want heavy. Rep ranges run higher to match.
+
+**Soccer** leads with injury prevention because it is the only part of this app with a serious
+evidence base: meta-analyses of the Nordic hamstring exercise in football squads report roughly a
+halving of hamstring injury rates, trials of Copenhagen adduction report a large reduction in
+groin problems, and FIFA 11+ style warm-ups report around a third fewer injuries overall. Figures
+vary by study and by adherence, so the plan notes give them as orders of magnitude rather than
+precise numbers. Everything else in the category — speed, power, touch — is ordinary programming.
 
 **Standing Only** has a hard constraint: nothing touches the floor, no chair, no kneeling, and it
 fits in about one square metre. Built for a gate area or a hotel corridor. A wall is used only for
@@ -53,10 +61,16 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   recalculates against what you are actually doing.
 - **Added-weight log** on hangboard blocks, off by default and enabled in settings. Prefilled with
   last session's number, in lb or kg.
-- **Settings** for weight logging and unit, timer sounds, screen wake lock and figure animation.
+- **Saved exercises.** Star anything from the overlay or the library; the Saved view lists them
+  newest first with per-item removal and a clear-all.
+- **UI density** — compact, normal or comfortable. Row height, card padding, gaps, type size and
+  control size all scale from one set of CSS custom properties on the document root, so a session
+  page runs roughly 1900px tall at compact and 2500px at comfortable.
+- **Settings** for density, weight logging and unit, timer sounds, screen wake lock and figure
+  animation.
 - **Week structure** with five rotations and the spacing rules behind them, plus a recovery
   warning if you open a finger-intensive plan within 48 hours of the last one.
-- **Exercise library** with search across 139 movements, usable as a substitution reference.
+- **Exercise library** with search across 164 movements, usable as a substitution reference.
 - **Screen wake lock** while a session runs, so the phone does not sleep between sets.
 
 ## Stack
@@ -118,6 +132,7 @@ both shapes. A block declaring an `interval` spec automatically renders an inter
 | `ct.history.v2` | Last 60 finished sessions |
 | `ct.loads.v1` | Added weight per hangboard block, last 8 entries each |
 | `ct.settings.v1` | Preferences, merged over defaults so new settings are not undefined |
+| `ct.favorites.v1` | Starred exercise keys, newest first, capped at 200 |
 
 Navigation is not stored: it lives in the URL and the browser's history stack.
 
@@ -127,7 +142,7 @@ Clearing site data resets both. History is disposable by design.
 
 Illustrations come from [free-exercise-db](https://github.com/yuhonas/free-exercise-db), released
 into the public domain under the Unlicense. Each entry provides a start and an end frame; the app
-crossfades them, which reads like a GIF at about 10 KB per frame — 1.4 MB for all 140 frames,
+crossfades them, which reads like a GIF at about 10 KB per frame — 1.6 MB for all 160 frames,
 small enough to precache entirely for offline use.
 
 **Two frames is the ceiling, not a shortcut.** All 873 dataset entries have exactly two images —
@@ -135,7 +150,7 @@ there are no exceptions in the data. wger is unreachable behind some network pol
 imagery is CC-BY-SA rather than public domain; everkinetic is an abandoned migration with no
 declared license. Generating intermediate frames from two stills would be a cross-dissolve, which
 is what the animation already does and adds no information. What the dataset does carry, and the
-app now uses, is a step-by-step instruction list per exercise — bundled for 68 of the 70
+app now uses, is a step-by-step instruction list per exercise — bundled for 78 of the 80
 illustrated movements and shown in the overlay under the cues.
 
 `scripts/exercise-image-map.json` maps exercise keys to dataset ids by hand. Automatic name

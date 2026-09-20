@@ -2,6 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import ExerciseIndex from "@/components/ExerciseIndex";
+import FavoritesView from "@/components/FavoritesView";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
 import PlanPreview from "@/components/PlanPreview";
@@ -154,6 +155,9 @@ export default function Home() {
           <button className="tab" aria-pressed={shellView === "week"} onClick={() => setView("week")}>
             Week
           </button>
+          <button className="tab" aria-pressed={shellView === "saved"} onClick={() => setView("saved")}>
+            Saved
+          </button>
           <button className="tab" aria-pressed={shellView === "library"} onClick={() => setView("library")}>
             Exercises
           </button>
@@ -183,6 +187,7 @@ export default function Home() {
 
       {shellView === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
       {shellView === "week" ? <WeekView onPick={openPreview} /> : null}
+      {shellView === "saved" ? <FavoritesView /> : null}
       {shellView === "library" ? <ExerciseIndex /> : null}
       {shellView === "settings" ? <SettingsView /> : null}
       {shellView === "history" ? <HistoryView history={history} /> : null}

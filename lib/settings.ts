@@ -7,6 +7,9 @@
 
 export type WeightUnit = "lb" | "kg";
 
+/** Element sizing across the app. */
+export type Density = "compact" | "normal" | "comfortable";
+
 export type Settings = {
   /** Hangboard load logging. Off by default - plenty of people hang bodyweight only. */
   logHangboardWeight: boolean;
@@ -17,6 +20,8 @@ export type Settings = {
   keepAwake: boolean;
   /** Cycle exercise illustrations between start and end position. */
   animateFigures: boolean;
+  /** Row height, padding, type size and control size scale together. */
+  density: Density;
 };
 
 export const DEFAULTS: Settings = Object.freeze({
@@ -25,6 +30,7 @@ export const DEFAULTS: Settings = Object.freeze({
   sounds: true,
   keepAwake: true,
   animateFigures: true,
+  density: "normal",
 });
 
 const KEY = "ct.settings.v1";

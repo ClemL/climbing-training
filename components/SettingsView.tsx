@@ -1,7 +1,8 @@
 "use client";
 
+import { clearFavorites } from "@/lib/favorites";
 import { clearHistory, clearLoads } from "@/lib/storage";
-import { resetSettings, updateSettings, type Settings } from "@/lib/settings";
+import { resetSettings, updateSettings, type Density, type Settings } from "@/lib/settings";
 import { useSettings } from "@/lib/use-settings";
 
 function Toggle({
@@ -58,6 +59,24 @@ export default function SettingsView() {
         </div>
       ) : null}
 
+      <h2>Display</h2>
+      <div className="setting">
+        <div className="setting-copy">
+          <div className="setting-name">Element size</div>
+          <div className="setting-why">
+            Row height, padding, type and controls all scale together. Compact fits more of a session on screen;
+            comfortable gives bigger tap targets for cold or chalky hands.
+          </div>
+        </div>
+      </div>
+      <div className="seg seg-wide">
+        {(["compact", "normal", "comfortable"] as Density[]).map((d) => (
+          <button key={d} aria-pressed={s.density === d} onClick={() => set("density", d)}>
+            {d[0].toUpperCase() + d.slice(1)}
+          </button>
+        ))}
+      </div>
+
       <h2>During a session</h2>
       <Toggle
         name="Timer sounds"
@@ -100,6 +119,20 @@ export default function SettingsView() {
           }}
         >
           Delete
+        </button>
+      </div>
+      <div className="setting">
+        <div className="setting-copy">
+          <div className="setting-name">Clear saved exercises</div>
+          <div className="setting-why">Everything starred for later.</div>
+        </div>
+        <button
+          className="btn sm danger"
+          onClick={() => {
+            if (window.confirm("Remove all saved exercises?")) clearFavorites();
+          }}
+        >
+          Clear
         </button>
       </div>
       <div className="setting">
