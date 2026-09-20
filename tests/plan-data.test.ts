@@ -8,6 +8,7 @@ import { PLANS } from "../lib/plans.ts";
 import { EXERCISES } from "../lib/exercises.ts";
 import { IMAGE_KEYS } from "../lib/exercise-images.ts";
 import { EXERCISE_STEPS } from "../lib/exercise-steps.ts";
+import { EXERCISE_GROUPS } from "../lib/exercise-groups.ts";
 import { CATEGORIES } from "../lib/types.ts";
 import { TEMPLATES } from "../lib/week.ts";
 
@@ -195,4 +196,18 @@ test("soccer prevention work is not scheduled as an afterthought", () => {
   for (const key of ["nordic-curl", "copenhagen", "groin-squeeze"]) {
     assert.ok(used.has(key), `sc-prevention must include "${key}"`);
   }
+});
+
+test("the directory covers every exercise exactly once", () => {
+  const seen = new Map<string, string>();
+  for (const group of EXERCISE_GROUPS) {
+    for (const key of group.keys) {
+      assert.ok(EXERCISES[key], `directory lists unknown exercise "${key}"`);
+      const prior = seen.get(key);
+      assert.ok(!prior, `"${key}" appears in both "${prior}" and "${group.label}"`);
+      seen.set(key, group.label);
+    }
+  }
+  const missing = Object.keys(EXERCISES).filter((k) => !seen.has(k));
+  assert.deepEqual(missing, [], `not reachable from the directory: ${missing.join(", ")}`);
 });

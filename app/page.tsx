@@ -159,7 +159,7 @@ export default function Home() {
             Saved
           </button>
           <button className="tab" aria-pressed={shellView === "library"} onClick={() => setView("library")}>
-            Exercises
+            Directory
           </button>
           <button className="tab" aria-pressed={shellView === "history"} onClick={() => setView("history")}>
             History

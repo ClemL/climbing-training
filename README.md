@@ -70,7 +70,11 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   animation.
 - **Week structure** with five rotations and the spacing rules behind them, plus a recovery
   warning if you open a finger-intensive plan within 48 hours of the last one.
-- **Exercise library** with search across 164 movements, usable as a substitution reference.
+- **Exercise directory** — all 164 movements in one scrollable list, grouped the way the plans use
+  them (warm-up, fingers, push, pull, legs, core, climbing, bands, standing, three soccer groups).
+  Filter to a group or search across everything; search results are labelled with their group. The
+  grouping is generated from the section comments in `lib/exercises.ts`, so it cannot drift from
+  the file it describes, and a test asserts every exercise appears in exactly one group.
 - **Screen wake lock** while a session runs, so the phone does not sleep between sets.
 
 ## Stack
@@ -97,7 +101,7 @@ npm run build    # production build
 npm run check    # typecheck + lint + tests
 ```
 
-`npm test` runs 15 data-integrity checks with `node --test` and no test framework: unresolved
+`npm test` runs 18 data-integrity checks with `node --test` and no test framework: unresolved
 exercise keys, duplicate ids, block minutes against the advertised session length, interval
 specs matching block rounds, image frames present on disk, and week templates never stacking
 two finger-intensive days. Editing `lib/plans.ts` by hand is the likely way this breaks, and a
