@@ -6,6 +6,7 @@ import FavoritesView from "@/components/FavoritesView";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
 import PlanPreview from "@/components/PlanPreview";
+import ProgressionsView from "@/components/ProgressionsView";
 import SettingsView from "@/components/SettingsView";
 import WeekView from "@/components/WeekView";
 import SessionView from "@/components/SessionView";
@@ -155,6 +156,13 @@ export default function Home() {
           <button className="tab" aria-pressed={shellView === "week"} onClick={() => setView("week")}>
             Week
           </button>
+          <button
+            className="tab"
+            aria-pressed={shellView === "progressions"}
+            onClick={() => setView("progressions")}
+          >
+            Progressions
+          </button>
           <button className="tab" aria-pressed={shellView === "saved"} onClick={() => setView("saved")}>
             Saved
           </button>
@@ -187,6 +195,7 @@ export default function Home() {
 
       {shellView === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
       {shellView === "week" ? <WeekView onPick={openPreview} /> : null}
+      {shellView === "progressions" ? <ProgressionsView /> : null}
       {shellView === "saved" ? <FavoritesView /> : null}
       {shellView === "library" ? <ExerciseIndex /> : null}
       {shellView === "settings" ? <SettingsView /> : null}

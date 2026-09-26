@@ -9,6 +9,7 @@ import { EXERCISES } from "../lib/exercises.ts";
 import { IMAGE_KEYS } from "../lib/exercise-images.ts";
 import { EXERCISE_STEPS } from "../lib/exercise-steps.ts";
 import { EXERCISE_GROUPS } from "../lib/exercise-groups.ts";
+import { PROGRESSIONS } from "../lib/progressions.ts";
 import { CATEGORIES } from "../lib/types.ts";
 import { TEMPLATES } from "../lib/week.ts";
 
@@ -141,11 +142,14 @@ test("bundled imagery matches real exercises and exists on disk", () => {
 test("no exercise is defined but unreachable from both plans and search", () => {
   // Orphans are allowed - they serve as substitutions in the library - but they
   // should be deliberate, so this pins the current count.
-  const used = new Set(PLANS.flatMap((p) => p.blocks.flatMap((b) => b.slots.map((s) => s.ex))));
+  const used = new Set([
+    ...PLANS.flatMap((p) => p.blocks.flatMap((b) => b.slots.map((s) => s.ex))),
+    ...PROGRESSIONS.flatMap((p) => p.rungs.map((r) => r.ex)),
+  ]);
   const orphans = Object.keys(EXERCISES).filter((k) => !used.has(k));
   assert.ok(
     orphans.length <= 12,
-    `${orphans.length} exercises are in no plan; trim them or add them: ${orphans.join(", ")}`,
+    `${orphans.length} exercises are in no plan or ladder; trim them or add them: ${orphans.join(", ")}`,
   );
 });
 
@@ -210,4 +214,33 @@ test("the directory covers every exercise exactly once", () => {
   }
   const missing = Object.keys(EXERCISES).filter((k) => !seen.has(k));
   assert.deepEqual(missing, [], `not reachable from the directory: ${missing.join(", ")}`);
+});
+
+test("progression ladders are well formed", () => {
+  const ids = PROGRESSIONS.map((p) => p.id);
+  assert.equal(new Set(ids).size, ids.length, "duplicate progression id");
+
+  for (const prog of PROGRESSIONS) {
+    assert.ok(prog.rungs.length >= 3, `${prog.id}: a ladder needs at least three rungs`);
+    assert.ok(prog.why.length > 40, `${prog.id}: explain why the order is what it is`);
+
+    for (const [i, rung] of prog.rungs.entries()) {
+      assert.ok(EXERCISES[rung.ex], `${prog.id}: rung ${i + 1} names unknown exercise "${rung.ex}"`);
+      // A criterion you cannot count is how people sit on one rung forever.
+      assert.ok(
+        /\d/.test(rung.criterion) || /end of the ladder/i.test(rung.criterion),
+        `${prog.id}: rung ${i + 1} has no countable criterion: "${rung.criterion}"`,
+      );
+    }
+
+    // Repeating the same exercise is fine only when the rung is relabelled,
+    // otherwise two rungs read identically.
+    const seen = new Map<string, string | undefined>();
+    for (const rung of prog.rungs) {
+      if (seen.has(rung.ex)) {
+        assert.ok(rung.label ?? seen.get(rung.ex), `${prog.id}: "${rung.ex}" repeats without a distinguishing label`);
+      }
+      seen.set(rung.ex, rung.label);
+    }
+  }
 });

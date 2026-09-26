@@ -294,6 +294,15 @@ export const EXERCISES: Record<string, ExerciseDef> = {
       "Chest touches first. Full lockout each rep.",
     ],
   },
+  "incline-pushup": {
+    name: "Incline Push-Up",
+    target: "Chest, triceps",
+    cues: [
+      "Hands on a table, counter or chair back; the higher the hands, the easier it is.",
+      "Same straight line and same elbow angle as a floor push-up.",
+      "The honest middle rung between a wall push-up and the floor.",
+    ],
+  },
   "decline-pushup": {
     name: "Feet-Elevated Push-Up",
     target: "Chest, shoulders, trunk",
@@ -316,6 +325,16 @@ export const EXERCISES: Record<string, ExerciseDef> = {
       "Alternate sides each rep.",
       "Step toward a one-arm push-up. Scale by bending the straight arm more.",
     ],
+  },
+  "one-arm-pushup": {
+    name: "One-Arm Push-Up",
+    target: "Chest, triceps, anti-rotation core",
+    cues: [
+      "Feet wide, free arm behind the back, body square to the floor the whole way.",
+      "Lower under control; the hips will want to twist away. That is the part you are training.",
+      "Elevate the hands to scale. Most people need a year of archer push-ups first.",
+    ],
+    demo: "one arm push up progression",
   },
   "pike-pushup": {
     name: "Pike Push-Up",
@@ -354,6 +373,24 @@ export const EXERCISES: Record<string, ExerciseDef> = {
       "Start from a dead hang with shoulders engaged.",
       "Drive elbows down to the ribs. Chin clears the bar, no chin reaching.",
       "Lower all the way. Half reps build half strength.",
+    ],
+  },
+  "band-assisted-pullup": {
+    name: "Band-Assisted Pull-Up",
+    target: "Lats, biceps",
+    cues: [
+      "Loop a band over the bar and put a knee or foot in it.",
+      "Assistance is largest at the bottom, which is exactly where you are weakest.",
+      "Move to a thinner band when you can do 8 clean reps, not when it feels easy.",
+    ],
+  },
+  "chin-up": {
+    name: "Chin-Up",
+    target: "Lats, biceps",
+    cues: [
+      "Palms facing you, shoulder width. More biceps than a pull-up, so most people get these first.",
+      "Full dead hang at the bottom, chin over the bar at the top.",
+      "A legitimate rung on the way to pull-ups, not a lesser exercise.",
     ],
   },
   "weighted-pullup": {
@@ -474,6 +511,15 @@ export const EXERCISES: Record<string, ExerciseDef> = {
       "Bar on the upper back, big breath, brace the trunk.",
       "Sit down and slightly back, knees track over the toes.",
       "Hips below knee crease if your mobility allows. Drive the floor away.",
+    ],
+  },
+  "bodyweight-squat": {
+    name: "Bodyweight Squat",
+    target: "Quads, glutes, ankle and hip range",
+    cues: [
+      "Feet shoulder width, arms forward as a counterweight.",
+      "Sit down between the hips, heels flat, chest up.",
+      "If the heels lift or the back rounds, work the deep squat hold before adding load.",
     ],
   },
   "goblet-squat": {
@@ -599,6 +645,15 @@ export const EXERCISES: Record<string, ExerciseDef> = {
       "Hang with active shoulders. Curl the knees to the chest, do not swing.",
       "Lower slowly to a dead stop before the next rep.",
       "Straighten the legs to make it harder.",
+    ],
+  },
+  "hanging-leg-raise": {
+    name: "Hanging Straight-Leg Raise",
+    target: "Lower abs, hip flexors, grip",
+    cues: [
+      "Legs straight, raised to at least hip height without swinging.",
+      "Tilt the pelvis under at the top rather than just lifting with the hip flexors.",
+      "Lower slowly to a dead stop. Any swing means go back to knee raises.",
     ],
   },
   "front-lever-tuck": {

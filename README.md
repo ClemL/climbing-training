@@ -61,6 +61,11 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   recalculates against what you are actually doing.
 - **Added-weight log** on hangboard blocks, off by default and enabled in settings. Prefilled with
   last session's number, in lb or kg.
+- **Progression ladders** for the twelve movement patterns that appear most across the plans —
+  push-up, dip, overhead, pull-up, row, squat, hinge, two core ladders, fingers, jumping and
+  adductor. Each rung carries a countable criterion for moving up, and collapsed ladders show a
+  thumbnail strip so you can see the whole progression at a glance. A test rejects any rung whose
+  criterion has no number in it.
 - **Saved exercises.** Star anything from the overlay or the library; the Saved view lists them
   newest first with per-item removal and a clear-all.
 - **UI density** — compact, normal or comfortable. Row height, card padding, gaps, type size and
@@ -70,7 +75,7 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   animation.
 - **Week structure** with five rotations and the spacing rules behind them, plus a recovery
   warning if you open a finger-intensive plan within 48 hours of the last one.
-- **Exercise directory** — all 164 movements in one scrollable list, grouped the way the plans use
+- **Exercise directory** — all 170 movements in one scrollable list, grouped the way the plans use
   them (warm-up, fingers, push, pull, legs, core, climbing, bands, standing, three soccer groups).
   Filter to a group or search across everything; search results are labelled with their group. The
   grouping is generated from the section comments in `lib/exercises.ts`, so it cannot drift from
@@ -101,7 +106,7 @@ npm run build    # production build
 npm run check    # typecheck + lint + tests
 ```
 
-`npm test` runs 18 data-integrity checks with `node --test` and no test framework: unresolved
+`npm test` runs 19 data-integrity checks with `node --test` and no test framework: unresolved
 exercise keys, duplicate ids, block minutes against the advertised session length, interval
 specs matching block rounds, image frames present on disk, and week templates never stacking
 two finger-intensive days. Editing `lib/plans.ts` by hand is the likely way this breaks, and a
@@ -138,7 +143,10 @@ both shapes. A block declaring an `interval` spec automatically renders an inter
 | `ct.settings.v1` | Preferences, merged over defaults so new settings are not undefined |
 | `ct.favorites.v1` | Starred exercise keys, newest first, capped at 200 |
 
-Navigation is not stored: it lives in the URL and the browser's history stack.
+Navigation is not stored: it lives in the URL and the browser's history stack, namespaced under a
+`ct` key inside `history.state` so the App Router's own bookkeeping there survives a popstate.
+Replacing that state wholesale makes Next resynchronize with a full page navigation, which silently
+reloads the document and discards component state.
 
 Clearing site data resets both. History is disposable by design.
 
@@ -146,7 +154,7 @@ Clearing site data resets both. History is disposable by design.
 
 Illustrations come from [free-exercise-db](https://github.com/yuhonas/free-exercise-db), released
 into the public domain under the Unlicense. Each entry provides a start and an end frame; the app
-crossfades them, which reads like a GIF at about 10 KB per frame — 1.6 MB for all 160 frames,
+crossfades them, which reads like a GIF at about 10 KB per frame — 1.7 MB for all 172 frames,
 small enough to precache entirely for offline use.
 
 **Two frames is the ceiling, not a shortcut.** All 873 dataset entries have exactly two images —
@@ -154,7 +162,7 @@ there are no exceptions in the data. wger is unreachable behind some network pol
 imagery is CC-BY-SA rather than public domain; everkinetic is an abandoned migration with no
 declared license. Generating intermediate frames from two stills would be a cross-dissolve, which
 is what the animation already does and adds no information. What the dataset does carry, and the
-app now uses, is a step-by-step instruction list per exercise — bundled for 78 of the 80
+app now uses, is a step-by-step instruction list per exercise — bundled for 84 of the 86
 illustrated movements and shown in the overlay under the cues.
 
 `scripts/exercise-image-map.json` maps exercise keys to dataset ids by hand. Automatic name

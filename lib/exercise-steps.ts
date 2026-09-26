@@ -30,6 +30,12 @@ export const EXERCISE_STEPS: Readonly<Record<string, readonly string[]>> = {
     "Begin to raise the bar as you exhale by pushing the floor with the heel of your foot as you straighten the legs again and go back to the starting position.",
     "Repeat for the recommended amount of repetitions."
   ],
+  "band-assisted-pullup": [
+    "Choke the band around the center of the pullup bar. You can use different bands to provide varying levels of assistance.",
+    "Pull the end of the band down, and place one bent knee into the loop, ensuring it won't slip out. Take a medium to wide grip on the bar. This will be your starting position.",
+    "Pull yourself upward by contracting the lats as you flex the elbow. The elbow should be driven to your side. Pull to the front, attempting to get your chin over the bar. Avoid swinging or jerking movements.",
+    "After a brief pause, return to the starting position."
+  ],
   "band-calf-raise": [
     "Grab an exercise band and stand on it with your toes making sure that the length of the band between the foot and the arms is the same for both sides.",
     "While holding the handles of the band, raise the arms to the side of your head as if you were getting ready to perform a shoulder press. The palms should be facing forward with the elbows bent and to the sides. This movement will create tension on the band. This will be your starting position.",
@@ -128,6 +134,11 @@ export const EXERCISE_STEPS: Readonly<Record<string, readonly string[]>> = {
     "Then, inhale and slowly begin to lower the dumbbells back to the starting position.",
     "Repeat for the recommended amount of repetitions."
   ],
+  "bodyweight-squat": [
+    "Stand with your feet shoulder width apart. You can place your hands behind your head. This will be your starting position.",
+    "Begin the movement by flexing your knees and hips, sitting back with your hips.",
+    "Continue down to full depth if you are able,and quickly reverse the motion until you return to the starting position. As you squat, keep your head and chest up and push your knees out."
+  ],
   "box-jump": [
     "Begin with a box of an appropriate height 1-2 feet in front of you. Stand with your feet should width apart. This will be your starting position.",
     "Perform a short squat in preparation for jumping, swinging your arms behind you.",
@@ -161,6 +172,13 @@ export const EXERCISE_STEPS: Readonly<Record<string, readonly string[]>> = {
     "Slowly lower your body as you inhale by bending at the elbows until you lower yourself far enough to where there is an angle slightly smaller than 90 degrees between the upper arm and the forearm. Tip: Keep the elbows as close as possible throughout the movement. Forearms should always be pointing down.",
     "Using your triceps to bring your torso up again, lift yourself back to the starting position.",
     "Repeat for the recommended amount of repetitions."
+  ],
+  "chin-up": [
+    "Grab the pull-up bar with the palms facing your torso and a grip closer than the shoulder width.",
+    "As you have both arms extended in front of you holding the bar at the chosen grip width, keep your torso as straight as possible while creating a curvature on your lower back and sticking your chest out. This is your starting position. Tip: Keeping the torso as straight as possible maximizes biceps stimulation while minimizing back involvement.",
+    "As you breathe out, pull your torso up until your head is around the level of the pull-up bar. Concentrate on using the biceps muscles in order to perform the movement. Keep the elbows close to your body. Tip: The upper torso should remain stationary as it moves through space and only the arms should move. The forearms should do no other work other than hold the bar.",
+    "After a second of squeezing the biceps in the contracted position, slowly lower your torso back to the starting position; when your arms are fully extended. Breathe in as you perform this portion of the movement.",
+    "Repeat this motion for the prescribed amount of repetitions."
   ],
   "db-bench": [
     "Lie down on a flat bench with a dumbbell in each hand resting on top of your thighs. The palms of your hands will be facing each other.",
@@ -256,6 +274,12 @@ export const EXERCISE_STEPS: Readonly<Record<string, readonly string[]>> = {
     "Go back slowly to the starting position as you breathe in.",
     "Repeat for the recommended amount of repetitions."
   ],
+  "hanging-leg-raise": [
+    "Hang from a chin-up bar with both arms extended at arms length in top of you using either a wide grip or a medium grip. The legs should be straight down with the pelvis rolled slightly backwards. This will be your starting position.",
+    "Raise your legs until the torso makes a 90-degree angle with the legs. Exhale as you perform this movement and hold the contraction for a second or so.",
+    "Go back slowly to the starting position as you breathe in.",
+    "Repeat for the recommended amount of repetitions."
+  ],
   "high-step-up": [
     "Stand up straight while holding a dumbbell on each hand (palms facing the side of your legs).",
     "Place the right foot on the elevated platform. Step on the platform by extending the hip and the knee of your right leg. Use the heel mainly to lift the rest of your body up and place the foot of the left leg on the platform as well. Breathe out as you execute the force required to come up.",
@@ -288,6 +312,11 @@ export const EXERCISE_STEPS: Readonly<Record<string, readonly string[]>> = {
     "Lock your arms at the top, hold for a second, and then start slowly lowering the weight. Tip Ideally, lowering the weights should take about twice as long as raising them.",
     "Repeat the movement for the prescribed amount of repetitions.",
     "When you are done, place the dumbbells back on your thighs and then on the floor. This is the safest manner to release the dumbbells."
+  ],
+  "incline-pushup": [
+    "Stand facing bench or sturdy elevated platform. Place hands on edge of bench or platform, slightly wider than shoulder width.",
+    "Position forefoot back from bench or platform with arms and body straight. Arms should be perpendicular to body. Keeping body straight, lower chest to edge of box or platform by bending arms.",
+    "Push body up until arms are extended. Repeat."
   ],
   "lateral-bound": [
     "Assume a half squat position facing 90 degrees from your direction of travel. This will be your starting position.",
@@ -328,6 +357,12 @@ export const EXERCISE_STEPS: Readonly<Record<string, readonly string[]>> = {
     "Lower the bar down to the collarbone slowly as you inhale.",
     "Lift the bar back up to the starting position as you exhale.",
     "Repeat for the recommended amount of repetitions."
+  ],
+  "one-arm-pushup": [
+    "Begin laying prone on the ground. Move yourself into a position supporting your weight on your toes and one arm. Your working arm should be placed directly under the shoulder, fully extended. Your legs should be extended, and for this movement you may need a wider base, placing your feet further apart than in a normal push-up.",
+    "Maintain good posture, and place your free hand behind your back. This will be your starting position.",
+    "Lower yourself by allowing the elbow to flex until you touch the ground.",
+    "Descend slowly, and reverse direction be extending the arm to return to the starting position."
   ],
   "pistol-progression": [
     "Pick up a kettlebell with two hands and hold it by the horns. Hold one leg off of the floor and squat down on the other.",
