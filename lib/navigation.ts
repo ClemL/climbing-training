@@ -14,9 +14,28 @@
  * history entries keeps offline behavior simple and treats both uniformly.
  */
 
-export type View = "plans" | "preview" | "session" | "history" | "library" | "saved" | "week" | "settings";
+export type View =
+  | "plans"
+  | "preview"
+  | "session"
+  | "history"
+  | "library"
+  | "saved"
+  | "progressions"
+  | "week"
+  | "settings";
 
-const VIEWS: readonly View[] = ["plans", "preview", "session", "history", "library", "saved", "week", "settings"];
+const VIEWS: readonly View[] = [
+  "plans",
+  "preview",
+  "session",
+  "history",
+  "library",
+  "saved",
+  "progressions",
+  "week",
+  "settings",
+];
 
 export type NavState = {
   view: View;
@@ -49,6 +68,22 @@ function fromUrl(): NavState {
   // A preview with no plan is meaningless; treat it as the list.
   if (state.view === "preview" && !state.planId) state.view = "plans";
   return state;
+}
+
+/**
+ * Our state is namespaced and merged into whatever is already in
+ * history.state rather than replacing it. The App Router keeps its own
+ * bookkeeping there; overwriting it makes Next resynchronize on popstate with
+ * a full page navigation, which silently reloads the document and throws away
+ * component state - an expanded ladder, a directory search, a scroll position.
+ */
+const STATE_KEY = "ct";
+
+type Stamped = Record<string, unknown> & { [STATE_KEY]?: NavState };
+
+function stamp(next: NavState): Stamped {
+  const existing = (window.history.state ?? {}) as Record<string, unknown>;
+  return { ...existing, [STATE_KEY]: next };
 }
 
 export function toUrl(s: NavState): string {
@@ -85,8 +120,8 @@ export function navigate(next: NavState, options: { replace?: boolean } = {}): v
   snapshot = next;
   try {
     const url = toUrl(next);
-    if (options.replace) window.history.replaceState(next, "", url);
-    else window.history.pushState(next, "", url);
+    if (options.replace) window.history.replaceState(stamp(next), "", url);
+    else window.history.pushState(stamp(next), "", url);
   } catch {
     /* history unavailable; the app still renders the right view */
   }
@@ -100,8 +135,8 @@ export function back(): void {
 
 /** Applies a state the browser restored. Never pushes - that would trap the user. */
 export function applyPopState(state: unknown): void {
-  snapshot =
-    state && typeof state === "object" && isView((state as NavState).view) ? (state as NavState) : fromUrl();
+  const carried = (state as Stamped | null)?.[STATE_KEY];
+  snapshot = carried && isView(carried.view) ? carried : fromUrl();
   emit();
 }
 
@@ -112,7 +147,7 @@ export function applyPopState(state: unknown): void {
 export function primeHistory(): void {
   const current = getNav();
   try {
-    window.history.replaceState(current, "", toUrl(current));
+    window.history.replaceState(stamp(current), "", toUrl(current));
   } catch {
     /* ignore */
   }
