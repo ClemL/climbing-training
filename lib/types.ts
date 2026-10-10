@@ -1,4 +1,4 @@
-export type Category = "freeweights" | "bands" | "bodyweight" | "gym" | "soccer" | "standing" | "prep";
+export type Category = "freeweights" | "bands" | "bodyweight" | "gym" | "soccer" | "standing" | "move" | "prep";
 
 /**
  * What a session taxes, for scheduling. `fingers` is the one that matters:
@@ -119,6 +119,12 @@ export const CATEGORIES: CategoryMeta[] = [
     label: "Standing Only",
     blurb: "Airports, gate areas, hotel corridors. Nothing touches the floor, no chair, one square metre.",
     icon: "\u{2708}",
+  },
+  {
+    id: "move",
+    label: "On the Move",
+    blurb: "One light band in a pocket. Short walks and bus stops: self-anchored, nothing on the ground, built to be interrupted.",
+    icon: "\u{1F6B6}",
   },
   {
     id: "prep",

@@ -167,6 +167,10 @@ export const EXERCISE_GROUPS: readonly ExerciseGroup[] = [
       "band-calf-raise",
       "band-y-raise",
       "band-wrist-ext",
+      "band-er-pull-apart",
+      "band-overhead-pulldown",
+      "band-diagonal-pull-apart",
+      "band-self-anchored-tricep",
     ],
   },
   {

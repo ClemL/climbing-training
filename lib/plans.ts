@@ -2003,6 +2003,139 @@ export const PLANS: Plan[] = [
     ],
   },
 
+  /* ============================ ON THE MOVE ============================ */
+  {
+    id: "mv-walk",
+    name: "Band Walk",
+    category: "move",
+    minutes: [18, 25],
+    tagline: "Upper-back and cuff volume riding on a walk you were taking anyway. Hand-held only.",
+    equipment: ["One light loop or tube band", "A hair tie or rubber band"],
+    focus: ["Rear delts", "Rotator cuff", "Lats", "Finger extensors"],
+    notes: [
+      "Everything is held in the hands. Nothing goes under the feet and nothing is anchored, so you never stop walking.",
+      "Pace the rounds by distance rather than the clock: one set per block or between two lamp posts, then a block of plain walking.",
+      "Stop the set at crossings and keep eyes up. Keep the band at chest height or below near other people; a band that slips at full stretch snaps toward a face.",
+      "The loads are light enough to repeat daily. This is the antagonist volume that climbing never supplies, collected on a commute.",
+    ],
+    blocks: [
+      {
+        id: "mvw-w",
+        tag: "W",
+        title: "First few minutes: warm up while walking",
+        kind: "circuit",
+        rounds: 1,
+        minutes: 4,
+        slots: [
+          { ex: "arm-circles", pres: "10 each way" },
+          { ex: "shoulder-rolls", pres: "10 each way" },
+          { ex: "band-finger-ext", pres: "20 per hand", note: "No hair tie? Swap in the self-resisted version." },
+        ],
+      },
+      {
+        id: "mvw-a",
+        tag: "A",
+        title: "Circuit: Upper back and cuff",
+        kind: "circuit",
+        rounds: 3,
+        rest: "1-2 min of plain walking",
+        minutes: 10,
+        note: "The core of the session. One exercise per block, then a block off.",
+        slots: [
+          { ex: "band-pull-apart", pres: "15 reps" },
+          { ex: "band-er-pull-apart", pres: "12 reps" },
+          { ex: "band-overhead-pulldown", pres: "12 reps", note: "Skip on a crowded sidewalk; it takes the hands above the head." },
+        ],
+      },
+      {
+        id: "mvw-b",
+        tag: "B",
+        title: "Circuit: Press and diagonals",
+        kind: "circuit",
+        rounds: 2,
+        rest: "1 min of plain walking",
+        minutes: 6,
+        slots: [
+          {
+            ex: "band-chest-press",
+            pres: "15 reps",
+            note: "Band around the upper back at armpit height, not anchored. Press forward as you walk.",
+          },
+          { ex: "band-diagonal-pull-apart", pres: "10 per side" },
+        ],
+      },
+      {
+        id: "mvw-c",
+        tag: "C",
+        title: "Forearms on the way home",
+        kind: "circuit",
+        rounds: 1,
+        minutes: 3,
+        slots: [
+          { ex: "band-finger-ext", pres: "25 per hand" },
+          { ex: "standing-wrist-stretch", pres: "30s each position" },
+        ],
+      },
+    ],
+  },
+
+  {
+    id: "mv-busstop",
+    name: "Bus Stop Band",
+    category: "move",
+    minutes: [6, 10],
+    tagline: "Three self-contained blocks, most valuable first. When the bus comes, stop; whatever you finished counts.",
+    equipment: ["One light loop or tube band", "A hair tie or rubber band"],
+    focus: ["Shoulders", "Posterior chain", "Arms"],
+    notes: [
+      "Built to be interrupted. Each block is complete on its own and the order is priority order, so a two-minute wait still gets the shoulder work in.",
+      "Everything is self-anchored: hands, or the band under your shoes. Do not tie it to the shelter, a sign post or a railing; there is nothing to untie when the bus arrives.",
+      "Stand back from the curb and keep the band clear of the queue.",
+    ],
+    blocks: [
+      {
+        id: "mvb-a",
+        tag: "1",
+        title: "Shoulders first",
+        kind: "circuit",
+        rounds: 1,
+        minutes: 3,
+        slots: [
+          { ex: "band-pull-apart", pres: "15 reps" },
+          { ex: "band-er-pull-apart", pres: "12 reps" },
+          { ex: "band-overhead-pulldown", pres: "10 reps" },
+        ],
+      },
+      {
+        id: "mvb-b",
+        tag: "2",
+        title: "Stand on the band",
+        kind: "circuit",
+        rounds: 1,
+        minutes: 3,
+        note: "Band under the middle of both shoes. Widen the stance to add tension.",
+        slots: [
+          { ex: "band-rdl", pres: "12 reps" },
+          { ex: "band-ohp", pres: "10 reps" },
+          { ex: "band-calf-raise", pres: "15 reps" },
+        ],
+      },
+      {
+        id: "mvb-c",
+        tag: "3",
+        title: "Arms, if the bus is late",
+        kind: "circuit",
+        rounds: 1,
+        minutes: 3,
+        slots: [
+          { ex: "band-curl", pres: "12 reps" },
+          { ex: "band-self-anchored-tricep", pres: "10 per side" },
+          { ex: "band-finger-ext", pres: "20 per hand" },
+        ],
+      },
+    ],
+  },
+
   /* ======================== WARM-UP & RECOVERY ======================== */
   {
     id: "wu-express",
