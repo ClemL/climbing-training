@@ -244,3 +244,28 @@ test("progression ladders are well formed", () => {
     }
   }
 });
+
+test("on-the-move plans need no anchor, and the walk needs nothing underfoot", () => {
+  // The category exists because there is no door. An anchored movement here
+  // is unusable, and anything stood on stops a walk.
+  const anchored = new Set([
+    "band-row", "band-pulldown", "band-straight-arm-pulldown", "band-rear-fly", "band-face-pull",
+    "band-pushdown", "band-pallof", "band-pull-through", "band-hip-adduction",
+  ]);
+  const underfoot = new Set([
+    "band-ohp", "band-lateral-raise", "band-curl", "band-squat", "band-rdl",
+    "band-good-morning", "band-calf-raise", "band-y-raise", "band-wrist-ext",
+  ]);
+  const move = PLANS.filter((p) => p.category === "move");
+  assert.ok(move.length > 0, "no on-the-move plans");
+  for (const plan of move) {
+    for (const block of plan.blocks) {
+      for (const slot of block.slots) {
+        assert.ok(!anchored.has(slot.ex), `${plan.id}/${block.id}: "${slot.ex}" needs an anchor`);
+        if (plan.id === "mv-walk") {
+          assert.ok(!underfoot.has(slot.ex), `${plan.id}/${block.id}: "${slot.ex}" is stood on, which stops the walk`);
+        }
+      }
+    }
+  }
+});

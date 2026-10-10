@@ -1,9 +1,9 @@
 # Training Days
 
-A phone-first training app: pick a session, hit start, work the checklist. Twenty-eight plans
+A phone-first training app: pick a session, hit start, work the checklist. Thirty plans
 across free weights, elastic bands, bodyweight, climbing-gym days, soccer, standing-only travel
-sessions and warm-ups, with a session clock, superset grouping, a rest timer, a hangboard interval timer,
-and form cues on every exercise.
+sessions, band work for walks and bus stops, and warm-ups, with a session clock, superset
+grouping, a rest timer, a hangboard interval timer, and form cues on every exercise.
 
 Everything is stored in `localStorage`. No account, no database, no server calls.
 
@@ -17,6 +17,7 @@ Everything is stored in `localStorage`. No account, no database, no server calls
 | Climbing Gym (wall, hangboard, weights) | Hangboard & Limit Boulders, Power Endurance 4x4s, Repeaters & Volume, Technique & Movement | 60-120 min |
 | Soccer | Injury Prevention, Strength & Power, Speed & Agility, Ball Skills & Touch, Match Day Warm-Up | 20-65 min |
 | Standing Only (nothing, one square metre) | Gate Area Reset, Long-Haul Recovery, Standing Climber Prehab | 8-20 min |
+| On the Move (one band, no anchor) | Band Walk, Bus Stop Band | 6-25 min |
 | Warm-Up & Recovery | Express Warm-Up, Full Warm-Up, Pre-Gym Activation, Post-Session Recovery | 10-30 min |
 
 **Elastic Bands** exists because bands load the opposite way to free weights — hardest at the end
@@ -33,6 +34,11 @@ precise numbers. Everything else in the category — speed, power, touch — is 
 **Standing Only** has a hard constraint: nothing touches the floor, no chair, no kneeling, and it
 fits in about one square metre. Built for a gate area or a hotel corridor. A wall is used only for
 balance and every exercise that mentions one works without it.
+
+**On the Move** is band work with no door: everything is self-anchored, held in the hands or
+stood on. The walk session is hand-held only, so you never stop walking; the bus-stop session is
+written in priority order in self-contained blocks, because the bus decides when it ends. A test
+keeps anchored movements out of the category and stood-on movements out of the walk.
 
 Loads are left to the athlete. Plans prescribe reps, rest and intent only.
 
@@ -75,7 +81,7 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   animation.
 - **Week structure** with five rotations and the spacing rules behind them, plus a recovery
   warning if you open a finger-intensive plan within 48 hours of the last one.
-- **Exercise directory** — all 170 movements in one scrollable list, grouped the way the plans use
+- **Exercise directory** — all 174 movements in one scrollable list, grouped the way the plans use
   them (warm-up, fingers, push, pull, legs, core, climbing, bands, standing, three soccer groups).
   Filter to a group or search across everything; search results are labelled with their group. The
   grouping is generated from the section comments in `lib/exercises.ts`, so it cannot drift from
@@ -106,7 +112,7 @@ npm run build    # production build
 npm run check    # typecheck + lint + tests
 ```
 
-`npm test` runs 19 data-integrity checks with `node --test` and no test framework: unresolved
+`npm test` runs 20 data-integrity checks with `node --test` and no test framework: unresolved
 exercise keys, duplicate ids, block minutes against the advertised session length, interval
 specs matching block rounds, image frames present on disk, and week templates never stacking
 two finger-intensive days. Editing `lib/plans.ts` by hand is the likely way this breaks, and a

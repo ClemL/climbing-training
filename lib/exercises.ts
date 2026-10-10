@@ -1072,6 +1072,46 @@ export const EXERCISES: Record<string, ExerciseDef> = {
     ],
     demo: "band wrist extension forearm elbow",
   },
+  "band-er-pull-apart": {
+    name: "Band External Rotation Pull-Apart",
+    target: "Rotator cuff (external rotators)",
+    cues: [
+      "Elbows bent 90 degrees and pinned to the ribs, palms up, band across both hands.",
+      "Rotate the forearms out to the sides. The elbows never leave the ribs.",
+      "Light band, slow reps. The anchored external rotation, both arms at once, no door needed.",
+    ],
+    demo: "band external rotation pull apart",
+  },
+  "band-overhead-pulldown": {
+    name: "Band Overhead Pull-Down",
+    target: "Lats, lower traps",
+    cues: [
+      "Arms straight overhead, band taut between hands set a little wider than the shoulders.",
+      "Pull the band apart and down in front of the face, elbows driving to the ribs.",
+      "Ribs down; do not arch to finish. A pulldown that needs no anchor.",
+    ],
+    demo: "band overhead pull apart lat pulldown no anchor",
+  },
+  "band-diagonal-pull-apart": {
+    name: "Band Diagonal Pull-Apart",
+    target: "Rear delts, upper and lower traps",
+    cues: [
+      "Band in front of the chest, one hand high and one low.",
+      "Pull apart along the diagonal: top hand up and back, bottom hand down toward the hip.",
+      "Switch which hand leads each set. Slow return.",
+    ],
+    demo: "band diagonal pull apart",
+  },
+  "band-self-anchored-tricep": {
+    name: "Band Self-Anchored Triceps Extension",
+    target: "Triceps (long head)",
+    cues: [
+      "One hand holds the band at the small of the back; that hand is the anchor.",
+      "Working elbow points up beside the head. Extend the forearm straight overhead.",
+      "Only the forearm moves. Ribs down, no arching.",
+    ],
+    demo: "resistance band overhead tricep extension behind back",
+  },
 
   /* ---------- Standing only: no floor, no chair, minimal space ---------- */
   "standing-march": {
