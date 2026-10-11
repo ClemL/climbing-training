@@ -1,4 +1,14 @@
-export type Category = "freeweights" | "bands" | "bodyweight" | "gym" | "soccer" | "standing" | "move" | "prep";
+export type Category =
+  | "freeweights"
+  | "bands"
+  | "bodyweight"
+  | "gym"
+  | "soccer"
+  | "golf"
+  | "knee"
+  | "standing"
+  | "move"
+  | "prep";
 
 /**
  * What a session taxes, for scheduling. `fingers` is the one that matters:
@@ -79,6 +89,11 @@ export type Plan = {
 export type CategoryMeta = {
   id: Category;
   label: string;
+  /**
+   * Fits a third of a phone screen, for the filter grid. A soft hyphen marks
+   * where a long word may break; without one the browser breaks it anywhere.
+   */
+  short: string;
   blurb: string;
   icon: string;
 };
@@ -86,48 +101,70 @@ export type CategoryMeta = {
 export const CATEGORIES: CategoryMeta[] = [
   {
     id: "freeweights",
+    short: "Weights",
     label: "Free Weights",
     blurb: "Barbell and dumbbell days. Push, pull, legs, or one full-body express session.",
     icon: "\u{1F3CB}",
   },
   {
     id: "bands",
+    short: "Bands",
     label: "Elastic Bands",
     blurb: "A set of bands and a door. Packs into a jacket pocket and covers most of a gym.",
     icon: "\u{1F9F5}",
   },
   {
     id: "bodyweight",
+    short: "Body\u00ADweight",
     label: "Bodyweight",
     blurb: "Floor and one chair. Nothing else. Works in a hotel room or a living room.",
     icon: "\u{1F9CD}",
   },
   {
     id: "gym",
+    short: "Climbing",
     label: "Climbing Gym",
     blurb: "Wall, hangboard and free weights. Strength, power endurance and skill days.",
     icon: "\u{1F9BE}",
   },
   {
     id: "soccer",
+    short: "Soccer",
     label: "Soccer",
     blurb: "Prevention, speed, power and solo ball work. The prevention session is the one with real evidence behind it.",
     icon: "\u{26BD}",
   },
   {
+    id: "golf",
+    short: "Golf",
+    label: "Golf",
+    blurb: "Warm-ups for the first tee and the range, plus the strength, speed and mobility behind a repeatable swing. The low back and lead elbow are what get hurt.",
+    icon: "\u{26F3}",
+  },
+  {
+    id: "knee",
+    short: "Knee",
+    label: "Knee Care",
+    blurb: "Phased knee rehab: calm it, strengthen it, then load it for sport. Not a diagnosis. Swelling, locking, giving way or a pop means see a clinician first.",
+    icon: "\u{1F9B5}",
+  },
+  {
     id: "standing",
+    short: "Standing",
     label: "Standing Only",
     blurb: "Airports, gate areas, hotel corridors. Nothing touches the floor, no chair, one square metre.",
     icon: "\u{2708}",
   },
   {
     id: "move",
+    short: "On the Move",
     label: "On the Move",
     blurb: "One light band in a pocket. Short walks and bus stops: self-anchored, nothing on the ground, built to be interrupted.",
     icon: "\u{1F6B6}",
   },
   {
     id: "prep",
+    short: "Warm-Up",
     label: "Warm-Up & Recovery",
     blurb: "Short sessions that bookend climbing. No strength work, just getting ready or flushing out.",
     icon: "\u{1F525}",

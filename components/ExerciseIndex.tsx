@@ -2,12 +2,27 @@
 
 import { useMemo, useState } from "react";
 import FavoriteButton from "./FavoriteButton";
+import FilterGrid, { type FilterOption } from "./FilterGrid";
 import { openExercise } from "./ExerciseSheet";
 import { EXERCISES } from "@/lib/exercises";
 import { EXERCISE_GROUPS } from "@/lib/exercise-groups";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
+import { setFilter } from "@/lib/navigation";
+import { useNav } from "@/lib/use-navigation";
 
 const TOTAL = Object.keys(EXERCISES).length;
+
+/** URL-safe id for a group, since labels carry spaces, colons and ampersands. */
+const slug = (label: string) =>
+  label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const OPTIONS: FilterOption[] = [
+  { id: "all", label: "All", count: TOTAL },
+  ...EXERCISE_GROUPS.map((g) => ({ id: slug(g.label), label: g.short, count: g.keys.length })),
+];
 
 function Row({ exKey, group }: { exKey: string; group?: string }) {
   const ex = EXERCISES[exKey];
@@ -40,7 +55,8 @@ function Row({ exKey, group }: { exKey: string; group?: string }) {
  */
 export default function ExerciseIndex() {
   const [q, setQ] = useState("");
-  const [group, setGroup] = useState<string | "all">("all");
+  const nav = useNav();
+  const group = nav.filter && EXERCISE_GROUPS.some((g) => slug(g.label) === nav.filter) ? nav.filter : "all";
 
   const needle = q.trim().toLowerCase();
 
@@ -65,7 +81,7 @@ export default function ExerciseIndex() {
     return out;
   }, [needle]);
 
-  const shown = EXERCISE_GROUPS.filter((g) => group === "all" || g.label === group);
+  const shown = EXERCISE_GROUPS.filter((g) => group === "all" || slug(g.label) === group);
 
   return (
     <>
@@ -94,16 +110,13 @@ export default function ExerciseIndex() {
         </>
       ) : (
         <>
-          <div className="tabs" style={{ marginBottom: 14 }}>
-            <button className="tab" aria-pressed={group === "all"} onClick={() => setGroup("all")}>
-              All {TOTAL}
-            </button>
-            {EXERCISE_GROUPS.map((g) => (
-              <button key={g.label} className="tab" aria-pressed={group === g.label} onClick={() => setGroup(g.label)}>
-                {g.label} {g.keys.length}
-              </button>
-            ))}
-          </div>
+          <FilterGrid
+            label="Exercise group"
+            options={OPTIONS}
+            value={group}
+            onChange={(id) => setFilter(id === "all" ? undefined : id)}
+            floating
+          />
 
           {shown.map((g) => (
             <section key={g.label}>

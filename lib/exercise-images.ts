@@ -57,6 +57,7 @@ export const IMAGE_KEYS: ReadonlySet<string> = new Set([
   "lateral-bound",
   "lateral-cone-hops",
   "lateral-raise",
+  "leg-swings",
   "nordic-curl",
   "oh-tricep-ext",
   "ohp",

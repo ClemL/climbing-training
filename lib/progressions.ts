@@ -186,6 +186,68 @@ export const PROGRESSIONS: readonly Progression[] = [
       { ex: "band-hip-adduction", criterion: "3 x 15 per side against a band, controlled both directions" },
     ],
   },
+  {
+    id: "rotation",
+    name: "Rotation",
+    pattern: "Golf swing and soccer strike",
+    why: "Range first, then resisting rotation, then producing it, then producing it fast. Power built on a trunk that cannot hold still leaks into the low back, which is where golfers and soccer players both feel it.",
+    rungs: [
+      { ex: "open-book", criterion: "8 per side with the top hand reaching the floor and both knees still down" },
+      { ex: "hip-90-90", criterion: "8 switches each way without the hands" },
+      { ex: "band-pallof", criterion: "3 x 10 per side with a 3-second press and no torso rotation" },
+      { ex: "wood-chop", criterion: "3 x 12 per side with hips and shoulders turning together" },
+      { ex: "med-ball-rotational-throw", criterion: "3 x 6 per side, the last throw as hard as the first" },
+      {
+        ex: "speed-swings",
+        criterion: "The end of the ladder. Measure clubhead speed weekly and end each set once it drops below your best.",
+        note: "A launch monitor or radar app makes this a number instead of a feeling.",
+      },
+    ],
+  },
+  {
+    id: "knee",
+    name: "Knee Strength",
+    pattern: "Knee rehab",
+    why: "From switching the quad back on to landing on one leg. A rung only counts at 3/10 pain or less during the work with no rise the next morning; reps without that are not progress. Hip strength runs alongside every rung, because it is what keeps the knee tracking over the foot.",
+    rungs: [
+      { ex: "quad-set", criterion: "10 x 5s holds with the knee fully straight and the kneecap gliding up" },
+      { ex: "straight-leg-raise", criterion: "3 x 15 per side with no bend at the knee as the leg lifts" },
+      { ex: "wall-sit", criterion: "5 x 45s with thighs near parallel at 3/10 or less" },
+      { ex: "sit-to-stand", criterion: "3 x 15 from a standard chair, no hands, 3-second lowering" },
+      { ex: "low-step-up", criterion: "3 x 12 per side on a 20 cm step, knee over the second toe" },
+      {
+        ex: "lateral-step-down",
+        criterion: "3 x 10 per side from 20 cm without the knee diving in or the hip dropping",
+        note: "Film it from the front. The knee drifting inside the foot is easier to see than to feel.",
+      },
+      { ex: "split-squat", criterion: "3 x 10 per side with the back knee hovering above the floor" },
+      { ex: "bulgarian-split-squat", criterion: "3 x 8 per side holding dumbbells" },
+      {
+        ex: "single-leg-hop-stick",
+        criterion: "Injured side hops at least 90% of the other side's distance, every landing stuck for 2s",
+        note: "The usual return-to-sport bar. Test it fresh, three hops per side, best distance each.",
+      },
+    ],
+  },
+  {
+    id: "patellar-tendon",
+    name: "Patellar Tendon",
+    pattern: "Tendon loading",
+    why: "Tendons adapt to load, not rest, and in a set order: holding, then slow heavy movement, then storing and releasing energy, then sport. Skipping a stage is how tendon pain comes back, usually the week jumping returns.",
+    rungs: [
+      { ex: "spanish-squat", criterion: "5 x 45s holds at 3/10 or less", note: "A wall sit if you have no band." },
+      { ex: "goblet-squat", label: "Heavy Slow Squat", criterion: "4 x 8 at 3s down, 3s up, adding load weekly" },
+      { ex: "decline-squat", criterion: "3 x 15 per side lowering over 3s at 3/10 or less" },
+      { ex: "split-squat", label: "Heavy Slow Split Squat", criterion: "4 x 8 per side holding dumbbells at 3s down, 3s up" },
+      { ex: "pogo-hops", criterion: "3 x 20 contacts with no rise in next-morning pain", note: "The first energy-storage rung. Tendons that were fine with slow loading often complain here." },
+      { ex: "box-jump", criterion: "4 x 5 jumps, stepping down, with no rise in next-morning pain" },
+      {
+        ex: "single-leg-hop-stick",
+        label: "Return to Sport",
+        criterion: "2 weeks of full training with no rise in next-morning pain",
+      },
+    ],
+  },
 ];
 
 export function progressionById(id: string): Progression | undefined {
