@@ -1823,8 +1823,15 @@ export const EXERCISES: Record<string, ExerciseDef> = {
  * youtube.com URL: on Android that gets handed to the YouTube app, and the
  * point of the bundled images is to stay inside this app.
  */
-export function searchUrl(key: string): string {
+function searchQuery(key: string): string {
   const ex = EXERCISES[key];
-  const q = ex?.demo ?? `${ex?.name ?? key} proper form`;
-  return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+  return ex?.demo ?? `${ex?.name ?? key} proper form`;
+}
+
+export function searchUrl(key: string): string {
+  return `https://www.google.com/search?q=${encodeURIComponent(searchQuery(key))}`;
+}
+
+export function imageSearchUrl(key: string): string {
+  return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(searchQuery(key))}`;
 }
