@@ -1,9 +1,9 @@
 # Training Days
 
-A phone-first training app: pick a session, hit start, work the checklist. Thirty plans
-across free weights, elastic bands, bodyweight, climbing-gym days, soccer, standing-only travel
-sessions, band work for walks and bus stops, and warm-ups, with a session clock, superset
-grouping, a rest timer, a hangboard interval timer, and form cues on every exercise.
+A phone-first training app: pick a session, hit start, work the checklist. Thirty-nine plans
+across free weights, elastic bands, bodyweight, climbing-gym days, soccer, golf, knee rehab,
+standing-only travel sessions, band work for walks and bus stops, and warm-ups, with a session
+clock, superset grouping, a rest timer, an interval timer, and form cues on every exercise.
 
 Everything is stored in `localStorage`. No account, no database, no server calls.
 
@@ -16,6 +16,8 @@ Everything is stored in `localStorage`. No account, no database, no server calls
 | Bodyweight (floor + one chair) | Push & Core, Pull & Posterior, Legs, Express Circuit | 25-55 min |
 | Climbing Gym (wall, hangboard, weights) | Hangboard & Limit Boulders, Power Endurance 4x4s, Repeaters & Volume, Technique & Movement | 60-120 min |
 | Soccer | Injury Prevention, Strength & Power, Speed & Agility, Ball Skills & Touch, Match Day Warm-Up | 20-65 min |
+| Golf | First Tee Warm-Up, Range Warm-Up, Strength & Power, Clubhead Speed, Mobility & Back Care | 8-55 min |
+| Knee Care | Phase 1: Calm & Activate, Phase 2: Build Strength, Phase 3: Load & Return, Knee Prep Before Sport | 8-45 min |
 | Standing Only (nothing, one square metre) | Gate Area Reset, Long-Haul Recovery, Standing Climber Prehab | 8-20 min |
 | On the Move (one band, no anchor) | Band Walk, Bus Stop Band | 6-25 min |
 | Warm-Up & Recovery | Express Warm-Up, Full Warm-Up, Pre-Gym Activation, Post-Session Recovery | 10-30 min |
@@ -30,6 +32,24 @@ halving of hamstring injury rates, trials of Copenhagen adduction report a large
 groin problems, and FIFA 11+ style warm-ups report around a third fewer injuries overall. Figures
 vary by study and by adherence, so the plan notes give them as orders of magnitude rather than
 precise numbers. Everything else in the category — speed, power, touch — is ordinary programming.
+
+**Golf** splits into two warm-ups and three training sessions. The warm-ups contain no static
+stretching: in a trial of young competitive golfers, holding stretches before swinging reduced
+clubhead speed, distance and quality of contact, so the holds live in the mobility session instead.
+The training sessions put rotational and lower-body power first, because those track clubhead speed
+more closely than arm strength, and finish on the lead elbow and the low back, the two places
+amateur golfers most often get sore.
+
+**Knee Care** is phased rehab rather than a menu: calm an irritable knee with isometrics and
+activation, build quad and hip strength (combined hip and knee work has the strongest evidence for
+kneecap pain), then load it heavy and slow and add landing before returning to sport. Every phase
+names the numbers that unlock the next one. Progress is paced by symptoms, not the calendar, using
+the pain-monitoring model physiotherapists use for tendon and kneecap pain: up to 3/10 during the
+work is acceptable if it has settled by the next morning. The **morning check-in** on the Knee
+filter records two 0-10 readings and turns them into a call: step back if either is over 3, hold
+if morning pain rose by 2 or more since the last check-in, progress after three clean check-ins in
+a row. The rule is a pure function with its own tests. None of this is a diagnosis, and every
+phase plan says when to see a clinician instead.
 
 **Standing Only** has a hard constraint: nothing touches the floor, no chair, no kneeling, and it
 fits in about one square metre. Built for a gate area or a hotel corridor. A wall is used only for
@@ -67,9 +87,9 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   recalculates against what you are actually doing.
 - **Added-weight log** on hangboard blocks, off by default and enabled in settings. Prefilled with
   last session's number, in lb or kg.
-- **Progression ladders** for the twelve movement patterns that appear most across the plans —
-  push-up, dip, overhead, pull-up, row, squat, hinge, two core ladders, fingers, jumping and
-  adductor. Each rung carries a countable criterion for moving up, and collapsed ladders show a
+- **Progression ladders** for fifteen movement patterns — push-up, dip, overhead, pull-up, row,
+  squat, hinge, two core ladders, fingers, jumping, adductor, rotation, knee strength and patellar
+  tendon loading. Each rung carries a countable criterion for moving up, and collapsed ladders show a
   thumbnail strip so you can see the whole progression at a glance. A test rejects any rung whose
   criterion has no number in it.
 - **Saved exercises.** Star anything from the overlay or the library; the Saved view lists them
@@ -79,10 +99,15 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   page runs roughly 1900px tall at compact and 2500px at comfortable.
 - **Settings** for density, weight logging and unit, timer sounds, screen wake lock and figure
   animation.
-- **Week structure** with five rotations and the spacing rules behind them, plus a recovery
+- **Filters that fit a phone.** Plan categories, directory groups and week templates are a wrapped
+  grid with every option visible, not a sideways-scrolling chip row that hid most of its options
+  off-screen. On long lists a pill appears once the grid scrolls away and jumps back to it. The
+  chosen filter lives in the URL (`?f=golf`), so opening a plan and pressing back keeps it.
+- **Week structure** with six rotations and the spacing rules behind them, plus a recovery
   warning if you open a finger-intensive plan within 48 hours of the last one.
-- **Exercise directory** — all 174 movements in one scrollable list, grouped the way the plans use
-  them (warm-up, fingers, push, pull, legs, core, climbing, bands, standing, three soccer groups).
+- **Exercise directory** — all 200 movements in one scrollable list, grouped the way the plans use
+  them (warm-up, fingers, push, pull, legs, core, climbing, bands, standing, three soccer groups,
+  golf, knee).
   Filter to a group or search across everything; search results are labelled with their group. The
   grouping is generated from the section comments in `lib/exercises.ts`, so it cannot drift from
   the file it describes, and a test asserts every exercise appears in exactly one group.
@@ -112,11 +137,12 @@ npm run build    # production build
 npm run check    # typecheck + lint + tests
 ```
 
-`npm test` runs 20 data-integrity checks with `node --test` and no test framework: unresolved
-exercise keys, duplicate ids, block minutes against the advertised session length, interval
-specs matching block rounds, image frames present on disk, and week templates never stacking
-two finger-intensive days. Editing `lib/plans.ts` by hand is the likely way this breaks, and a
-typo'd exercise key renders nothing at all — which you would discover standing at the hangboard.
+`npm test` runs 28 checks with `node --test` and no test framework. Most guard the data:
+unresolved exercise keys, duplicate ids, block minutes against the advertised session length,
+interval specs matching block rounds, image frames present on disk, and week templates never
+stacking two finger-intensive days. The rest cover duration parsing and the knee check-in rule.
+Editing `lib/plans.ts` by hand is the likely way this breaks, and a typo'd exercise key renders
+nothing at all — which you would discover standing at the hangboard.
 
 ## Deploying to Vercel
 
@@ -148,6 +174,7 @@ both shapes. A block declaring an `interval` spec automatically renders an inter
 | `ct.loads.v1` | Added weight per hangboard block, last 8 entries each |
 | `ct.settings.v1` | Preferences, merged over defaults so new settings are not undefined |
 | `ct.favorites.v1` | Starred exercise keys, newest first, capped at 200 |
+| `ct.knee.v1` | Knee check-ins (day, morning pain, session pain), newest first, capped at 90 |
 
 Navigation is not stored: it lives in the URL and the browser's history stack, namespaced under a
 `ct` key inside `history.state` so the App Router's own bookkeeping there survives a popstate.
@@ -160,7 +187,7 @@ Clearing site data resets both. History is disposable by design.
 
 Illustrations come from [free-exercise-db](https://github.com/yuhonas/free-exercise-db), released
 into the public domain under the Unlicense. Each entry provides a start and an end frame; the app
-crossfades them, which reads like a GIF at about 10 KB per frame — 1.7 MB for all 172 frames,
+crossfades them, which reads like a GIF at about 10 KB per frame — 1.7 MB for all 174 frames,
 small enough to precache entirely for offline use.
 
 **Two frames is the ceiling, not a shortcut.** All 873 dataset entries have exactly two images —
@@ -168,7 +195,7 @@ there are no exceptions in the data. wger is unreachable behind some network pol
 imagery is CC-BY-SA rather than public domain; everkinetic is an abandoned migration with no
 declared license. Generating intermediate frames from two stills would be a cross-dissolve, which
 is what the animation already does and adds no information. What the dataset does carry, and the
-app now uses, is a step-by-step instruction list per exercise — bundled for 84 of the 86
+app now uses, is a step-by-step instruction list per exercise — bundled for 85 of the 87
 illustrated movements and shown in the overlay under the cues.
 
 `scripts/exercise-image-map.json` maps exercise keys to dataset ids by hand. Automatic name
@@ -178,8 +205,9 @@ that teaches the wrong movement is worse than no image, so every pair was checke
 The movements with no illustration are climbing-specific (hangboard grips, limit bouldering,
 footwork drills) or standing-only variants with no equipment-free match in the dataset — the
 dataset's calf raise is on a machine and its quad stretch needs a box, which contradicts the whole
-premise of the standing plans. Those keep their text cues plus a
-plain web search link. That link deliberately does not point at youtube.com, because Android hands
+premise of the standing plans. Most golf and knee rehab movements are missing too: the dataset has
+no clamshell, Spanish squat, terminal knee extension or club drill, and its split squat is a jump.
+Leg swings are the one golf match. Those keep their text cues plus a plain web search link. That link deliberately does not point at youtube.com, because Android hands
 those URLs to the YouTube app.
 
 To regenerate after changing the mapping:

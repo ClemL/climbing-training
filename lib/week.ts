@@ -96,6 +96,21 @@ export const TEMPLATES: Template[] = [
       { day: "Sun", planId: "cool-recovery" },
     ],
   },
+  {
+    id: "knee-rehab",
+    name: "Knee rehab, still climbing",
+    forWho:
+      "A knee block that keeps you on the wall. Swap in whichever phase you are on for the Mon/Wed/Fri sessions. Drop knees, heel hooks and big rock-overs on the bad side wait until the check-in has said progress for two weeks.",
+    days: [
+      { day: "Mon", planId: "kn-build" },
+      { day: "Tue", planId: "cg-technique" },
+      { day: "Wed", planId: "kn-build" },
+      { day: "Thu", planId: null, note: "Rest, or Phase 1 if the knee is sore" },
+      { day: "Fri", planId: "kn-build" },
+      { day: "Sat", planId: "cg-repeaters" },
+      { day: "Sun", planId: null, note: "Rest, or a walk" },
+    ],
+  },
 ];
 
 export const RULES: { rule: string; why: string }[] = [
@@ -118,6 +133,10 @@ export const RULES: { rule: string; why: string }[] = [
   {
     rule: "Deload every fourth week: cut volume by about 40 percent, keep the intensity.",
     why: "Strength gains land during recovery, not during the work. Four hard weeks in a row produces a plateau and a tweaky elbow; three plus a light one produces progress.",
+  },
+  {
+    rule: "Knee sessions go on non-consecutive days, and the morning check-in decides when to progress.",
+    why: "Tendon and joint pain often shows up the morning after rather than during the session, so the calendar is a poor guide. Pain at 3/10 or under that has settled by morning means the load was right.",
   },
   {
     rule: "Technique days are training, even though they do not feel like it.",

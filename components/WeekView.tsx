@@ -1,29 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { planById } from "@/lib/plans";
+import FilterGrid from "./FilterGrid";
+import { setFilter } from "@/lib/navigation";
+import { PLANS, planById } from "@/lib/plans";
+import { useNav } from "@/lib/use-navigation";
 import { RULES, TEMPLATES } from "@/lib/week";
 import type { Plan } from "@/lib/types";
 
+const OPTIONS = TEMPLATES.map((t) => ({ id: t.id, label: t.name }));
+
 export default function WeekView({ onPick }: { onPick: (plan: Plan) => void }) {
-  const [active, setActive] = useState(TEMPLATES[0].id);
-  const template = TEMPLATES.find((t) => t.id === active) ?? TEMPLATES[0];
+  const nav = useNav();
+  const template = TEMPLATES.find((t) => t.id === nav.filter) ?? TEMPLATES[0];
 
   return (
     <>
       <h1>Week structure</h1>
       <p className="lede">
-        Sixteen sessions is a menu, not a plan. These rotations already respect the spacing rules below, which is
+        {PLANS.length} sessions is a menu, not a plan. These rotations already respect the spacing rules below, which is
         the part that keeps fingers and elbows intact.
       </p>
 
-      <div className="tabs" style={{ marginBottom: 14 }}>
-        {TEMPLATES.map((t) => (
-          <button key={t.id} className="tab" aria-pressed={t.id === active} onClick={() => setActive(t.id)}>
-            {t.name}
-          </button>
-        ))}
-      </div>
+      <FilterGrid
+        label="Week template"
+        options={OPTIONS}
+        value={template.id}
+        onChange={(id) => setFilter(id === TEMPLATES[0].id ? undefined : id)}
+        wide
+      />
 
       <p className="cat-blurb">{template.forWho}</p>
 

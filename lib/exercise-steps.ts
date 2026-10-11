@@ -337,6 +337,10 @@ export const EXERCISE_STEPS: Readonly<Record<string, readonly string[]>> = {
     "Lower the dumbbells back down slowly to the starting position as you inhale.",
     "Repeat for the recommended amount of repetitions."
   ],
+  "leg-swings": [
+    "Stand next to a chair or other support, holding on with one hand.",
+    "Swing your leg forward, keeping the leg straight. Continue with a downward swing, bringing the leg as far back as your flexibility allows. Repeat 5-10 times, and then switch legs."
+  ],
   "nordic-curl": [
     "Using the leg pad of a lat pulldown machine or a preacher bench, position yourself so that your ankles are under the pads, knees on the seat, and you are facing away from the machine. You should be upright and maintaining good posture.",
     "This will be your starting position. Lower yourself under control until your knees are almost completely straight.",

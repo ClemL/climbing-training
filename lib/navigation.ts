@@ -43,6 +43,11 @@ export type NavState = {
   planId?: string;
   /** Exercise in the overlay, layered above whichever view is beneath it. */
   ex?: string;
+  /**
+   * The view's filter: a plan category, a directory group or a week template.
+   * Kept in the URL so opening a plan and coming back does not reset it.
+   */
+  filter?: string;
 };
 
 export const HOME: NavState = Object.freeze({ view: "plans" });
@@ -65,6 +70,8 @@ function fromUrl(): NavState {
   if (planId) state.planId = planId;
   const ex = q.get("ex");
   if (ex) state.ex = ex;
+  const filter = q.get("f");
+  if (filter) state.filter = filter;
   // A preview with no plan is meaningless; treat it as the list.
   if (state.view === "preview" && !state.planId) state.view = "plans";
   return state;
@@ -91,6 +98,7 @@ export function toUrl(s: NavState): string {
   if (s.view !== "plans") q.set("v", s.view);
   if (s.planId) q.set("p", s.planId);
   if (s.ex) q.set("ex", s.ex);
+  if (s.filter) q.set("f", s.filter);
   const query = q.toString();
   return query ? `?${query}` : window.location.pathname;
 }
@@ -126,6 +134,16 @@ export function navigate(next: NavState, options: { replace?: boolean } = {}): v
     /* history unavailable; the app still renders the right view */
   }
   emit();
+}
+
+/**
+ * Changes the current view's filter in place. A replace, not a push: back
+ * should leave the view, not step through every filter that was tapped.
+ */
+export function setFilter(filter: string | undefined): void {
+  const next: NavState = { ...getNav(), filter };
+  if (!filter) delete next.filter;
+  navigate(next, { replace: true });
 }
 
 /** Hands control to the browser, which answers with a popstate we apply. */

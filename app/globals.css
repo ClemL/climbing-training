@@ -12,10 +12,15 @@
   --warn: #fbbf24;
   --danger: #f87171;
   --cat-freeweights: #f59e0b;
+  --cat-bands: #e879f9;
   --cat-bodyweight: #34d399;
   --cat-gym: #a78bfa;
-  --cat-prep: #fb7185;
+  --cat-soccer: #60a5fa;
+  --cat-golf: #a3e635;
+  --cat-knee: #fb923c;
+  --cat-standing: #94a3b8;
   --cat-move: #22d3ee;
+  --cat-prep: #fb7185;
   --radius: 12px;
   --radius-sm: 8px;
 
@@ -218,6 +223,107 @@ a {
   background: var(--bg-raised-2);
   color: var(--text);
   border-color: var(--border);
+}
+
+/* ---------- filter grid ----------
+   Replaces sideways-scrolling chip rows: every option visible, one tap each.
+   Three columns on a phone, more as the shell widens. */
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(102px, 1fr));
+  gap: 6px;
+  margin: 0 0 14px;
+  /* Clears the sticky top bar when the floating pill scrolls back here. */
+  scroll-margin-top: 112px;
+}
+
+.filter-grid.wide {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.filter-opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: calc(var(--d-control) + 15px);
+  padding: 6px 9px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-raised);
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.filter-opt .fo-icon {
+  flex: 0 0 auto;
+  font-size: 15px;
+}
+
+.filter-opt .fo-label {
+  flex: 1;
+  min-width: 0;
+  hyphens: manual;
+  overflow-wrap: break-word;
+}
+
+.filter-opt .fo-count,
+.filter-fab .filter-fab-change {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.filter-opt[aria-pressed="true"] {
+  color: var(--text);
+  border-color: var(--opt, var(--accent));
+  background: color-mix(in srgb, var(--opt, var(--accent)) 16%, var(--bg-raised));
+  box-shadow: inset 0 0 0 1px var(--opt, var(--accent));
+}
+
+.filter-opt[aria-pressed="true"] .fo-count {
+  color: var(--text-dim);
+}
+
+/* Appears once the grid has scrolled under the top bar; one tap scrolls back. */
+.filter-fab {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: calc(100vw - 32px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--opt, var(--accent)) 14%, var(--bg-raised-2));
+  border: 1px solid color-mix(in srgb, var(--opt, var(--accent)) 45%, transparent);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  animation: fab-in 0.16s ease-out;
+}
+
+.filter-fab .filter-fab-change {
+  padding-left: 7px;
+  border-left: 1px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@keyframes fab-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
 }
 
 h1 {
@@ -1584,4 +1690,129 @@ a.btn.primary {
 .rung-tick {
   color: var(--good);
   font-weight: 800;
+}
+
+/* ---------- knee check-in ---------- */
+.knee-card {
+  --tone: var(--accent);
+  background: color-mix(in srgb, var(--tone) 8%, var(--bg-raised));
+  border: 1px solid color-mix(in srgb, var(--tone) 30%, var(--border-soft));
+  border-radius: var(--radius);
+  padding: var(--d-card-p);
+  margin-bottom: var(--d-block-gap);
+}
+
+.knee-card.progress {
+  --tone: var(--good);
+}
+
+.knee-card.hold {
+  --tone: var(--warn);
+}
+
+.knee-card.back {
+  --tone: var(--danger);
+}
+
+.knee-verdict {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.knee-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.knee-title {
+  font-weight: 700;
+  font-size: calc(var(--d-name) + 1px);
+  color: var(--tone);
+}
+
+.knee-detail {
+  margin: 6px 0 0;
+  font-size: var(--d-sub);
+  color: var(--text-dim);
+}
+
+.knee-form {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.pain-row {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.pain-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.pain-label {
+  display: block;
+  font-weight: 600;
+  font-size: var(--d-name);
+}
+
+.pain-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.pain-value {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.pain-value small {
+  font-size: 12px;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.pain-row input[type="range"] {
+  width: 100%;
+  height: 32px;
+  margin: 0;
+}
+
+.knee-log {
+  margin-top: 10px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 4px;
+}
+
+.knee-log-row {
+  display: grid;
+  grid-template-columns: 4.5em 1fr 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 3px 0;
+}
+
+.knee-log-day {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.knee-log-x {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--text-faint);
+  font-size: 12px;
 }

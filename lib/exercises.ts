@@ -1554,6 +1554,268 @@ export const EXERCISES: Record<string, ExerciseDef> = {
     ],
     demo: "weak foot training drills soccer",
   },
+
+  /* ---------- Golf ---------- */
+  "club-hip-hinge": {
+    name: "Club Hip Hinge",
+    target: "Hip hinge pattern, hamstrings, address posture",
+    cues: [
+      "Club along the spine, touching the back of the head, between the shoulder blades and the tailbone.",
+      "Push the hips back with soft knees until the hamstrings load. All three contact points stay on the club.",
+      "10 reps. This is address posture: the hips move, the low back does not.",
+    ],
+    demo: "golf hip hinge drill club along spine",
+  },
+  "club-trunk-rotation": {
+    name: "Club Trunk Rotation",
+    target: "Thoracic rotation, swing-specific mobility",
+    cues: [
+      "Club across the front of the shoulders, arms crossed over it, in golf posture.",
+      "Turn back and through without the hips sliding or the spine tipping up.",
+      "10 each way, a little further each rep. The turn comes from the mid back, not the low back.",
+    ],
+    demo: "golf warm up trunk rotation club across shoulders",
+  },
+  "leg-swings": {
+    name: "Leg Swings",
+    target: "Hip flexors, hamstrings, adductors (dynamic)",
+    cues: [
+      "Hold a cart, bag stand or club for balance. Swing one leg forward and back, then across the body and out.",
+      "Start small and let the range grow over 10 swings. Torso stays tall.",
+      "10 each direction, each leg.",
+    ],
+  },
+  "lunge-rotation": {
+    name: "Lunge with Rotation",
+    target: "Hip flexors, thoracic rotation, single-leg balance",
+    cues: [
+      "Step into a lunge holding a club out in front at chest height.",
+      "Rotate the chest toward the front knee, return to center, then step through.",
+      "5 per side. Front knee stays over the foot.",
+    ],
+    demo: "lunge with rotation golf warm up",
+  },
+  "club-forearm-rotation": {
+    name: "Club Forearm Rotations",
+    target: "Forearm pronation and supination, wrist hinge",
+    cues: [
+      "Hold a club near the head, elbow bent to 90 degrees at your side.",
+      "Rotate the shaft slowly side to side using only the forearm, then hinge it up and down from the wrist.",
+      "10 each way, each hand. The lead elbow and wrist are where amateur golfers most often get sore.",
+    ],
+    demo: "golf forearm wrist warm up club rotation",
+  },
+  "half-swing": {
+    name: "Half Swings",
+    target: "Sequencing, tempo, strike",
+    cues: [
+      "Wedge, hip high to hip high, about half effort.",
+      "Let the body turn move the club rather than the hands. Clubface square at both ends.",
+      "With balls on the range, or as practice swings anywhere else.",
+    ],
+    demo: "golf half swing drill",
+  },
+  "ramp-swings": {
+    name: "Ramp-Up Swings",
+    target: "Progressive speed through the bag",
+    cues: [
+      "Work up the bag: wedge, mid iron, hybrid or wood, then driver.",
+      "3-5 balls per club, effort rising from about 60% to full.",
+      "No range: the same ramp as practice swings, half speed to full.",
+    ],
+    demo: "golf range warm up routine wedge to driver",
+  },
+  "speed-swings": {
+    name: "Max-Intent Swings",
+    target: "Clubhead speed, rate of force development",
+    cues: [
+      "Driver or a speed stick, no ball. Swing as fast as you can while still holding the finish in balance.",
+      "Swing the opposite way too, at the same intent. It keeps the trunk loaded in both directions.",
+      "Full rest between sets. Stop when speed or balance drops off; tired swings train a slower swing.",
+    ],
+    demo: "golf speed training overspeed swings",
+  },
+  "med-ball-rotational-throw": {
+    name: "Rotational Medicine Ball Throw",
+    target: "Rotational power, hip-to-shoulder sequencing",
+    cues: [
+      "Side-on to a solid wall, 2-4 kg ball at the back hip, athletic stance.",
+      "Load into the back hip, let the hips start the throw and the arms finish it. Release as hard as you can.",
+      "6 per side, reset between reps. No ball: a band wood chop at full speed.",
+    ],
+    demo: "rotational medicine ball throw wall golf",
+  },
+  "open-book": {
+    name: "Open Book",
+    target: "Thoracic rotation, chest",
+    cues: [
+      "Lie on your side, knees bent to 90 degrees and stacked, arms straight out in front.",
+      "Sweep the top arm up and over to the other side, eyes following the hand. Knees stay together on the floor.",
+      "Pause 2-3 seconds open, 8 per side. Knees down keeps the turn in the upper back.",
+    ],
+    demo: "open book thoracic rotation stretch",
+  },
+  "hip-90-90": {
+    name: "90/90 Hip Switch",
+    target: "Hip internal and external rotation",
+    cues: [
+      "Sit with both knees bent to 90 degrees, one leg in front of you and one out to the side.",
+      "Rotate both knees over to the other side, sitting tall, hands off the floor if you can.",
+      "8 switches each way. Lead-hip internal rotation is what the swing turns through, and the range most often missing.",
+    ],
+    demo: "90 90 hip switch mobility",
+  },
+
+  /* ---------- Knee ---------- */
+  "quad-set": {
+    name: "Quad Set",
+    target: "Quadriceps activation, full knee extension",
+    cues: [
+      "Sit with the leg straight and a rolled towel under the knee.",
+      "Tighten the thigh to press the back of the knee into the towel. The kneecap should glide up. Hold 5 seconds.",
+      "10 holds. The first step after a flare, and a check that the quad still switches on fully.",
+    ],
+    demo: "quad set exercise physical therapy",
+  },
+  "straight-leg-raise": {
+    name: "Straight Leg Raise",
+    target: "Quadriceps, hip flexors",
+    cues: [
+      "Lie on your back, other knee bent with the foot flat.",
+      "Lock the knee with a quad set first, then lift the leg to the height of the other knee. Lower over 3 seconds.",
+      "If the knee bends as the leg lifts, stay on quad sets until it does not.",
+    ],
+    demo: "straight leg raise knee rehab",
+  },
+  "terminal-knee-extension": {
+    name: "Terminal Knee Extension",
+    target: "Quadriceps, last degrees of knee straightening",
+    cues: [
+      "Band anchored low in front, looped behind the knee. Step back until it pulls the knee forward.",
+      "From slightly bent, straighten the knee fully against the band and squeeze the thigh for 2 seconds.",
+      "15-20 reps. Low load, and it trains the last few degrees of straightening a sore knee loses first.",
+    ],
+    demo: "terminal knee extension band",
+  },
+  "spanish-squat": {
+    name: "Spanish Squat",
+    target: "Quadriceps, patellar tendon (isometric)",
+    cues: [
+      "Heavy band or strap around a post, looped behind both knees. Step back until it is taut.",
+      "Sit back with shins vertical and torso upright, letting the band hold the knees. Hold at a depth you tolerate.",
+      "Holds of 30-45 seconds. A wall sit does the same job with no band.",
+    ],
+    demo: "spanish squat patellar tendon isometric",
+  },
+  "side-lying-abduction": {
+    name: "Side-Lying Hip Abduction",
+    target: "Glute medius",
+    cues: [
+      "Lie on your side, bottom knee bent, top leg straight and slightly behind the body.",
+      "Lift the top leg with the toes pointing forward, not up. Stop before the pelvis rolls back.",
+      "15-20 per side with a 2-second lowering.",
+    ],
+    demo: "side lying hip abduction glute medius",
+  },
+  clamshell: {
+    name: "Clamshell",
+    target: "Glute medius, hip external rotators",
+    cues: [
+      "Side-lying, hips and knees bent, heels together. Band above the knees to progress.",
+      "Open the top knee without letting the pelvis rock back.",
+      "15-20 per side. Slow, and stop where the hip starts to roll.",
+    ],
+    demo: "clamshell exercise band",
+  },
+  "sit-to-stand": {
+    name: "Sit-to-Stand",
+    target: "Quadriceps, glutes",
+    cues: [
+      "Sit on the front half of a chair, feet hip width, arms crossed.",
+      "Lean forward and stand without the hands, then sit back down over 3 seconds: touch, do not drop.",
+      "A cushion on the seat makes it easier, a lower seat or a dumbbell makes it harder.",
+    ],
+    demo: "sit to stand exercise knee",
+  },
+  "low-step-up": {
+    name: "Step-Up",
+    target: "Quadriceps, glutes, single-leg control",
+    cues: [
+      "A 15-20 cm step or stair to start. Whole foot on the step.",
+      "Drive up through the top leg without pushing off the back foot, knee tracking over the second toe.",
+      "Lower under control. Raise the step before adding load.",
+    ],
+  },
+  "lateral-step-down": {
+    name: "Lateral Step-Down",
+    target: "Quadriceps, hip control",
+    cues: [
+      "Stand side-on at the edge of a step, the outside leg hanging off.",
+      "Bend the standing knee to touch the free heel to the floor, then stand. Knee over the second toe, pelvis level.",
+      "Height and slowness are the dials. A knee that dives inward means the step is too high for now.",
+    ],
+    demo: "lateral step down knee exercise",
+  },
+  "split-squat": {
+    name: "Split Squat",
+    target: "Quadriceps, glutes",
+    cues: [
+      "Long split stance, back heel up, both feet pointing forward.",
+      "Lower the back knee straight down toward the floor. The front shin may travel forward.",
+      "Go only as deep as stays at 3/10 pain or less. Dumbbells at the sides to load it.",
+    ],
+    demo: "split squat form",
+  },
+  "decline-squat": {
+    name: "Decline Single-Leg Squat",
+    target: "Patellar tendon, quadriceps (eccentric)",
+    cues: [
+      "One leg on a 25-degree slant board, or heels on a 5 cm plate if you have none.",
+      "Lower over 3 seconds to about 60 degrees of knee bend, then stand back up using both legs.",
+      "Tendon discomfort up to 3/10 is acceptable if it has settled by the next morning.",
+    ],
+    demo: "decline single leg squat patellar tendinopathy",
+  },
+  "reverse-nordic": {
+    name: "Reverse Nordic",
+    target: "Quadriceps (lengthened, eccentric)",
+    cues: [
+      "Kneel upright on a pad, body straight from knee to head.",
+      "Lean back as one piece with the hips staying forward, as far as you control, then return.",
+      "6-10 reps over a small range at first. Skip it if kneeling on the knee hurts.",
+    ],
+    demo: "reverse nordic quad exercise",
+  },
+  "backward-walk": {
+    name: "Backward Walking",
+    target: "Quadriceps, knee extension under low load",
+    cues: [
+      "Walk backwards on a clear, flat surface, or a treadmill at a slow walk holding the rails.",
+      "Reach back with the toes and straighten each knee fully as you push off.",
+      "An incline or a sled makes it harder. Going backwards works the quads with less kneecap compression.",
+    ],
+    demo: "backward walking knee rehab retro walking",
+  },
+  "snap-down": {
+    name: "Snap-Down Landing",
+    target: "Landing mechanics, deceleration",
+    cues: [
+      "Rise onto the toes with arms overhead, then snap down into a quarter-squat landing as fast as you can.",
+      "Land quietly, hips back, knees over the toes, and freeze for 2 seconds.",
+      "Teaches the landing before any jump is added.",
+    ],
+    demo: "snap down landing drill",
+  },
+  "single-leg-hop-stick": {
+    name: "Single-Leg Hop & Stick",
+    target: "Landing control, return-to-sport readiness",
+    cues: [
+      "Hop forward a short distance from one leg to the same leg and freeze the landing for 2 seconds.",
+      "Knee over the second toe, hips level, no wobble. Distance grows only while every landing is clean.",
+      "Compare sides. Return-to-sport criteria usually want the injured side within 90% of the other.",
+    ],
+    demo: "single leg hop and stick landing",
+  },
 };
 
 /**
