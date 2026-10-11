@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from "react";
 import ExerciseFigure from "./ExerciseFigure";
 import FavoriteButton from "./FavoriteButton";
-import { EXERCISES, searchUrl } from "@/lib/exercises";
+import { EXERCISES, imageSearchUrl, searchUrl } from "@/lib/exercises";
 import { EXERCISE_STEPS } from "@/lib/exercise-steps";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
 import { back, getNav, navigate } from "@/lib/navigation";
@@ -86,9 +86,14 @@ export default function ExerciseSheet() {
           ) : null}
 
           {!hasImage ? (
-            <a className="btn sm" href={searchUrl(exKey)} target="_blank" rel="noopener noreferrer">
-              Search the web &#8599;
-            </a>
+            <div className="sheet-links">
+              <a className="btn sm" href={searchUrl(exKey)} target="_blank" rel="noopener noreferrer">
+                Search the web &#8599;
+              </a>
+              <a className="btn sm" href={imageSearchUrl(exKey)} target="_blank" rel="noopener noreferrer">
+                Search images &#8599;
+              </a>
+            </div>
           ) : null}
         </div>
       </div>

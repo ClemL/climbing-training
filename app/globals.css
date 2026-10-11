@@ -1331,6 +1331,12 @@ a.btn.primary {
   margin-bottom: 8px;
 }
 
+.sheet-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .exfig.large {
   max-width: 100%;
   aspect-ratio: 3 / 2;
