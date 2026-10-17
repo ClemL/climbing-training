@@ -7,7 +7,8 @@ import LoadLog from "./LoadLog";
 import RestTimer from "./RestTimer";
 import { useTick, useWakeLock } from "@/lib/hooks";
 import { useSettings } from "@/lib/use-settings";
-import { elapsedMs, formatClock, slotKey, type ActiveSession } from "@/lib/storage";
+import { blockKeys, isSkipped, progressOf, roundsOf, slotKey } from "@/lib/progress";
+import { elapsedMs, formatClock, type ActiveSession } from "@/lib/storage";
 import type { Block, Plan } from "@/lib/types";
 
 const KIND_LABEL: Record<Block["kind"], string> = {
@@ -29,38 +30,6 @@ function restSeconds(rest?: string): number | undefined {
   const sec = rest.match(/(\d+)\s*s/i);
   if (sec) return Number(sec[1]);
   return undefined;
-}
-
-/** Rounds actually being performed, which the athlete can raise or lower. */
-function roundsOf(session: ActiveSession, block: Block): number {
-  return session.rounds?.[block.id] ?? block.rounds;
-}
-
-function isSkipped(session: ActiveSession, block: Block): boolean {
-  return !!session.skipped?.[block.id];
-}
-
-/** Keys for one block at its current round count. */
-function blockKeys(session: ActiveSession, block: Block): string[] {
-  const keys: string[] = [];
-  for (let r = 1; r <= roundsOf(session, block); r++) {
-    for (let i = 0; i < block.slots.length; i++) keys.push(slotKey(block.id, r, i));
-  }
-  return keys;
-}
-
-/** Progress counts only what is still on the card: skipped blocks and dropped rounds do not. */
-function progressOf(plan: Plan, session: ActiveSession): { checked: number; total: number } {
-  let checked = 0;
-  let total = 0;
-  for (const block of plan.blocks) {
-    if (isSkipped(session, block)) continue;
-    for (const k of blockKeys(session, block)) {
-      total += 1;
-      if (session.done[k]) checked += 1;
-    }
-  }
-  return { checked, total };
 }
 
 /** Rest prescription of the first unfinished block, used as the highlighted preset. */

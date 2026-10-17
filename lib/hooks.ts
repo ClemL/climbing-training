@@ -10,15 +10,25 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * Everything downstream derives from wall-clock deadlines, which means a
  * backgrounded tab - where browsers throttle timers to about once a minute -
  * shows the correct time the moment it is foregrounded again.
+ *
+ * A countdown passes its own window. Ticking stops at `until`, so a finished
+ * timer sitting on "Go" or "Complete" stops redrawing ten times a second. And
+ * the value never reads earlier than `from`: while stopped it holds the last
+ * tick, which can be minutes old when the next countdown starts, and would
+ * show that countdown minutes too long until the first new tick lands.
  */
-export function useTick(on: boolean, intervalMs = 250): number {
+export function useTick(on: boolean, intervalMs = 250, from = 0, until = Infinity): number {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     if (!on) return;
-    const t = window.setInterval(() => setNow(Date.now()), intervalMs);
+    const t = window.setInterval(() => {
+      const next = Date.now();
+      setNow(next);
+      if (next >= until) window.clearInterval(t);
+    }, intervalMs);
     return () => window.clearInterval(t);
-  }, [on, intervalMs]);
-  return now;
+  }, [on, intervalMs, until]);
+  return Math.max(now, from);
 }
 
 /**

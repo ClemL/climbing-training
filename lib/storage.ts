@@ -148,6 +148,43 @@ export function clearHistory(): void {
   emit();
 }
 
+function isHistoryEntry(v: unknown): v is HistoryEntry {
+  const h = v as HistoryEntry | null;
+  return (
+    !!h &&
+    typeof h.id === "string" &&
+    typeof h.planId === "string" &&
+    typeof h.planName === "string" &&
+    typeof h.category === "string" &&
+    typeof h.finishedAt === "number" &&
+    typeof h.durationMs === "number" &&
+    typeof h.checked === "number" &&
+    typeof h.total === "number"
+  );
+}
+
+/**
+ * Sessions from a backup, merged into the ones already here. Matched by id,
+ * so importing the same file twice changes nothing. Newest first, capped.
+ */
+export function mergeHistory(current: readonly HistoryEntry[], incoming: unknown): HistoryEntry[] {
+  const have = new Set(current.map((h) => h.id));
+  const added: HistoryEntry[] = [];
+  for (const h of Array.isArray(incoming) ? incoming : []) {
+    if (!isHistoryEntry(h) || have.has(h.id)) continue;
+    have.add(h.id);
+    added.push(h);
+  }
+  return [...current, ...added].sort((a, b) => b.finishedAt - a.finishedAt).slice(0, HISTORY_CAP);
+}
+
+export function importHistory(incoming: unknown): void {
+  const next = mergeHistory(getHistorySnapshot(), incoming);
+  historySnapshot = next;
+  write(HISTORY_KEY, next);
+  emit();
+}
+
 /* ---------------------------------------------------------------------------
  * Added-weight log
  *
@@ -198,8 +235,36 @@ export function clearLoads(): void {
   emit();
 }
 
-export function slotKey(blockId: string, round: number, slotIndex: number): string {
-  return `${blockId}:${round}:${slotIndex}`;
+function isLoadEntry(v: unknown): v is LoadEntry {
+  const e = v as LoadEntry | null;
+  return !!e && typeof e.at === "number" && typeof e.value === "number" && Number.isFinite(e.value);
+}
+
+/** Hangboard entries from a backup, merged per block. Matched by timestamp, newest first, capped. */
+export function mergeLoads(current: Record<string, LoadEntry[]>, incoming: unknown): Record<string, LoadEntry[]> {
+  const next = { ...current };
+  if (!incoming || typeof incoming !== "object" || Array.isArray(incoming)) return next;
+  for (const [key, entries] of Object.entries(incoming)) {
+    // Only `planId:blockId` keys, which also keeps "__proto__" out of the assignment below.
+    if (!/^[\w-]+:[\w-]+$/.test(key)) continue;
+    const have = new Set((next[key] ?? []).map((e) => e.at));
+    const added: LoadEntry[] = [];
+    for (const e of Array.isArray(entries) ? entries : []) {
+      if (!isLoadEntry(e) || have.has(e.at)) continue;
+      have.add(e.at);
+      added.push(e);
+    }
+    if (added.length === 0) continue;
+    next[key] = [...(next[key] ?? []), ...added].sort((a, b) => b.at - a.at).slice(0, LOADS_PER_BLOCK);
+  }
+  return next;
+}
+
+export function importLoads(incoming: unknown): void {
+  const next = mergeLoads(getLoadsSnapshot(), incoming);
+  loadsSnapshot = next;
+  write(LOADS_KEY, next);
+  emit();
 }
 
 export function formatClock(ms: number): string {

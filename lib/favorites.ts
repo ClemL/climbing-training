@@ -67,3 +67,19 @@ export function removeFavorite(exKey: string): void {
 export function clearFavorites(): void {
   commit(EMPTY);
 }
+
+/** Saved exercises from a backup. Those already here keep their place; new ones follow. */
+export function mergeFavorites(current: readonly string[], incoming: unknown): string[] {
+  const have = new Set(current);
+  const added: string[] = [];
+  for (const k of Array.isArray(incoming) ? incoming : []) {
+    if (typeof k !== "string" || have.has(k)) continue;
+    have.add(k);
+    added.push(k);
+  }
+  return [...current, ...added].slice(0, CAP);
+}
+
+export function importFavorites(incoming: unknown): void {
+  commit(mergeFavorites(getFavorites(), incoming));
+}

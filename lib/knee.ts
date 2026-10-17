@@ -122,6 +122,11 @@ function isPain(v: unknown): v is number {
   return typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= 10;
 }
 
+function isCheckIn(v: unknown): v is KneeCheckIn {
+  const e = v as KneeCheckIn | null;
+  return !!e && typeof e.day === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.day) && isPain(e.morning) && isPain(e.session);
+}
+
 function read(): readonly KneeCheckIn[] {
   if (typeof window === "undefined") return EMPTY;
   try {
@@ -129,15 +134,25 @@ function read(): readonly KneeCheckIn[] {
     if (!raw) return EMPTY;
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) return EMPTY;
-    return Object.freeze(
-      parsed.filter(
-        (e): e is KneeCheckIn =>
-          !!e && typeof e.day === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.day) && isPain(e.morning) && isPain(e.session),
-      ),
-    );
+    return Object.freeze(parsed.filter(isCheckIn));
   } catch {
     return EMPTY;
   }
+}
+
+/**
+ * Check-ins from a backup, merged into the log. One per day still holds: on a
+ * day both have, the entry already on this device wins.
+ */
+export function mergeCheckIns(current: readonly KneeCheckIn[], incoming: unknown): KneeCheckIn[] {
+  const have = new Set(current.map((e) => e.day));
+  const added: KneeCheckIn[] = [];
+  for (const e of Array.isArray(incoming) ? incoming : []) {
+    if (!isCheckIn(e) || have.has(e.day)) continue;
+    have.add(e.day);
+    added.push(e);
+  }
+  return [...current, ...added].sort((a, b) => (a.day < b.day ? 1 : -1)).slice(0, CAP);
 }
 
 function commit(next: readonly KneeCheckIn[]): void {
@@ -172,4 +187,8 @@ export function logCheckIn(entry: KneeCheckIn): void {
 
 export function removeCheckIn(day: string): void {
   commit(getKneeLog().filter((e) => e.day !== day));
+}
+
+export function importCheckIns(incoming: unknown): void {
+  commit(mergeCheckIns(getKneeLog(), incoming));
 }
