@@ -9,7 +9,7 @@ export default function HistoryView({ history }: { history: readonly HistoryEntr
     <>
       <h1>History</h1>
       <p className="lede">
-        Stored in this browser only, capped at the last 60 sessions. Clearing site data wipes it, which is fine.
+        Stored in this browser only, capped at the last 60 sessions. Clearing site data wipes it; a backup in Settings keeps a copy.
       </p>
 
       {history.length === 0 ? (

@@ -61,8 +61,13 @@ self.addEventListener("fetch", (event) => {
       (async () => {
         try {
           const fresh = await fetch(request);
-          const cache = await caches.open(SHELL);
-          cache.put("/", fresh.clone());
+          // Only a good page may become the offline shell. A 404 for a mistyped
+          // URL or a 500 from a bad deploy would otherwise be what opens with
+          // no signal, until some later navigation happened to replace it.
+          if (fresh.ok) {
+            const cache = await caches.open(SHELL);
+            cache.put("/", fresh.clone());
+          }
           return fresh;
         } catch {
           const cached = await caches.match("/", { ignoreSearch: true });

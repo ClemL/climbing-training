@@ -55,8 +55,8 @@ export default function IntervalTimer({ spec }: { spec: IntervalSpec }) {
   const lastSegment = useRef<number>(-1);
   const lastTick = useRef<number>(-1);
 
-  const now = useTick(timeline !== null, 100);
   const finishesAt = timeline ? timeline[timeline.length - 1].end : 0;
+  const now = useTick(timeline !== null, 100, timeline?.[0].start, finishesAt);
   const running = timeline !== null && now < finishesAt;
   const done = timeline !== null && now >= finishesAt;
 

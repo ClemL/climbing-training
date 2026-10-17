@@ -1,9 +1,27 @@
 "use client";
 
+import { useRef, useState } from "react";
+import { applyImport, downloadBackup, parseBackup, previewImport, type ImportCounts } from "@/lib/backup";
 import { clearFavorites } from "@/lib/favorites";
-import { clearHistory, clearLoads } from "@/lib/storage";
+import { clearHistory, clearLoads, formatDate } from "@/lib/storage";
 import { resetSettings, updateSettings, type Density, type Settings } from "@/lib/settings";
 import { useSettings } from "@/lib/use-settings";
+
+/** "12 sessions, 3 knee check-ins and 1 saved exercise", leaving out whatever is zero. */
+function describe(c: ImportCounts): string {
+  const parts = (
+    [
+      [c.sessions, "session", "sessions"],
+      [c.checkIns, "knee check-in", "knee check-ins"],
+      [c.loads, "hangboard entry", "hangboard entries"],
+      [c.saved, "saved exercise", "saved exercises"],
+    ] as const
+  )
+    .filter(([n]) => n > 0)
+    .map(([n, one, many]) => `${n} ${n === 1 ? one : many}`);
+  if (parts.length < 2) return parts[0] ?? "";
+  return `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
+}
 
 function Toggle({
   name,
@@ -30,6 +48,24 @@ function Toggle({
 export default function SettingsView() {
   const s = useSettings();
   const set = <K extends keyof Settings>(key: K, value: Settings[K]) => updateSettings({ [key]: value } as Partial<Settings>);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [importNote, setImportNote] = useState<string | null>(null);
+
+  const importFile = async (file: File) => {
+    const parsed = parseBackup(await file.text());
+    if (!parsed.ok) {
+      setImportNote(parsed.error);
+      return;
+    }
+    const adds = describe(previewImport(parsed.backup));
+    const from = formatDate(parsed.backup.exportedAt);
+    if (adds && !window.confirm(`Backup from ${from}. Add ${adds} to this device? Nothing already here is changed or removed.`)) {
+      return;
+    }
+    const { settings } = applyImport(parsed.backup);
+    const taken = settings ? " Settings taken from the backup." : "";
+    setImportNote(adds ? `Added ${adds}.${taken}` : `Nothing in the ${from} backup is new to this device.${taken}`);
+  };
 
   return (
     <>
@@ -96,6 +132,49 @@ export default function SettingsView() {
         on={s.animateFigures}
         onChange={(v) => set("animateFigures", v)}
       />
+
+      <h2>Backup</h2>
+      <div className="setting">
+        <div className="setting-copy">
+          <div className="setting-name">Export a backup</div>
+          <div className="setting-why">
+            Sessions, knee check-ins, the hangboard log, saved exercises and settings, as one JSON file. Keep it
+            somewhere other than this phone.
+          </div>
+        </div>
+        <button className="btn sm" onClick={() => downloadBackup()}>
+          Export
+        </button>
+      </div>
+      <div className="setting">
+        <div className="setting-copy">
+          <div className="setting-name">Import a backup</div>
+          <div className="setting-why">
+            Merges into what is here and never removes anything, so a phone and a tablet can trade files. Settings
+            come across only to a device that has none of its own.
+          </div>
+          {importNote ? (
+            <div className="setting-why" role="status" style={{ color: "var(--text)", marginTop: 4 }}>
+              {importNote}
+            </div>
+          ) : null}
+        </div>
+        <button className="btn sm" onClick={() => fileRef.current?.click()}>
+          Import
+        </button>
+        {/* No `accept` filter: Android pickers often type a .json from Drive as
+            octet-stream and grey it out. parseBackup rejects anything else. */}
+        <input
+          ref={fileRef}
+          type="file"
+          hidden
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            e.target.value = "";
+            if (file) void importFile(file);
+          }}
+        />
+      </div>
 
       <h2>Data</h2>
       <div className="setting">

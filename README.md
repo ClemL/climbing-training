@@ -5,7 +5,8 @@ across free weights, elastic bands, bodyweight, climbing-gym days, soccer, golf,
 standing-only travel sessions, band work for walks and bus stops, and warm-ups, with a session
 clock, superset grouping, a rest timer, an interval timer, and form cues on every exercise.
 
-Everything is stored in `localStorage`. No account, no database, no server calls.
+Everything is stored in `localStorage`. No account, no database, no server calls. A backup in
+Settings exports it to one JSON file and merges it back in on any device.
 
 ## Plans
 
@@ -99,6 +100,12 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   page runs roughly 1900px tall at compact and 2500px at comfortable.
 - **Settings** for density, weight logging and unit, timer sounds, screen wake lock and figure
   animation.
+- **Backup and restore.** Export writes sessions, knee check-ins, the hangboard log, saved
+  exercises and settings to `training-days-yyyyMMdd_HHmm.json`. Import merges rather than
+  replaces: entries match by id, day or timestamp, the copy already on the device wins a clash,
+  and importing the same file twice changes nothing — so a phone and a tablet can trade files.
+  Settings come across only to a device that has none of its own, since density is a per-device
+  choice. The session in progress is never exported.
 - **Filters that fit a phone.** Plan categories, directory groups and week templates are a wrapped
   grid with every option visible, not a sideways-scrolling chip row that hid most of its options
   off-screen. On long lists a pill appears once the grid scrolls away and jumps back to it. The
@@ -137,10 +144,11 @@ npm run build    # production build
 npm run check    # typecheck + lint + tests
 ```
 
-`npm test` runs 28 checks with `node --test` and no test framework. Most guard the data:
+`npm test` runs 38 checks with `node --test` and no test framework. Most guard the data:
 unresolved exercise keys, duplicate ids, block minutes against the advertised session length,
 interval specs matching block rounds, image frames present on disk, and week templates never
-stacking two finger-intensive days. The rest cover duration parsing and the knee check-in rule.
+stacking two finger-intensive days. The rest cover duration parsing, the knee check-in rule,
+session progress counting and the merge rules behind backup import.
 Editing `lib/plans.ts` by hand is the likely way this breaks, and a typo'd exercise key renders
 nothing at all — which you would discover standing at the hangboard.
 
@@ -181,7 +189,8 @@ Navigation is not stored: it lives in the URL and the browser's history stack, n
 Replacing that state wholesale makes Next resynchronize with a full page navigation, which silently
 reloads the document and discards component state.
 
-Clearing site data resets both. History is disposable by design.
+Clearing site data resets both. Every key but `ct.active.v2` goes into a backup; without one, a
+cleared browser or a new phone starts from nothing.
 
 ## Exercise imagery
 
@@ -225,7 +234,9 @@ a build plugin would add coupling without adding capability — and a plugin tha
 upgrade would take offline support down with it.
 
 - **Install** precaches the shell and every image listed in `public/image-manifest.json`.
-- **Navigations** are network-first with a cached shell fallback, so deploys are picked up.
+- **Navigations** are network-first with a cached shell fallback, so deploys are picked up. Only
+  a successful response replaces the cached shell, so a 404 or a failing deploy cannot become the
+  page that opens offline.
 - **Everything else** is cache-first, which is always correct for content-hashed build assets.
 
 Bump `VERSION` in `public/sw.js` when the shell changes in a way that must invalidate caches.

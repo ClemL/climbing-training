@@ -26,12 +26,14 @@ export default function RestTimer({
   // correct across a backgrounded tab, a locked screen, or a dropped frame.
   const [deadline, setDeadline] = useState<number | null>(initialDeadline ?? null);
   const [total, setTotal] = useState(initialTotal);
+  // When the current countdown began; the clock never reads earlier. See useTick.
+  const [startedAt, setStartedAt] = useState(0);
   const { sounds } = useSettings();
   const beepRaw = useBeep();
   const beep = sounds ? beepRaw : NO_SOUND;
   const lastBeep = useRef<number>(-1);
 
-  const now = useTick(deadline !== null, 100);
+  const now = useTick(deadline !== null, 100, startedAt, deadline ?? undefined);
   const remainMs = deadline === null ? 0 : Math.max(0, deadline - now);
   const remainSec = Math.ceil(remainMs / 1000);
   const expired = deadline !== null && remainMs === 0;
@@ -51,9 +53,11 @@ export default function RestTimer({
   }, [remainSec, remainMs, deadline, beep]);
 
   const start = useCallback((secs: number) => {
+    const t = Date.now();
     lastBeep.current = -1;
     setTotal(secs);
-    setDeadline(Date.now() + secs * 1000);
+    setStartedAt(t);
+    setDeadline(t + secs * 1000);
   }, []);
 
   const extend = useCallback(() => {

@@ -11,6 +11,7 @@ import SettingsView from "@/components/SettingsView";
 import WeekView from "@/components/WeekView";
 import SessionView from "@/components/SessionView";
 import { planById, PLANS } from "@/lib/plans";
+import { progressOf } from "@/lib/progress";
 import {
   clearActive,
   elapsedMs,
@@ -68,7 +69,8 @@ export default function Home() {
     if (!active) return;
     const plan = planById(active.planId);
     if (!plan) return;
-    const total = plan.blocks.reduce((n, b) => n + b.slots.length * b.rounds, 0);
+    // Counted the way the session view counts, so History records what was on screen.
+    const { checked, total } = progressOf(plan, active);
     const entry: HistoryEntry = {
       id: `${active.planId}-${active.startedAt}`,
       planId: plan.id,
@@ -76,7 +78,7 @@ export default function Home() {
       category: plan.category,
       finishedAt: Date.now(),
       durationMs: elapsedMs(active),
-      checked: Object.keys(active.done).length,
+      checked,
       total,
     };
     pushHistory(entry);
@@ -180,7 +182,7 @@ export default function Home() {
           <div style={{ flex: 1, minWidth: 0 }}>
             <div className="t">{activePlan.name} in progress</div>
             <div className="when faint" style={{ fontSize: 12 }}>
-              {formatClock(elapsedMs(active))} elapsed &middot; {Object.keys(active.done).length} checked
+              {formatClock(elapsedMs(active))} elapsed &middot; {progressOf(activePlan, active).checked} checked
               {active.running ? "" : " · paused"}
             </div>
           </div>
