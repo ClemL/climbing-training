@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import ChalkNav, { LibrarySwitch } from "@/components/ChalkNav";
 import ExerciseIndex from "@/components/ExerciseIndex";
 import FavoritesView from "@/components/FavoritesView";
 import HistoryView from "@/components/HistoryView";
@@ -195,6 +196,7 @@ export default function Home() {
         </div>
       ) : null}
 
+      {shellView === "library" || shellView === "saved" ? <LibrarySwitch view={shellView} onGo={setView} /> : null}
       {shellView === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
       {shellView === "week" ? <WeekView onPick={openPreview} /> : null}
       {shellView === "progressions" ? <ProgressionsView /> : null}
@@ -208,6 +210,8 @@ export default function Home() {
         <br />
         Loads are yours to pick. Stop any finger work that produces sharp or localized pain.
       </p>
+
+      <ChalkNav view={shellView} onGo={setView} />
     </>
   );
 }

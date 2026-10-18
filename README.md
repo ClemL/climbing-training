@@ -98,7 +98,21 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
 - **UI density** — compact, normal or comfortable. Row height, card padding, gaps, type size and
   control size all scale from one set of CSS custom properties on the document root, so a session
   page runs roughly 1900px tall at compact and 2500px at comfortable.
-- **Settings** for density, weight logging and unit, timer sounds, screen wake lock and figure
+- **Two styles, Classic and Chalk**, switched in Settings. Classic is the original. Chalk is a
+  one-handed phone redesign:
+  - five-item bottom navigation instead of six top tabs, two of which ran off a 372px screen, with
+    Directory and Saved sharing a Library slot;
+  - a session folded to the block being worked: one sticky clock with a progress bar, plan notes
+    behind a "Before you start" fold, finished blocks collapsed, the next one opened and scrolled
+    into view, and rounds and skip moved into a per-block menu so a slip cannot drop a block;
+  - a timer bar that names the next item under a 44px countdown;
+  - 44px targets throughout, where Classic's checkboxes are 27px;
+  - a light theme that follows the phone or is set by hand, every color at 4.5:1 or better.
+
+  An inline script in `<head>` applies the stored style and theme before first paint, so a light
+  theme does not flash dark on open. Every Chalk rule is scoped to `data-style="chalk"` on the
+  document root, so Classic renders pixel-for-pixel as it did.
+- **Settings** for style and theme, density, weight logging and unit, timer sounds, screen wake lock and figure
   animation.
 - **Backup and restore.** Export writes sessions, knee check-ins, the hangboard log, saved
   exercises and settings to `training-days-yyyyMMdd_HHmm.json`. Import merges rather than
@@ -144,11 +158,13 @@ npm run build    # production build
 npm run check    # typecheck + lint + tests
 ```
 
-`npm test` runs 38 checks with `node --test` and no test framework. Most guard the data:
+`npm test` runs 44 checks with `node --test` and no test framework. Most guard the data:
 unresolved exercise keys, duplicate ids, block minutes against the advertised session length,
 interval specs matching block rounds, image frames present on disk, and week templates never
 stacking two finger-intensive days. The rest cover duration parsing, the knee check-in rule,
-session progress counting and the merge rules behind backup import.
+session progress counting, Chalk's current-block and next-item logic, the merge rules behind
+backup import, the pre-paint style script, and the light theme's contrast, read straight from
+`globals.css`.
 Editing `lib/plans.ts` by hand is the likely way this breaks, and a typo'd exercise key renders
 nothing at all — which you would discover standing at the hangboard.
 

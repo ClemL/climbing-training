@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { progressOf, slotKey } from "../lib/progress.ts";
+import { currentBlock, nextItem, progressOf, slotKey } from "../lib/progress.ts";
 import type { ActiveSession } from "../lib/storage.ts";
 import type { Plan, Slot } from "../lib/types.ts";
 
@@ -56,4 +56,21 @@ test("dropping a round drops the boxes checked in it", () => {
 
 test("adding a round adds to the total", () => {
   assert.deepEqual(progressOf(PLAN, session({ rounds: { m: 4 } })), { checked: 0, total: 11 });
+});
+
+/* Chalk's focus mode opens the current block and names the next item. */
+
+test("the current block is the first with anything unchecked, skipping skipped blocks", () => {
+  assert.equal(currentBlock(PLAN, session())?.id, "w");
+  assert.equal(currentBlock(PLAN, session({ done: done(["w", 1, 0], ["w", 1, 1], ["w", 1, 2]) }))?.id, "m");
+  assert.equal(currentBlock(PLAN, session({ skipped: { w: true } }))?.id, "m");
+});
+
+test("next item walks the current block round by round, and is gone when the card is done", () => {
+  const s = session({ done: done(["w", 1, 0], ["w", 1, 1], ["w", 1, 2], ["m", 1, 0], ["m", 1, 1], ["m", 2, 0]) });
+  const n = nextItem(PLAN, s);
+  assert.deepEqual([n?.block.id, n?.round, n?.slotIndex, n?.rounds], ["m", 2, 1, 3]);
+  const all = session({ skipped: { w: true }, rounds: { m: 1 }, done: done(["m", 1, 0], ["m", 1, 1]) });
+  assert.equal(currentBlock(PLAN, all), undefined);
+  assert.equal(nextItem(PLAN, all), undefined);
 });

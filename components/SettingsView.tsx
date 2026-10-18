@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { applyImport, downloadBackup, parseBackup, previewImport, type ImportCounts } from "@/lib/backup";
 import { clearFavorites } from "@/lib/favorites";
 import { clearHistory, clearLoads, formatDate } from "@/lib/storage";
-import { resetSettings, updateSettings, type Density, type Settings } from "@/lib/settings";
+import { resetSettings, updateSettings, type Density, type Settings, type Style, type Theme } from "@/lib/settings";
 import { useSettings } from "@/lib/use-settings";
 
 /** "12 sessions, 3 knee check-ins and 1 saved exercise", leaving out whatever is zero. */
@@ -96,6 +96,39 @@ export default function SettingsView() {
       ) : null}
 
       <h2>Display</h2>
+      <div className="setting">
+        <div className="setting-copy">
+          <div className="setting-name">Style</div>
+          <div className="setting-why">
+            Chalk is the one-handed redesign: navigation at the bottom, a session folded to the block you are on, bigger
+            targets, and a light theme for daylight. Classic is the original.
+          </div>
+        </div>
+      </div>
+      <div className="seg seg-wide two">
+        {(["classic", "chalk"] as Style[]).map((v) => (
+          <button key={v} aria-pressed={s.style === v} onClick={() => set("style", v)}>
+            {v[0].toUpperCase() + v.slice(1)}
+          </button>
+        ))}
+      </div>
+      {s.style === "chalk" ? (
+        <>
+          <div className="setting">
+            <div className="setting-copy">
+              <div className="setting-name">Theme</div>
+              <div className="setting-why">System follows the phone. Light reads better outdoors in sun.</div>
+            </div>
+          </div>
+          <div className="seg seg-wide">
+            {(["system", "light", "dark"] as Theme[]).map((v) => (
+              <button key={v} aria-pressed={s.theme === v} onClick={() => set("theme", v)}>
+                {v[0].toUpperCase() + v.slice(1)}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : null}
       <div className="setting">
         <div className="setting-copy">
           <div className="setting-name">Element size</div>
