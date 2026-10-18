@@ -119,7 +119,7 @@ export default function SessionView({
   const elapsed = elapsedMs(session, now);
 
   return (
-    <div style={{ ["--cat" as string]: `var(--cat-${plan.category})` }}>
+    <div className="narrow" style={{ ["--cat" as string]: `var(--cat-${plan.category})` }}>
       <div className="topbar">
         <button className="btn sm ghost" onClick={onExit} aria-label="Back to plans">
           &#8592;
@@ -148,8 +148,20 @@ export default function SessionView({
           <span className="pill">{plan.blocks.length} blocks</span>
           <span className="pill">{total} checkpoints</span>
         </div>
-        <div className="progress" aria-label={`${pct} percent complete`}>
-          <i style={{ width: `${pct}%` }} />
+        <div className="block-progress" role="img" aria-label={`${pct} percent complete`}>
+          {plan.blocks
+            .filter((b) => b.slots.length > 0)
+            .map((b) => {
+              const skipped = isSkipped(session, b);
+              const keys = blockKeys(session, b);
+              const done = keys.filter((k) => session.done[k]).length;
+              const width = skipped || !keys.length ? 0 : Math.round((done / keys.length) * 100);
+              return (
+                <span key={b.id} className={skipped ? "skipped" : undefined}>
+                  <i style={{ width: `${width}%` }} />
+                </span>
+              );
+            })}
         </div>
         <div className="clockrow">
           <div className={`clock mono${session.running ? "" : " paused"}`}>{formatClock(elapsed)}</div>
