@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
-import DensitySync from "@/components/DensitySync";
+import DisplaySync from "@/components/DisplaySync";
 import ExerciseSheet from "@/components/ExerciseSheet";
 import NavigationSync from "@/components/NavigationSync";
 import ServiceWorker from "@/components/ServiceWorker";
+import { BOOT_SCRIPT } from "@/lib/display";
 import "./globals.css";
 
 const ui = Archivo({ subsets: ["latin"], variable: "--font-ui", display: "swap" });
@@ -27,12 +28,16 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${ui.variable} ${mono.variable}`}>
+    // The boot script sets data attributes on <html> before React hydrates it.
+    <html lang="en" className={`${ui.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+      </head>
       <body>
         <div className="shell">{children}</div>
         <ExerciseSheet />
         <NavigationSync />
-        <DensitySync />
+        <DisplaySync />
         <ServiceWorker />
       </body>
     </html>

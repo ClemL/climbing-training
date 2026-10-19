@@ -2133,3 +2133,436 @@ h1 {
   font-size: 12px;
   color: var(--text-dim);
 }
+
+/* =========================================================================
+   Chalk
+   The one-handed phone redesign, chosen in Settings next to Classic. Every
+   rule below is scoped to :root[data-style="chalk"], or to the light theme
+   only Chalk can turn on, or to markup only Chalk renders - so Classic looks
+   exactly as it did.
+   ========================================================================= */
+
+.seg.seg-wide.two {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Rendered in both styles so the server HTML already has them; shown only in Chalk. */
+.chalk-nav,
+.seg.library-switch {
+  display: none;
+}
+
+/* ---------- daylight theme ----------
+   Dark text on a light ground reads faster and more accurately, and the gap
+   widens in bright light - the golf range, the soccer field. Every text and
+   accent color clears 4.5:1 on all three backgrounds; tests/display.test.ts
+   holds it there. */
+:root[data-theme="light"] {
+  --bg: #f4f2ed;
+  --bg-raised: #ffffff;
+  --bg-raised-2: #ebe8e1;
+  --border: #cfc9bd;
+  --border-soft: #e2ddd3;
+  --text: #16191e;
+  --text-dim: #4a525f;
+  --text-faint: #5f6774;
+  --bg-hover: #ebe8e1;
+  --accent: #1f5fcc;
+  --accent-hover: #1a52b3;
+  --on-accent: #ffffff;
+  --good: #0b7149;
+  --warn: #8a5100;
+  --danger: #b8312a;
+  --cat-freeweights: #a14a05;
+  --cat-bands: #9c1aa8;
+  --cat-bodyweight: #08704a;
+  --cat-gym: #6331c9;
+  --cat-soccer: #1d55c9;
+  --cat-golf: #4a6b0c;
+  --cat-knee: #b23d09;
+  --cat-standing: #4b5768;
+  --cat-move: #0b6a80;
+  --cat-prep: #b3123a;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px -12px rgba(0, 0, 0, 0.18);
+  color-scheme: light;
+}
+
+/* The rules above that hard-code a dark-theme color. */
+:root[data-theme="light"] .topbar,
+:root[data-theme="light"] .dir-head {
+  background: rgba(244, 242, 237, 0.94);
+}
+
+:root[data-theme="light"] .timerbar {
+  background: rgba(255, 255, 255, 0.97);
+}
+
+:root[data-theme="light"] .block-note,
+:root[data-theme="light"] .round-head {
+  background: rgba(0, 0, 0, 0.025);
+}
+
+:root[data-theme="light"] .btn:hover {
+  background: var(--bg-raised-2);
+}
+
+:root[data-theme="light"] .btn.primary:hover {
+  background: #1a52b3;
+}
+
+:root[data-theme="light"]
+  :is(
+    .btn.primary,
+    a.btn.primary,
+    .btn.good,
+    .check[aria-pressed="true"],
+    .setdot[aria-pressed="true"],
+    .seg button[aria-pressed="true"],
+    .frame-controls .btn[aria-pressed="true"]
+  ) {
+  color: #fff;
+}
+
+:root[data-theme="light"] :is(.btn.danger, .info-btn.danger-btn) {
+  border-color: #eec4c0;
+}
+
+:root[data-theme="light"] .notes {
+  color: #4d3c12;
+}
+
+:root[data-theme="light"] .warn-title {
+  color: #a3231c;
+}
+
+:root[data-theme="light"] .warn-body {
+  color: #5a2a27;
+}
+
+:root[data-theme="light"] :is(.exfig, .thumb) {
+  background: #fff;
+}
+
+:root[data-theme="light"] .sheet-backdrop {
+  background: rgba(20, 24, 30, 0.45);
+}
+
+:root[data-theme="light"] .kind-superset {
+  background: rgba(31, 95, 204, 0.1);
+  color: #1f4fae;
+  border-color: rgba(31, 95, 204, 0.3);
+}
+
+:root[data-theme="light"] .kind-circuit {
+  background: rgba(11, 113, 73, 0.1);
+  color: #0b6b44;
+  border-color: rgba(11, 113, 73, 0.3);
+}
+
+:root[data-theme="light"] .kind-interval {
+  background: rgba(138, 81, 0, 0.1);
+  color: #7a4700;
+  border-color: rgba(138, 81, 0, 0.3);
+}
+
+:root[data-theme="light"] .kind-straight {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ---------- bottom navigation ----------
+   Five destinations where the thumb already is, instead of six tabs at the
+   top that ran off the edge of a phone. */
+:root[data-style="chalk"] .topbar.stacked .tabs {
+  display: none;
+}
+
+:root[data-style="chalk"] .chalk-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: color-mix(in srgb, var(--bg-raised) 97%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  padding: 4px max(6px, calc((100vw - 760px) / 2)) calc(4px + env(safe-area-inset-bottom));
+}
+
+.chalk-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 56px;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.chalk-nav-item svg {
+  width: 52px;
+  height: 28px;
+  padding: 2px 14px;
+  border-radius: 999px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chalk-nav-item[aria-current="page"] {
+  color: var(--text);
+}
+
+.chalk-nav-item[aria-current="page"] svg {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+:root[data-style="chalk"] .seg.library-switch {
+  display: grid;
+  margin: 2px 0 14px;
+}
+
+:root[data-style="chalk"] .filter-fab {
+  bottom: calc(78px + env(safe-area-inset-bottom));
+}
+
+:root[data-style="chalk"] .shell {
+  padding-bottom: calc(170px + env(safe-area-inset-bottom));
+}
+
+/* Category tiles stack icon over label on a phone, so a word like "Climbing"
+   gets the tile's full width instead of breaking mid-word. */
+@media (max-width: 420px) {
+  :root[data-style="chalk"] .filter-grid:not(.wide) .filter-opt {
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 4px 8px;
+    text-align: center;
+  }
+
+  :root[data-style="chalk"] .filter-grid:not(.wide) .fo-label {
+    flex: none;
+  }
+
+  :root[data-style="chalk"] .filter-grid:not(.wide) .fo-icon {
+    font-size: 19px;
+  }
+
+  :root[data-style="chalk"] .filter-grid:not(.wide) .fo-count {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+  }
+}
+
+/* ---------- targets ----------
+   44px, the size WCAG's enhanced target criterion asks for. Chalky and sweaty
+   fingers are the normal case here, and Classic's 27px boxes are not. */
+:root[data-style="chalk"] :is(.check, .info-btn, .round-step, .setdot, .icon-btn) {
+  width: 44px;
+  height: 44px;
+}
+
+:root[data-style="chalk"] .check {
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+:root[data-style="chalk"] .info-btn {
+  font-size: 15px;
+}
+
+:root[data-style="chalk"] .round-step {
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+:root[data-style="chalk"] .setdot {
+  font-size: 15px;
+}
+
+:root[data-style="chalk"] .timer-btn {
+  height: 44px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+:root[data-style="chalk"] .btn.sm {
+  min-height: 44px;
+}
+
+/* ---------- session focus mode ---------- */
+.topbar-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+}
+
+.topbar-progress > i {
+  display: block;
+  height: 100%;
+  background: var(--cat);
+  transition: width 0.2s;
+}
+
+.notes-fold {
+  padding: 0;
+}
+
+.notes-fold summary {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.notes-fold summary::-webkit-details-marker {
+  display: none;
+}
+
+.notes-fold summary::after {
+  content: "\25BE";
+  margin-left: auto;
+  transition: transform 0.15s;
+}
+
+.notes-fold[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.notes-fold ul {
+  padding: 0 14px 12px 30px;
+}
+
+.focus-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 2px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.focus-bar > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:root[data-style="chalk"] .block {
+  scroll-margin-top: 76px;
+}
+
+:root[data-style="chalk"] .block.done {
+  opacity: 0.7;
+}
+
+:root[data-style="chalk"] .block.current {
+  border-color: color-mix(in srgb, var(--cat) 55%, var(--border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cat) 35%, transparent);
+}
+
+:root[data-style="chalk"] .block-head {
+  align-items: center;
+}
+
+:root[data-style="chalk"] .block.folded .block-head,
+:root[data-style="chalk"] .block.skipped .block-head {
+  border-bottom: none;
+}
+
+:root[data-style="chalk"] .block-tag {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.block-toggle {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.block-toggle > .block-title,
+.block-toggle > .block-meta {
+  display: block;
+}
+
+.block-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 13px;
+  background: var(--bg-raised-2);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.block-menu-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.block-menu-count {
+  min-width: 2ch;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* ---------- now / next bar ----------
+   The countdown big enough to read from the wall, and the next item named
+   under it, so a glance answers both "how long" and "what now". */
+:root[data-style="chalk"] .timerbar-inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 6px 12px;
+}
+
+:root[data-style="chalk"] .rest-display {
+  font-size: 44px;
+  line-height: 1;
+  min-width: 0;
+}
+
+:root[data-style="chalk"] :is(.timer-label, .timer-next) {
+  grid-column: 2;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+:root[data-style="chalk"] .quick {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(54px, 1fr));
+}
+
+:root[data-style="chalk"] .quick .btn {
+  min-height: 44px;
+  padding: 0 6px;
+  font-size: 15px;
+}

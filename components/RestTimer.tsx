@@ -14,6 +14,7 @@ export default function RestTimer({
   initialDeadline,
   initialTotal = 0,
   label,
+  next,
 }: {
   suggestion?: number;
   /** Epoch ms. Set by the parent via a changing `key`, which remounts and starts the clock. */
@@ -21,6 +22,8 @@ export default function RestTimer({
   initialTotal?: number;
   /** Shown while an exercise-triggered countdown runs. */
   label?: string;
+  /** Chalk only: the next unchecked item, so the bar answers "what now" as well as "how long". */
+  next?: string;
 }) {
   // A wall-clock deadline, not a decrementing counter: the countdown stays
   // correct across a backgrounded tab, a locked screen, or a dropped frame.
@@ -74,6 +77,7 @@ export default function RestTimer({
           {counting ? formatClock(remainMs) : expired ? "Go" : "Rest"}
         </div>
         {counting && label ? <span className="timer-label truncate">{label}</span> : null}
+        {next && !(counting && label) ? <span className="timer-next truncate">Next: {next}</span> : null}
         {counting ? (
           <div className="quick">
             <button className="btn sm" onClick={extend}>

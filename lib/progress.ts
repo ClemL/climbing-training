@@ -32,6 +32,26 @@ export function blockKeys(session: ActiveSession, block: Block): string[] {
   return keys;
 }
 
+/** The block the athlete is on: the first one still on the card with anything unchecked. */
+export function currentBlock(plan: Plan, session: ActiveSession): Block | undefined {
+  return plan.blocks.find((b) => !isSkipped(session, b) && blockKeys(session, b).some((k) => !session.done[k]));
+}
+
+export type NextItem = { block: Block; round: number; slotIndex: number; rounds: number };
+
+/** The first unchecked item in the current block, in the order the card lists it: round by round. */
+export function nextItem(plan: Plan, session: ActiveSession): NextItem | undefined {
+  const block = currentBlock(plan, session);
+  if (!block) return undefined;
+  const rounds = roundsOf(session, block);
+  for (let round = 1; round <= rounds; round++) {
+    for (let slotIndex = 0; slotIndex < block.slots.length; slotIndex++) {
+      if (!session.done[slotKey(block.id, round, slotIndex)]) return { block, round, slotIndex, rounds };
+    }
+  }
+  return undefined;
+}
+
 /** Progress counts only what is still on the card: skipped blocks and dropped rounds do not. */
 export function progressOf(plan: Plan, session: ActiveSession): { checked: number; total: number } {
   let checked = 0;

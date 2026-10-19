@@ -5,10 +5,22 @@
  * is the source of truth, the server snapshot is the defaults.
  */
 
+import { SETTINGS_KEY } from "./display";
+
 export type WeightUnit = "lb" | "kg";
 
 /** Element sizing across the app. */
 export type Density = "compact" | "normal" | "comfortable";
+
+/**
+ * Overall look. Classic is the original. Chalk is the one-handed phone
+ * redesign - bottom navigation, a session collapsed to the block you are on,
+ * bigger targets, a light theme - kept side by side so the two can be compared.
+ */
+export type Style = "classic" | "chalk";
+
+/** Chalk only. "system" follows the phone's light or dark mode. */
+export type Theme = "system" | "light" | "dark";
 
 export type Settings = {
   /** Hangboard load logging. Off by default - plenty of people hang bodyweight only. */
@@ -22,6 +34,8 @@ export type Settings = {
   animateFigures: boolean;
   /** Row height, padding, type size and control size scale together. */
   density: Density;
+  style: Style;
+  theme: Theme;
 };
 
 export const DEFAULTS: Settings = Object.freeze({
@@ -31,9 +45,11 @@ export const DEFAULTS: Settings = Object.freeze({
   keepAwake: true,
   animateFigures: true,
   density: "normal",
+  style: "classic",
+  theme: "system",
 });
 
-const KEY = "ct.settings.v1";
+const KEY = SETTINGS_KEY;
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
