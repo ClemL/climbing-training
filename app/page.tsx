@@ -7,6 +7,7 @@ import FavoritesView from "@/components/FavoritesView";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
 import PlanPreview from "@/components/PlanPreview";
+import PlanRail from "@/components/PlanRail";
 import ProgressionsView from "@/components/ProgressionsView";
 import SettingsView from "@/components/SettingsView";
 import WeekView from "@/components/WeekView";
@@ -121,13 +122,18 @@ export default function Home() {
 
   if (view === "preview" && previewPlan) {
     return (
-      <PlanPreview
-        plan={previewPlan}
-        hasActiveOther={!!active && active.planId !== previewPlan.id}
-        history={history}
-        onBack={() => window.history.back()}
-        onStart={() => start(previewPlan)}
-      />
+      <div className="split">
+        <PlanRail currentId={previewPlan.id} />
+        <div className="split-main">
+          <PlanPreview
+            plan={previewPlan}
+            hasActiveOther={!!active && active.planId !== previewPlan.id}
+            history={history}
+            onBack={() => window.history.back()}
+            onStart={() => start(previewPlan)}
+          />
+        </div>
+      </div>
     );
   }
 
@@ -136,9 +142,10 @@ export default function Home() {
       <div className="topbar stacked">
         <div className="topbar-row">
           <div className="brand">
-            <span>&#129506;</span>
             <span>
-              Training Days
+              <span className="wordmark">
+                Training<b>/</b>Days
+              </span>
               <small>{PLANS.length} plans &middot; local only</small>
             </span>
           </div>
