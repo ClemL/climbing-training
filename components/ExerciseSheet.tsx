@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import ExerciseFigure from "./ExerciseFigure";
 import FavoriteButton from "./FavoriteButton";
+import Sheet from "./Sheet";
 import { EXERCISES, imageSearchUrl, searchUrl } from "@/lib/exercises";
 import { EXERCISE_STEPS } from "@/lib/exercise-steps";
 import { IMAGE_KEYS } from "@/lib/exercise-images";
@@ -29,20 +30,6 @@ export default function ExerciseSheet() {
   // consumed rather than stranded behind the user.
   const close = useCallback(() => back(), []);
 
-  useEffect(() => {
-    if (!exKey) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") back();
-    };
-    document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [exKey]);
-
   if (!exKey) return null;
   const ex = EXERCISES[exKey];
   if (!ex) return null;
@@ -51,52 +38,50 @@ export default function ExerciseSheet() {
   const hasImage = IMAGE_KEYS.has(exKey);
 
   return (
-    <div className="sheet-backdrop" role="presentation" onClick={close}>
-      <div className="sheet" role="dialog" aria-modal="true" aria-label={ex.name} onClick={(e) => e.stopPropagation()}>
-        <div className="sheet-head">
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div className="sheet-title">{ex.name}</div>
-            <div className="sheet-target">{ex.target}</div>
-          </div>
-          <FavoriteButton exKey={exKey} className="star sheet-star" />
-          <button className="btn sm" onClick={close} aria-label="Close">
-            &#10005;
-          </button>
+    <Sheet label={ex.name} onClose={close}>
+      <div className="sheet-head">
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="sheet-title">{ex.name}</div>
+          <div className="sheet-target">{ex.target}</div>
         </div>
-
-        <div className="sheet-body">
-          {hasImage ? <ExerciseFigure exKey={exKey} large /> : null}
-
-          <h3 className="sheet-h">Form cues</h3>
-          <ul className="sheet-cues">
-            {ex.cues.map((c) => (
-              <li key={c}>{c}</li>
-            ))}
-          </ul>
-
-          {steps?.length ? (
-            <>
-              <h3 className="sheet-h">Step by step</h3>
-              <ol className="sheet-steps">
-                {steps.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ol>
-            </>
-          ) : null}
-
-          {!hasImage ? (
-            <div className="sheet-links">
-              <a className="btn sm" href={searchUrl(exKey)} target="_blank" rel="noopener noreferrer">
-                Search the web &#8599;
-              </a>
-              <a className="btn sm" href={imageSearchUrl(exKey)} target="_blank" rel="noopener noreferrer">
-                Search images &#8599;
-              </a>
-            </div>
-          ) : null}
-        </div>
+        <FavoriteButton exKey={exKey} className="star sheet-star" />
+        <button className="btn sm" onClick={close} aria-label="Close">
+          &#10005;
+        </button>
       </div>
-    </div>
+
+      <div className="sheet-body">
+        {hasImage ? <ExerciseFigure exKey={exKey} large /> : null}
+
+        <h3 className="sheet-h">Form cues</h3>
+        <ul className="sheet-cues">
+          {ex.cues.map((c) => (
+            <li key={c}>{c}</li>
+          ))}
+        </ul>
+
+        {steps?.length ? (
+          <>
+            <h3 className="sheet-h">Step by step</h3>
+            <ol className="sheet-steps">
+              {steps.map((s, i) => (
+                <li key={i}>{s}</li>
+              ))}
+            </ol>
+          </>
+        ) : null}
+
+        {!hasImage ? (
+          <div className="sheet-links">
+            <a className="btn sm" href={searchUrl(exKey)} target="_blank" rel="noopener noreferrer">
+              Search the web &#8599;
+            </a>
+            <a className="btn sm" href={imageSearchUrl(exKey)} target="_blank" rel="noopener noreferrer">
+              Search images &#8599;
+            </a>
+          </div>
+        ) : null}
+      </div>
+    </Sheet>
   );
 }

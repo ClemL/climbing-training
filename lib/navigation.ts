@@ -48,6 +48,8 @@ export type NavState = {
    * Kept in the URL so opening a plan and coming back does not reset it.
    */
   filter?: string;
+  /** The changelog dialog, layered like the exercise overlay so back closes it. */
+  log?: boolean;
 };
 
 export const HOME: NavState = Object.freeze({ view: "plans" });
@@ -72,6 +74,7 @@ function fromUrl(): NavState {
   if (ex) state.ex = ex;
   const filter = q.get("f");
   if (filter) state.filter = filter;
+  if (q.get("log") === "1") state.log = true;
   // A preview with no plan is meaningless; treat it as the list.
   if (state.view === "preview" && !state.planId) state.view = "plans";
   return state;
@@ -99,6 +102,7 @@ export function toUrl(s: NavState): string {
   if (s.planId) q.set("p", s.planId);
   if (s.ex) q.set("ex", s.ex);
   if (s.filter) q.set("f", s.filter);
+  if (s.log) q.set("log", "1");
   const query = q.toString();
   return query ? `?${query}` : window.location.pathname;
 }

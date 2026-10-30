@@ -158,15 +158,29 @@ npm run build    # production build
 npm run check    # typecheck + lint + tests
 ```
 
-`npm test` runs 44 checks with `node --test` and no test framework. Most guard the data:
+`npm test` runs 48 checks with `node --test` and no test framework. Most guard the data:
 unresolved exercise keys, duplicate ids, block minutes against the advertised session length,
 interval specs matching block rounds, image frames present on disk, and week templates never
 stacking two finger-intensive days. The rest cover duration parsing, the knee check-in rule,
 session progress counting, Chalk's current-block and next-item logic, the merge rules behind
-backup import, the pre-paint style script, and the light theme's contrast, read straight from
-`globals.css`.
+backup import, the pre-paint style script, the light theme's contrast, read straight from
+`globals.css`, and the changelog parser and file format.
 Editing `lib/plans.ts` by hand is the likely way this breaks, and a typo'd exercise key renders
 nothing at all — which you would discover standing at the hangboard.
+
+## Changelog
+
+The footer on every page except a running session shows the version, the build time and the newest
+line of `public/updates.txt`; tapping that line opens the whole changelog, newest first.
+
+- One entry per line, **oldest first, newest last**, so shipping an entry is a one-line append:
+  `YYYY-MM-DDTHH:MM:00Z - What changed, as a plain sentence` (`date -u +%Y-%m-%dT%H:%M:00Z`).
+- Entries describe what a user would notice. Refactors, tests and tooling do not get a line.
+- The file is fetched at runtime, not bundled, so adding an entry needs no code change. A missing
+  or empty file only hides the entry; the build line still shows.
+- The version is `version` in `package.json`. The build time is stamped once per build in
+  `next.config.ts`, already formatted, so the prerendered page and the client agree.
+- A test checks every line's shape and that the timestamps never go backwards.
 
 ## Deploying to Vercel
 
@@ -249,7 +263,8 @@ npm i -D sharp && node scripts/fetch-exercise-images.mjs
 a build plugin would add coupling without adding capability — and a plugin that breaks on a Next
 upgrade would take offline support down with it.
 
-- **Install** precaches the shell and every image listed in `public/image-manifest.json`.
+- **Install** precaches the shell, `updates.txt`, and every image listed in `public/image-manifest.json`.
+- **The changelog** is network-first, since it changes between deploys under the same name.
 - **Navigations** are network-first with a cached shell fallback, so deploys are picked up. Only
   a successful response replaces the cached shell, so a 404 or a failing deploy cannot become the
   page that opens offline.

@@ -1,0 +1,20 @@
+2026-09-13T01:30:00Z - Training Days launches: session plans for free weights, bodyweight, climbing-gym days and warm-ups, with a session clock, superset grouping, a rest timer and a checklist
+2026-09-13T21:52:00Z - Exercise illustrations now ship with the app instead of links out to YouTube
+2026-09-13T22:00:00Z - Installs to the home screen and works with no signal
+2026-09-13T22:07:00Z - Per-exercise timers, a week structure, a hangboard weight log, and skipping blocks or changing rounds mid-session
+2026-09-13T22:40:00Z - Exercise detail opens in an overlay that keeps your place in the session, and settings get their own panel
+2026-09-14T14:15:00Z - The back button walks back through the app instead of leaving it
+2026-09-15T14:05:00Z - Added the Elastic Bands and Standing Only categories
+2026-09-20T00:17:00Z - Added a Soccer category
+2026-09-20T00:17:00Z - Star exercises into a Saved list, and choose compact, normal or comfortable density
+2026-09-20T00:19:00Z - The exercise library is now a directory grouped by movement, with search across every group
+2026-09-26T14:18:00Z - Pressing back no longer reloads the page and throws away your search, open sections or scroll position
+2026-09-26T14:19:00Z - Added progression ladders, where every rung names a countable target for moving up
+2026-10-10T18:09:00Z - Added On the Move: band sessions for walks and bus stops, with nothing to anchor to
+2026-10-11T17:27:00Z - Added Golf and Knee Care, a morning knee check-in, and filters that show every option without sideways scrolling
+2026-10-11T18:26:00Z - Exercises without an illustration get an image search link beside the web search
+2026-10-17T17:02:00Z - History counts now match the session, finished timers stop ticking, and a missing page can no longer become what opens offline
+2026-10-17T17:02:00Z - Back up your sessions, check-ins, hangboard log, saved exercises and settings to one file, and merge it on another device
+2026-10-18T04:06:00Z - New look: lime on near-black, a large interval countdown, bigger buttons, and the plan list beside a plan on wide screens
+2026-10-18T13:32:00Z - Added the Chalk style: bottom navigation, a session folded to the current block, 44px buttons and a light theme
+2026-10-30T23:01:00Z - Added this changelog

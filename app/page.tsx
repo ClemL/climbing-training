@@ -4,6 +4,7 @@ import { useCallback, useSyncExternalStore } from "react";
 import ChalkNav, { LibrarySwitch } from "@/components/ChalkNav";
 import ExerciseIndex from "@/components/ExerciseIndex";
 import FavoritesView from "@/components/FavoritesView";
+import Footer from "@/components/Footer";
 import HistoryView from "@/components/HistoryView";
 import PlanLibrary from "@/components/PlanLibrary";
 import PlanPreview from "@/components/PlanPreview";
@@ -132,93 +133,99 @@ export default function Home() {
             onBack={() => window.history.back()}
             onStart={() => start(previewPlan)}
           />
+          <Footer />
         </div>
       </div>
     );
   }
 
   return (
-    <>
-      <div className="topbar stacked">
-        <div className="topbar-row">
-          <div className="brand">
-            <span>
-              <span className="wordmark">
-                Training<b>/</b>Days
+    <div className="page">
+      <div className="page-body">
+        <div className="topbar stacked">
+          <div className="topbar-row">
+            <div className="brand">
+              <span>
+                <span className="wordmark">
+                  Training<b>/</b>Days
+                </span>
+                <small>{PLANS.length} plans &middot; local only</small>
               </span>
-              <small>{PLANS.length} plans &middot; local only</small>
-            </span>
+            </div>
+            <div className="spacer" />
+            <button
+              className="icon-btn"
+              aria-pressed={shellView === "settings"}
+              aria-label="Settings"
+              onClick={() => setView(shellView === "settings" ? "plans" : "settings")}
+            >
+              &#9881;
+            </button>
           </div>
-          <div className="spacer" />
-          <button
-            className="icon-btn"
-            aria-pressed={shellView === "settings"}
-            aria-label="Settings"
-            onClick={() => setView(shellView === "settings" ? "plans" : "settings")}
-          >
-            &#9881;
-          </button>
+          <div className="tabs">
+            <button className="tab" aria-pressed={shellView === "plans"} onClick={() => setView("plans")}>
+              Plans
+            </button>
+            <button className="tab" aria-pressed={shellView === "week"} onClick={() => setView("week")}>
+              Week
+            </button>
+            <button
+              className="tab"
+              aria-pressed={shellView === "progressions"}
+              onClick={() => setView("progressions")}
+            >
+              Progressions
+            </button>
+            <button className="tab" aria-pressed={shellView === "saved"} onClick={() => setView("saved")}>
+              Saved
+            </button>
+            <button className="tab" aria-pressed={shellView === "library"} onClick={() => setView("library")}>
+              Directory
+            </button>
+            <button className="tab" aria-pressed={shellView === "history"} onClick={() => setView("history")}>
+              History
+            </button>
+          </div>
         </div>
-        <div className="tabs">
-          <button className="tab" aria-pressed={shellView === "plans"} onClick={() => setView("plans")}>
-            Plans
-          </button>
-          <button className="tab" aria-pressed={shellView === "week"} onClick={() => setView("week")}>
-            Week
-          </button>
-          <button
-            className="tab"
-            aria-pressed={shellView === "progressions"}
-            onClick={() => setView("progressions")}
-          >
-            Progressions
-          </button>
-          <button className="tab" aria-pressed={shellView === "saved"} onClick={() => setView("saved")}>
-            Saved
-          </button>
-          <button className="tab" aria-pressed={shellView === "library"} onClick={() => setView("library")}>
-            Directory
-          </button>
-          <button className="tab" aria-pressed={shellView === "history"} onClick={() => setView("history")}>
-            History
-          </button>
-        </div>
+
+        {active && activePlan ? (
+          <div className="resume">
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="t">{activePlan.name} in progress</div>
+              <div className="when faint" style={{ fontSize: 12 }}>
+                {formatClock(elapsedMs(active))} elapsed &middot; {progressOf(activePlan, active).checked} checked
+                {active.running ? "" : " · paused"}
+              </div>
+            </div>
+            <button className="btn good sm" onClick={() => setView("session")}>
+              Resume
+            </button>
+            <button className="btn sm danger" onClick={discard} aria-label="Discard session">
+              &#10005;
+            </button>
+          </div>
+        ) : null}
+
+        {shellView === "library" || shellView === "saved" ? <LibrarySwitch view={shellView} onGo={setView} /> : null}
+        {shellView === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
+        {shellView === "week" ? <WeekView onPick={openPreview} /> : null}
+        {shellView === "progressions" ? <ProgressionsView /> : null}
+        {shellView === "saved" ? <FavoritesView /> : null}
+        {shellView === "library" ? <ExerciseIndex /> : null}
+        {shellView === "settings" ? <SettingsView /> : null}
+        {shellView === "history" ? <HistoryView history={history} /> : null}
+
       </div>
 
-      {active && activePlan ? (
-        <div className="resume">
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div className="t">{activePlan.name} in progress</div>
-            <div className="when faint" style={{ fontSize: 12 }}>
-              {formatClock(elapsedMs(active))} elapsed &middot; {progressOf(activePlan, active).checked} checked
-              {active.running ? "" : " · paused"}
-            </div>
-          </div>
-          <button className="btn good sm" onClick={() => setView("session")}>
-            Resume
-          </button>
-          <button className="btn sm danger" onClick={discard} aria-label="Discard session">
-            &#10005;
-          </button>
-        </div>
-      ) : null}
-
-      {shellView === "library" || shellView === "saved" ? <LibrarySwitch view={shellView} onGo={setView} /> : null}
-      {shellView === "plans" ? <PlanLibrary onPick={openPreview} /> : null}
-      {shellView === "week" ? <WeekView onPick={openPreview} /> : null}
-      {shellView === "progressions" ? <ProgressionsView /> : null}
-      {shellView === "saved" ? <FavoritesView /> : null}
-      {shellView === "library" ? <ExerciseIndex /> : null}
-      {shellView === "settings" ? <SettingsView /> : null}
-      {shellView === "history" ? <HistoryView history={history} /> : null}
-
-      <p className="footer">
-        Everything lives in this browser&apos;s localStorage. No account, no sync, no server.
-        <br />
-        Loads are yours to pick. Stop any finger work that produces sharp or localized pain.
-      </p>
+      <Footer>
+        <p>
+          Everything lives in this browser&apos;s localStorage. No account, no sync, no server.
+          <br />
+          Loads are yours to pick. Stop any finger work that produces sharp or localized pain.
+        </p>
+      </Footer>
 
       <ChalkNav view={shellView} onGo={setView} />
-    </>
+    </div>
   );
 }
