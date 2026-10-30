@@ -10,10 +10,10 @@
  * Hashed build chunks are cached as they are requested, since their names are
  * only known after a build.
  */
-const VERSION = "v2";
+const VERSION = "v3";
 const SHELL = `shell-${VERSION}`;
 const RUNTIME = `runtime-${VERSION}`;
-const SHELL_URLS = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
+const SHELL_URLS = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/updates.txt"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -72,6 +72,26 @@ self.addEventListener("fetch", (event) => {
         } catch {
           const cached = await caches.match("/", { ignoreSearch: true });
           return cached ?? Response.error();
+        }
+      })(),
+    );
+    return;
+  }
+
+  // The changelog is edited between deploys under a fixed name, so cache first
+  // would pin the copy from install day. Network first, cached copy offline.
+  if (url.pathname === "/updates.txt") {
+    event.respondWith(
+      (async () => {
+        try {
+          const fresh = await fetch(request);
+          if (fresh.ok) {
+            const cache = await caches.open(SHELL);
+            cache.put("/updates.txt", fresh.clone());
+          }
+          return fresh;
+        } catch {
+          return (await caches.match("/updates.txt")) ?? Response.error();
         }
       })(),
     );

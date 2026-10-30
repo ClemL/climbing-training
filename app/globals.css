@@ -908,7 +908,16 @@ h2 {
   padding: var(--d-row-y) 13px;
 }
 
+/* A shell view fills at least the screen above the shell's bottom padding, so
+   the footer sits at the foot of the page even when the content is short. */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 120px);
+}
+
 .footer {
+  margin-top: auto;
   text-align: center;
   color: var(--text-faint);
   font-size: 12px;
@@ -916,9 +925,57 @@ h2 {
   line-height: 1.7;
 }
 
+.footer p {
+  margin: 0;
+}
+
+.build-info {
+  margin-top: 14px;
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+.changelog-trigger {
+  display: block;
+  width: 100%;
+  margin-top: 2px;
+  padding: 4px 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  /* One line only: the full text is in the title and the dialog. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.changelog-trigger:hover,
+.changelog-trigger:focus-visible {
+  color: var(--text);
+}
+
+.changelog-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  /* A long changelog scrolls inside the sheet rather than growing it. */
+  max-height: 28rem;
+  overflow-y: auto;
+}
+
+.changelog-list li {
+  margin-bottom: 7px;
+}
+
 @media (min-width: 640px) {
   .shell {
     padding: 0 20px 130px;
+  }
+  .page {
+    min-height: calc(100dvh - 130px);
   }
   h1 {
     font-size: 26px;
@@ -2334,6 +2391,10 @@ h1 {
 
 :root[data-style="chalk"] .shell {
   padding-bottom: calc(170px + env(safe-area-inset-bottom));
+}
+
+:root[data-style="chalk"] .page {
+  min-height: calc(100dvh - 170px - env(safe-area-inset-bottom));
 }
 
 /* Category tiles stack icon over label on a phone, so a word like "Climbing"
