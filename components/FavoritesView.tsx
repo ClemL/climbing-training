@@ -32,31 +32,33 @@ export default function FavoritesView() {
         <span className="pill">{known.length} saved</span>
       </div>
 
-      {known.map((key) => {
-        const ex = EXERCISES[key];
-        return (
-          <div key={key} className="lib-item">
-            <div className="lib-head">
-              <button
-                style={{ flex: 1, minWidth: 0, textAlign: "left" }}
-                onClick={() => openExercise(key)}
-                aria-label={`Open ${ex.name}`}
-              >
-                <div className="ex-name">{ex.name}</div>
-                <div className="ex-pres">{ex.target}</div>
-              </button>
-              {IMAGE_KEYS.has(key) ? <span className="chip">illustrated</span> : null}
-              <button
-                className="info-btn danger-btn"
-                aria-label={`Remove ${ex.name} from saved`}
-                onClick={() => removeFavorite(key)}
-              >
-                &#10005;
-              </button>
+      <div className="cols">
+        {known.map((key) => {
+          const ex = EXERCISES[key];
+          return (
+            <div key={key} className="lib-item">
+              <div className="lib-head">
+                <button
+                  style={{ flex: 1, minWidth: 0, textAlign: "left" }}
+                  onClick={() => openExercise(key)}
+                  aria-label={`Open ${ex.name}`}
+                >
+                  <div className="ex-name">{ex.name}</div>
+                  <div className="ex-pres">{ex.target}</div>
+                </button>
+                {IMAGE_KEYS.has(key) ? <span className="chip">illustrated</span> : null}
+                <button
+                  className="info-btn danger-btn"
+                  aria-label={`Remove ${ex.name} from saved`}
+                  onClick={() => removeFavorite(key)}
+                >
+                  &#10005;
+                </button>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
 
       <button
         className="btn danger block"

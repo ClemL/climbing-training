@@ -5,7 +5,7 @@
  * is the source of truth, the server snapshot is the defaults.
  */
 
-import { SETTINGS_KEY } from "./display";
+import { SETTINGS_KEY, type TextSize, type ThemeId } from "./display";
 
 export type WeightUnit = "lb" | "kg";
 
@@ -19,8 +19,8 @@ export type Density = "compact" | "normal" | "comfortable";
  */
 export type Style = "classic" | "chalk";
 
-/** Chalk only. "system" follows the phone's light or dark mode. */
-export type Theme = "system" | "light" | "dark";
+/** "system" follows the phone's light or dark mode in Chalk, and is dark in Classic. */
+export type Theme = "system" | ThemeId;
 
 export type Settings = {
   /** Hangboard load logging. Off by default - plenty of people hang bodyweight only. */
@@ -36,6 +36,8 @@ export type Settings = {
   density: Density;
   style: Style;
   theme: Theme;
+  /** Type size alone, separate from density. */
+  textSize: TextSize;
 };
 
 export const DEFAULTS: Settings = Object.freeze({
@@ -47,6 +49,7 @@ export const DEFAULTS: Settings = Object.freeze({
   density: "normal",
   style: "classic",
   theme: "system",
+  textSize: "100",
 });
 
 const KEY = SETTINGS_KEY;

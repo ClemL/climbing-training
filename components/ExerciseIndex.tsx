@@ -104,9 +104,11 @@ export default function ExerciseIndex() {
             {matches.length} {matches.length === 1 ? "match" : "matches"} for &ldquo;{q.trim()}&rdquo;
           </p>
           {matches.length === 0 ? <div className="empty">No matches. Try a muscle name or a piece of a cue.</div> : null}
-          {matches.map((m) => (
-            <Row key={m.key} exKey={m.key} group={m.group} />
-          ))}
+          <div className="cols">
+            {matches.map((m) => (
+              <Row key={m.key} exKey={m.key} group={m.group} />
+            ))}
+          </div>
         </>
       ) : (
         <>
@@ -124,9 +126,11 @@ export default function ExerciseIndex() {
                 <span>{g.label}</span>
                 <span className="faint">{g.keys.length}</span>
               </div>
-              {g.keys.map((key) => (
-                <Row key={key} exKey={key} />
-              ))}
+              <div className="cols">
+                {g.keys.map((key) => (
+                  <Row key={key} exKey={key} />
+                ))}
+              </div>
             </section>
           ))}
         </>

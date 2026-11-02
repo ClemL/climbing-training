@@ -6,6 +6,7 @@ import { IMAGE_KEYS } from "@/lib/exercise-images";
 import { recoveryWarnings } from "@/lib/recovery";
 import type { HistoryEntry } from "@/lib/storage";
 import type { Plan } from "@/lib/types";
+import { textPx } from "@/lib/display";
 
 const KIND_LABEL: Record<string, string> = {
   superset: "superset",
@@ -36,7 +37,7 @@ export default function PlanPreview({
         <button className="btn sm ghost" onClick={onBack} aria-label="Back to plans">
           &#8592;
         </button>
-        <div className="brand" style={{ fontSize: 14 }}>
+        <div className="brand" style={{ fontSize: textPx(14) }}>
           {plan.name}
         </div>
         <div className="spacer" />
@@ -69,7 +70,7 @@ export default function PlanPreview({
             Starting this will discard the session already in progress.
           </p>
         ) : null}
-        <button className="btn primary block" style={{ marginTop: 14, padding: "13px", fontSize: 15 }} onClick={onStart}>
+        <button className="btn primary block" style={{ marginTop: 14, padding: "13px", fontSize: textPx(15) }} onClick={onStart}>
           Start session &amp; clock
         </button>
       </div>
@@ -142,7 +143,7 @@ export default function PlanPreview({
         </section>
       ))}
 
-      <button className="btn primary block" style={{ marginTop: 8, padding: "13px", fontSize: 15 }} onClick={onStart}>
+      <button className="btn primary block" style={{ marginTop: 8, padding: "13px", fontSize: textPx(15) }} onClick={onStart}>
         Start session &amp; clock
       </button>
     </div>

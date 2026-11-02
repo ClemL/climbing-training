@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { applyImport, downloadBackup, parseBackup, previewImport, type ImportCounts } from "@/lib/backup";
+import { TEXT_SIZES, THEMES } from "@/lib/display";
 import { clearFavorites } from "@/lib/favorites";
+import { PHONE_MAX_WIDTH, WIDE_MIN_WIDTH } from "@/lib/layout";
 import { clearHistory, clearLoads, formatDate } from "@/lib/storage";
-import { resetSettings, updateSettings, type Density, type Settings, type Style, type Theme } from "@/lib/settings";
+import { resetSettings, updateSettings, type Density, type Settings, type Style } from "@/lib/settings";
 import { useSettings } from "@/lib/use-settings";
 
 /** "12 sessions, 3 knee check-ins and 1 saved exercise", leaving out whatever is zero. */
@@ -21,6 +23,39 @@ function describe(c: ImportCounts): string {
     .map(([n, one, many]) => `${n} ${n === 1 ? one : many}`);
   if (parts.length < 2) return parts[0] ?? "";
   return `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
+}
+
+/**
+ * The real figures of whatever device is reading, so the device test sizes can
+ * be checked against it, and the layout the stylesheet chose for them.
+ */
+function describeScreen(): string {
+  const ratio = Math.round(window.devicePixelRatio * 1000) / 1000;
+  const layout = window.matchMedia(`(min-width: ${WIDE_MIN_WIDTH}px)`).matches
+    ? "wide layout"
+    : window.matchMedia(`(max-width: ${PHONE_MAX_WIDTH}px)`).matches
+      ? "phone layout"
+      : "single column";
+  return `${window.innerWidth} × ${window.innerHeight} CSS pixels at ${ratio}× · ${layout}`;
+}
+
+function ScreenReadout() {
+  const [screen, setScreen] = useState("");
+  // A fold, an unfold or a rotation changes the screen while Settings is open; the readout follows.
+  useEffect(() => {
+    const onResize = () => setScreen(describeScreen());
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return (
+    <div className="setting">
+      <div className="setting-copy">
+        <div className="setting-name">This screen</div>
+        <div className="setting-why screen-size">{screen}</div>
+      </div>
+    </div>
+  );
 }
 
 function Toggle({
@@ -72,194 +107,223 @@ export default function SettingsView() {
       <h1>Settings</h1>
       <p className="lede">Stored in this browser alongside everything else. Nothing syncs.</p>
 
-      <h2>Training</h2>
-      <Toggle
-        name="Log added weight on hangboard blocks"
-        why="Off by default. Turn this on only if you hang with added or removed weight; bodyweight hangs need no record."
-        on={s.logHangboardWeight}
-        onChange={(v) => set("logHangboardWeight", v)}
-      />
-      {s.logHangboardWeight ? (
-        <div className="setting">
-          <div className="setting-copy">
-            <div className="setting-name">Weight unit</div>
-            <div className="setting-why">Applies to the hangboard log only.</div>
-          </div>
-          <div className="seg">
-            {(["lb", "kg"] as const).map((u) => (
-              <button key={u} aria-pressed={s.unit === u} onClick={() => set("unit", u)}>
-                {u}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      <h2>Display</h2>
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Style</div>
-          <div className="setting-why">
-            Chalk is the one-handed redesign: navigation at the bottom, a session folded to the block you are on, bigger
-            targets, and a light theme for daylight. Classic is the original.
-          </div>
-        </div>
-      </div>
-      <div className="seg seg-wide two">
-        {(["classic", "chalk"] as Style[]).map((v) => (
-          <button key={v} aria-pressed={s.style === v} onClick={() => set("style", v)}>
-            {v[0].toUpperCase() + v.slice(1)}
-          </button>
-        ))}
-      </div>
-      {s.style === "chalk" ? (
-        <>
+      {/* Sections sit side by side on a wide screen, in reading order down each column. */}
+      <div className="cols settings-cols">
+        <section className="settings-group">
+        <h2>Training</h2>
+        <Toggle
+          name="Log added weight on hangboard blocks"
+          why="Off by default. Turn this on only if you hang with added or removed weight; bodyweight hangs need no record."
+          on={s.logHangboardWeight}
+          onChange={(v) => set("logHangboardWeight", v)}
+        />
+        {s.logHangboardWeight ? (
           <div className="setting">
             <div className="setting-copy">
-              <div className="setting-name">Theme</div>
-              <div className="setting-why">System follows the phone. Light reads better outdoors in sun.</div>
+              <div className="setting-name">Weight unit</div>
+              <div className="setting-why">Applies to the hangboard log only.</div>
+            </div>
+            <div className="seg">
+              {(["lb", "kg"] as const).map((u) => (
+                <button key={u} aria-pressed={s.unit === u} onClick={() => set("unit", u)}>
+                  {u}
+                </button>
+              ))}
             </div>
           </div>
-          <div className="seg seg-wide">
-            {(["system", "light", "dark"] as Theme[]).map((v) => (
-              <button key={v} aria-pressed={s.theme === v} onClick={() => set("theme", v)}>
-                {v[0].toUpperCase() + v.slice(1)}
-              </button>
-            ))}
-          </div>
-        </>
-      ) : null}
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Element size</div>
-          <div className="setting-why">
-            Row height, padding, type and controls all scale together. Compact fits more of a session on screen;
-            comfortable gives bigger tap targets for cold or chalky hands.
-          </div>
-        </div>
-      </div>
-      <div className="seg seg-wide">
-        {(["compact", "normal", "comfortable"] as Density[]).map((d) => (
-          <button key={d} aria-pressed={s.density === d} onClick={() => set("density", d)}>
-            {d[0].toUpperCase() + d.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      <h2>During a session</h2>
-      <Toggle
-        name="Timer sounds"
-        why="Countdown beeps on the last three seconds of every rest and interval phase."
-        on={s.sounds}
-        onChange={(v) => set("sounds", v)}
-      />
-      <Toggle
-        name="Keep the screen awake"
-        why="Holds the display on while a session is running, so the phone does not lock between sets."
-        on={s.keepAwake}
-        onChange={(v) => set("keepAwake", v)}
-      />
-      <Toggle
-        name="Animate exercise illustrations"
-        why="Cycles between start and end position. Turn off to hold the start frame; the overlay can still step through manually."
-        on={s.animateFigures}
-        onChange={(v) => set("animateFigures", v)}
-      />
-
-      <h2>Backup</h2>
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Export a backup</div>
-          <div className="setting-why">
-            Sessions, knee check-ins, the hangboard log, saved exercises and settings, as one JSON file. Keep it
-            somewhere other than this phone.
-          </div>
-        </div>
-        <button className="btn sm" onClick={() => downloadBackup()}>
-          Export
-        </button>
-      </div>
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Import a backup</div>
-          <div className="setting-why">
-            Merges into what is here and never removes anything, so a phone and a tablet can trade files. Settings
-            come across only to a device that has none of its own.
-          </div>
-          {importNote ? (
-            <div className="setting-why" role="status" style={{ color: "var(--text)", marginTop: 4 }}>
-              {importNote}
+        ) : null}
+        </section>
+        <section className="settings-group">
+        <h2>Display</h2>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Style</div>
+            <div className="setting-why">
+              Chalk is the one-handed redesign: navigation at the bottom, a session folded to the block you are on, and
+              bigger targets. Classic is the original.
             </div>
-          ) : null}
+          </div>
         </div>
-        <button className="btn sm" onClick={() => fileRef.current?.click()}>
-          Import
-        </button>
-        {/* No `accept` filter: Android pickers often type a .json from Drive as
-            octet-stream and grey it out. parseBackup rejects anything else. */}
-        <input
-          ref={fileRef}
-          type="file"
-          hidden
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            e.target.value = "";
-            if (file) void importFile(file);
-          }}
+        <div className="seg seg-wide two">
+          {(["classic", "chalk"] as Style[]).map((v) => (
+            <button key={v} aria-pressed={s.style === v} onClick={() => set("style", v)}>
+              {v[0].toUpperCase() + v.slice(1)}
+            </button>
+          ))}
+        </div>
+        <fieldset className="choices">
+          <legend className="setting-name">Theme</legend>
+          <label className="choice">
+            <input type="radio" name="theme" checked={s.theme === "system"} onChange={() => set("theme", "system")} />
+            <span className="choice-copy">
+              <span className="choice-name">System</span>
+              <span className="setting-why">
+                {s.style === "chalk" ? "Follows the phone's light or dark mode." : "Dark, as Classic has always been."}
+              </span>
+            </span>
+          </label>
+          {THEMES.map((t) => (
+            <label key={t.id} className="choice">
+              <input type="radio" name="theme" checked={s.theme === t.id} onChange={() => set("theme", t.id)} />
+              <span className="choice-copy">
+                <span className="choice-name">{t.label}</span>
+                <span className="setting-why">{t.tip}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Element size</div>
+            <div className="setting-why">
+              Row height, padding, type and controls all scale together. Compact fits more of a session on screen;
+              comfortable gives bigger tap targets for cold or chalky hands.
+            </div>
+          </div>
+        </div>
+        <div className="seg seg-wide">
+          {(["compact", "normal", "comfortable"] as Density[]).map((d) => (
+            <button key={d} aria-pressed={s.density === d} onClick={() => set("density", d)}>
+              {d[0].toUpperCase() + d.slice(1)}
+            </button>
+          ))}
+        </div>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Text size</div>
+            <div className="setting-why">
+              Type alone, apart from element size, so larger text does not also mean fewer rows on screen.
+            </div>
+          </div>
+        </div>
+        <div className="seg seg-wide four" role="group" aria-label="Text size">
+          {TEXT_SIZES.map((t) => (
+            <button key={t.id} aria-pressed={s.textSize === t.id} onClick={() => set("textSize", t.id)}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <ScreenReadout />
+        </section>
+        <section className="settings-group">
+        <h2>During a session</h2>
+        <Toggle
+          name="Timer sounds"
+          why="Countdown beeps on the last three seconds of every rest and interval phase."
+          on={s.sounds}
+          onChange={(v) => set("sounds", v)}
         />
-      </div>
-
-      <h2>Data</h2>
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Reset settings</div>
-          <div className="setting-why">Back to defaults. Training history is untouched.</div>
+        <Toggle
+          name="Keep the screen awake"
+          why="Holds the display on while a session is running, so the phone does not lock between sets."
+          on={s.keepAwake}
+          onChange={(v) => set("keepAwake", v)}
+        />
+        <Toggle
+          name="Animate exercise illustrations"
+          why="Cycles between start and end position. Turn off to hold the start frame; the overlay can still step through manually."
+          on={s.animateFigures}
+          onChange={(v) => set("animateFigures", v)}
+        />
+        </section>
+        <section className="settings-group">
+        <h2>Backup</h2>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Export a backup</div>
+            <div className="setting-why">
+              Sessions, knee check-ins, the hangboard log, saved exercises and settings, as one JSON file. Keep it
+              somewhere other than this phone.
+            </div>
+          </div>
+          <button className="btn sm" onClick={() => downloadBackup()}>
+            Export
+          </button>
         </div>
-        <button className="btn sm" onClick={() => resetSettings()}>
-          Reset
-        </button>
-      </div>
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Delete hangboard log</div>
-          <div className="setting-why">Every added-weight entry, for all plans.</div>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Import a backup</div>
+            <div className="setting-why">
+              Merges into what is here and never removes anything, so a phone and a tablet can trade files. Settings
+              come across only to a device that has none of its own.
+            </div>
+            {importNote ? (
+              <div className="setting-why" role="status" style={{ color: "var(--text)", marginTop: 4 }}>
+                {importNote}
+              </div>
+            ) : null}
+          </div>
+          <button className="btn sm" onClick={() => fileRef.current?.click()}>
+            Import
+          </button>
+          {/* No `accept` filter: Android pickers often type a .json from Drive as
+              octet-stream and grey it out. parseBackup rejects anything else. */}
+          <input
+            ref={fileRef}
+            type="file"
+            hidden
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = "";
+              if (file) void importFile(file);
+            }}
+          />
         </div>
-        <button
-          className="btn sm danger"
-          onClick={() => {
-            if (window.confirm("Delete every hangboard weight entry?")) clearLoads();
-          }}
-        >
-          Delete
-        </button>
-      </div>
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Clear saved exercises</div>
-          <div className="setting-why">Everything starred for later.</div>
+        </section>
+        <section className="settings-group">
+        <h2>Data</h2>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Reset settings</div>
+            <div className="setting-why">Back to defaults. Training history is untouched.</div>
+          </div>
+          <button className="btn sm" onClick={() => resetSettings()}>
+            Reset
+          </button>
         </div>
-        <button
-          className="btn sm danger"
-          onClick={() => {
-            if (window.confirm("Remove all saved exercises?")) clearFavorites();
-          }}
-        >
-          Clear
-        </button>
-      </div>
-      <div className="setting">
-        <div className="setting-copy">
-          <div className="setting-name">Delete training history</div>
-          <div className="setting-why">All finished sessions.</div>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Delete hangboard log</div>
+            <div className="setting-why">Every added-weight entry, for all plans.</div>
+          </div>
+          <button
+            className="btn sm danger"
+            onClick={() => {
+              if (window.confirm("Delete every hangboard weight entry?")) clearLoads();
+            }}
+          >
+            Delete
+          </button>
         </div>
-        <button
-          className="btn sm danger"
-          onClick={() => {
-            if (window.confirm("Delete all training history from this browser?")) clearHistory();
-          }}
-        >
-          Delete
-        </button>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Clear saved exercises</div>
+            <div className="setting-why">Everything starred for later.</div>
+          </div>
+          <button
+            className="btn sm danger"
+            onClick={() => {
+              if (window.confirm("Remove all saved exercises?")) clearFavorites();
+            }}
+          >
+            Clear
+          </button>
+        </div>
+        <div className="setting">
+          <div className="setting-copy">
+            <div className="setting-name">Delete training history</div>
+            <div className="setting-why">All finished sessions.</div>
+          </div>
+          <button
+            className="btn sm danger"
+            onClick={() => {
+              if (window.confirm("Delete all training history from this browser?")) clearHistory();
+            }}
+          >
+            Delete
+          </button>
+        </div>
+        </section>
       </div>
     </>
   );

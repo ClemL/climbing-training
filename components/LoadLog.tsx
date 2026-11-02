@@ -10,6 +10,7 @@ import {
   formatDate,
 } from "@/lib/storage";
 import { useSettings } from "@/lib/use-settings";
+import { textPx } from "@/lib/display";
 
 /**
  * Added-weight entry for hangboard blocks. The previous value is prefilled,
@@ -42,7 +43,7 @@ export default function LoadLog({ planId, blockId }: { planId: string; blockId: 
           value={value}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <span className="faint" style={{ fontSize: 13 }}>
+        <span className="faint" style={{ fontSize: textPx(13) }}>
           {unit}
         </span>
         <button

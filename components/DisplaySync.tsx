@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
-import { displayAttributes } from "@/lib/display";
+import { displayAttributes, themeColor } from "@/lib/display";
 import { useSettings } from "@/lib/use-settings";
 
 const LIGHT = "(prefers-color-scheme: light)";
@@ -16,7 +16,7 @@ const prefersLight = () => window.matchMedia(LIGHT).matches;
 const serverPrefersLight = () => false;
 
 /**
- * Publishes density, style and theme to the document root, where the CSS
+ * Publishes density, style, theme and text size to the document root, where the CSS
  * custom properties are redefined. BOOT_SCRIPT sets the same attributes before
  * first paint; this keeps them current when a setting or the phone's light or
  * dark mode changes. Renders nothing.
@@ -31,9 +31,9 @@ export default function DisplaySync() {
     root.dataset.density = a.density;
     root.dataset.style = a.style;
     root.dataset.theme = a.theme;
+    root.dataset.text = a.text;
     // The browser's own toolbar follows the page background.
-    const bg = getComputedStyle(root).getPropertyValue("--bg").trim();
-    if (bg) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", bg);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor(a.theme));
   }, [settings, light]);
 
   return null;

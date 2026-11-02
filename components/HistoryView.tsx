@@ -21,19 +21,21 @@ export default function HistoryView({ history }: { history: readonly HistoryEntr
             <span className="pill">{formatClock(totalMs)} total</span>
             <span className="pill">{formatClock(Math.round(totalMs / history.length))} average</span>
           </div>
-          {history.map((h) => (
-            <div key={h.id} className="hist" style={{ ["--cat" as string]: `var(--cat-${h.category})` }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="ex-name">{h.planName}</div>
-                <div className="when">
-                  {formatDate(h.finishedAt)} &middot; {h.checked}/{h.total} checked
+          <div className="cols">
+            {history.map((h) => (
+              <div key={h.id} className="hist" style={{ ["--cat" as string]: `var(--cat-${h.category})` }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="ex-name">{h.planName}</div>
+                  <div className="when">
+                    {formatDate(h.finishedAt)} &middot; {h.checked}/{h.total} checked
+                  </div>
+                </div>
+                <div className="mono" style={{ fontWeight: 700 }}>
+                  {formatClock(h.durationMs)}
                 </div>
               </div>
-              <div className="mono" style={{ fontWeight: 700 }}>
-                {formatClock(h.durationMs)}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
           <button
             className="btn danger block"
             style={{ marginTop: 14 }}

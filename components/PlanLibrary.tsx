@@ -6,6 +6,7 @@ import { setFilter } from "@/lib/navigation";
 import { PLANS } from "@/lib/plans";
 import { useNav } from "@/lib/use-navigation";
 import { CATEGORIES, type Plan } from "@/lib/types";
+import { textPx } from "@/lib/display";
 
 const SHORTEST = Math.min(...PLANS.map((p) => p.minutes[0]));
 const LONGEST = Math.max(...PLANS.map((p) => p.minutes[1]));
@@ -50,7 +51,7 @@ export default function PlanLibrary({ onPick }: { onPick: (plan: Plan) => void }
               <h2>
                 {cat.icon} {cat.label}
               </h2>
-              <span className="faint" style={{ fontSize: 12 }}>
+              <span className="faint" style={{ fontSize: textPx(12) }}>
                 {plans.length} plans
               </span>
             </div>
