@@ -63,12 +63,14 @@ export default function WeekView({ onPick }: { onPick: (plan: Plan) => void }) {
       </div>
 
       <h2>Why it is ordered this way</h2>
-      {RULES.map((r) => (
-        <div key={r.rule} className="rule">
-          <div className="rule-head">{r.rule}</div>
-          <div className="rule-why">{r.why}</div>
-        </div>
-      ))}
+      <div className="cols">
+        {RULES.map((r) => (
+          <div key={r.rule} className="rule">
+            <div className="rule-head">{r.rule}</div>
+            <div className="rule-why">{r.why}</div>
+          </div>
+        ))}
+      </div>
     </>
   );
 }

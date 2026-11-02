@@ -6,6 +6,7 @@ import IntervalTimer from "./IntervalTimer";
 import LoadLog from "./LoadLog";
 import RestTimer from "./RestTimer";
 import { EXERCISES } from "@/lib/exercises";
+import { textPx } from "@/lib/display";
 import { useTick, useWakeLock } from "@/lib/hooks";
 import { useSettings } from "@/lib/use-settings";
 import {
@@ -151,20 +152,20 @@ export default function SessionView({
   const elapsed = elapsedMs(session, now);
 
   return (
-    <div className="narrow" style={{ ["--cat" as string]: `var(--cat-${plan.category})` }}>
+    <div className="narrow session" style={{ ["--cat" as string]: `var(--cat-${plan.category})` }}>
       <div className="topbar">
         <button className="btn sm ghost" onClick={onExit} aria-label="Back to plans">
           &#8592;
         </button>
         <div style={{ minWidth: 0, flex: 1 }}>
-          <div className="brand truncate" style={{ fontSize: 14 }} title={plan.name}>
+          <div className="brand truncate" style={{ fontSize: textPx(14) }} title={plan.name}>
             {plan.name}
           </div>
-          <small className="faint" style={{ fontSize: 11 }}>
+          <small className="faint" style={{ fontSize: textPx(11) }}>
             {checked}/{total} done &middot; {pct}%
           </small>
         </div>
-        <div className={`clock mono${session.running ? "" : " paused"}`} style={{ fontSize: 22 }}>
+        <div className={`clock mono${session.running ? "" : " paused"}`} style={{ fontSize: textPx(22) }}>
           {formatClock(elapsed)}
         </div>
         <button className="btn sm" onClick={() => setRunning(!session.running)}>
@@ -177,282 +178,289 @@ export default function SessionView({
         ) : null}
       </div>
 
-      {focus ? null : (
-        <div className="session-head">
-          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-            <span className="pill cat">
-              {plan.minutes[0]}-{plan.minutes[1]} min
-            </span>
-            <span className="pill">{plan.blocks.length} blocks</span>
-            <span className="pill">{total} checkpoints</span>
-          </div>
-          <div className="block-progress" role="img" aria-label={`${pct} percent complete`}>
-            {plan.blocks
-              .filter((b) => b.slots.length > 0)
-              .map((b) => {
-                const skipped = isSkipped(session, b);
-                const keys = blockKeys(session, b);
-                const done = keys.filter((k) => session.done[k]).length;
-                const width = skipped || !keys.length ? 0 : Math.round((done / keys.length) * 100);
-                return (
-                  <span key={b.id} className={skipped ? "skipped" : undefined}>
-                    <i style={{ width: `${width}%` }} />
-                  </span>
-                );
-              })}
-          </div>
-          <div className="clockrow">
-            <div className={`clock mono${session.running ? "" : " paused"}`}>{formatClock(elapsed)}</div>
-            <div className="spacer" />
-            <button className="btn" onClick={() => setRunning(!session.running)}>
-              {session.running ? "Pause" : "Resume"}
-            </button>
-            <button className="btn good" onClick={onFinish}>
-              Finish
-            </button>
-          </div>
-        </div>
-      )}
-
-      {plan.notes?.length ? (
-        focus ? (
-          <details className="notes notes-fold">
-            <summary>
-              Before you start &middot; {plan.notes.length} {plan.notes.length === 1 ? "note" : "notes"}
-            </summary>
-            <ul>
-              {plan.notes.map((n) => (
-                <li key={n}>{n}</li>
-              ))}
-            </ul>
-          </details>
-        ) : (
-          <div className="notes">
-            <ul>
-              {plan.notes.map((n) => (
-                <li key={n}>{n}</li>
-              ))}
-            </ul>
-          </div>
-        )
-      ) : null}
-
-      {focus ? (
-        <div className="focus-bar">
-          <span>{current ? `On ${current.tag}: ${current.title}` : "Every block is checked off"}</span>
-          <button className="btn sm ghost" aria-pressed={showAll} onClick={() => setShowAll(!showAll)}>
-            {showAll ? "Fold" : "Show all"}
-          </button>
-        </div>
-      ) : null}
-
-      {plan.blocks.map((block) => {
-        const skipped = isSkipped(session, block);
-        const rounds = roundsOf(session, block);
-        const keys = blockKeys(session, block);
-        const doneCount = keys.filter((k) => session.done[k]).length;
-        const blockDone = !skipped && doneCount === keys.length;
-        const grouped = block.kind === "superset" || block.kind === "circuit" || block.kind === "interval";
-        const compact = block.slots.length === 1 && rounds > 1;
-        const expanded = !focus || showAll || (open[block.id] ?? block.id === currentId);
-        // Inside a button the heading has to be phrasing content.
-        const H = focus ? "span" : "div";
-        const heading = (
-          <>
-            <H className="block-title">
-              {block.title}
-              {KIND_LABEL[block.kind] ? (
-                <span className={`kind-badge kind-${block.kind}`}>{KIND_LABEL[block.kind]}</span>
-              ) : null}
-            </H>
-            <H className="block-meta">
-              {focus && skipped ? (
-                "Skipped"
-              ) : focus && !expanded ? (
-                `${doneCount}/${keys.length} done · ~${block.minutes} min`
-              ) : (
-                <>
-                  {rounds > 1 ? `${rounds} rounds` : "1 round"}
-                  {rounds !== block.rounds ? ` (plan: ${block.rounds})` : ""}
-                  {block.rest ? ` · rest ${block.rest}` : ""}
-                  {` · ~${block.minutes} min`}
-                </>
-              )}
-            </H>
-          </>
-        );
-
-        return (
-          <section
-            key={block.id}
-            id={`block-${block.id}`}
-            className={`block${blockDone ? " done" : ""}${skipped ? " skipped" : ""}${focus && block.id === currentId ? " current" : ""}${expanded ? "" : " folded"}`}
-          >
-            <div className="block-head">
-              <div className="block-tag">{focus && blockDone ? "✓" : block.tag}</div>
-              {focus ? (
-                <button
-                  className="block-toggle"
-                  aria-expanded={expanded}
-                  onClick={() => setOpen((o) => ({ ...o, [block.id]: !expanded }))}
-                >
-                  {heading}
-                </button>
-              ) : (
-                <div style={{ flex: 1, minWidth: 0 }}>{heading}</div>
-              )}
-              {focus ? (
-                <button
-                  className="round-step"
-                  aria-label={`Options for ${block.title}`}
-                  aria-expanded={menu === block.id}
-                  onClick={() => setMenu((m) => (m === block.id ? null : block.id))}
-                >
-                  &#8943;
-                </button>
-              ) : (
-                <div className="block-controls">
-                  <button
-                    className="round-step"
-                    aria-label={`One less round of ${block.title}`}
-                    disabled={skipped || rounds <= 1}
-                    onClick={() => stepRounds(block, -1)}
-                  >
-                    &minus;
-                  </button>
-                  <button
-                    className="round-step"
-                    aria-label={`One more round of ${block.title}`}
-                    disabled={skipped}
-                    onClick={() => stepRounds(block, 1)}
-                  >
-                    +
-                  </button>
-                  <button
-                    className="round-step"
-                    aria-label={skipped ? `Restore ${block.title}` : `Skip ${block.title}`}
-                    onClick={() => toggleSkip(block)}
-                  >
-                    {skipped ? "↺" : "✕"}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {focus && menu === block.id ? (
-              <div className="block-menu">
-                <span className="block-menu-label">Rounds</span>
-                <button
-                  className="round-step"
-                  aria-label={`One less round of ${block.title}`}
-                  disabled={skipped || rounds <= 1}
-                  onClick={() => stepRounds(block, -1)}
-                >
-                  &minus;
-                </button>
-                <span className="mono block-menu-count">{rounds}</span>
-                <button
-                  className="round-step"
-                  aria-label={`One more round of ${block.title}`}
-                  disabled={skipped}
-                  onClick={() => stepRounds(block, 1)}
-                >
-                  +
-                </button>
+      {/* On a wide screen the clock and notes stay in a column beside the blocks. */}
+      <div className="session-layout">
+        <aside className="session-side">
+          {focus ? null : (
+            <div className="session-head">
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                <span className="pill cat">
+                  {plan.minutes[0]}-{plan.minutes[1]} min
+                </span>
+                <span className="pill">{plan.blocks.length} blocks</span>
+                <span className="pill">{total} checkpoints</span>
+              </div>
+              <div className="block-progress" role="img" aria-label={`${pct} percent complete`}>
+                {plan.blocks
+                  .filter((b) => b.slots.length > 0)
+                  .map((b) => {
+                    const skipped = isSkipped(session, b);
+                    const keys = blockKeys(session, b);
+                    const done = keys.filter((k) => session.done[k]).length;
+                    const width = skipped || !keys.length ? 0 : Math.round((done / keys.length) * 100);
+                    return (
+                      <span key={b.id} className={skipped ? "skipped" : undefined}>
+                        <i style={{ width: `${width}%` }} />
+                      </span>
+                    );
+                  })}
+              </div>
+              <div className="clockrow">
+                <div className={`clock mono${session.running ? "" : " paused"}`}>{formatClock(elapsed)}</div>
                 <div className="spacer" />
-                <button
-                  className={`btn sm${skipped ? "" : " danger"}`}
-                  onClick={() => {
-                    toggleSkip(block);
-                    setMenu(null);
-                  }}
-                >
-                  {skipped ? "Restore block" : "Skip block"}
+                <button className="btn" onClick={() => setRunning(!session.running)}>
+                  {session.running ? "Pause" : "Resume"}
+                </button>
+                <button className="btn good" onClick={onFinish}>
+                  Finish
                 </button>
               </div>
-            ) : null}
+            </div>
+          )}
 
-            {skipped ? null : (
-              // Folded with `hidden` rather than unmounted, so a running interval timer survives it.
-              <div className="block-body" hidden={!expanded}>
-                {block.note ? <div className="block-note">{block.note}</div> : null}
-                {block.interval ? <IntervalTimer spec={{ ...block.interval, sets: rounds }} /> : null}
-                {block.interval && settings.logHangboardWeight ? <LoadLog planId={plan.id} blockId={block.id} /> : null}
+          {plan.notes?.length ? (
+            focus ? (
+              <details className="notes notes-fold">
+                <summary>
+                  Before you start &middot; {plan.notes.length} {plan.notes.length === 1 ? "note" : "notes"}
+                </summary>
+                <ul>
+                  {plan.notes.map((n) => (
+                    <li key={n}>{n}</li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <div className="notes">
+                <ul>
+                  {plan.notes.map((n) => (
+                    <li key={n}>{n}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          ) : null}
+        </aside>
 
-                {compact ? (
-                  <div className="round">
-                    <ExerciseRow
-                      slot={block.slots[0]}
-                      checked={keys.every((k) => session.done[k])}
-                      onToggle={() => setMany(keys, !keys.every((k) => session.done[k]))}
-                      onTimer={startTimer}
-                    />
-                    <div className="setdots">
-                      <span className="setdots-label">{block.unit ?? "Sets"}</span>
-                      {Array.from({ length: rounds }, (_, ri) => ri + 1).map((round) => {
-                        const k = slotKey(block.id, round, 0);
-                        return (
-                          <button
-                            key={k}
-                            className="setdot"
-                            aria-pressed={!!session.done[k]}
-                            aria-label={`${block.unit ?? "Set"} ${round}`}
-                            onClick={() => toggle(k)}
-                          >
-                            {round}
-                          </button>
-                        );
-                      })}
+        <div className="session-main">
+          {focus ? (
+            <div className="focus-bar">
+              <span>{current ? `On ${current.tag}: ${current.title}` : "Every block is checked off"}</span>
+              <button className="btn sm ghost" aria-pressed={showAll} onClick={() => setShowAll(!showAll)}>
+                {showAll ? "Fold" : "Show all"}
+              </button>
+            </div>
+          ) : null}
+
+          {plan.blocks.map((block) => {
+            const skipped = isSkipped(session, block);
+            const rounds = roundsOf(session, block);
+            const keys = blockKeys(session, block);
+            const doneCount = keys.filter((k) => session.done[k]).length;
+            const blockDone = !skipped && doneCount === keys.length;
+            const grouped = block.kind === "superset" || block.kind === "circuit" || block.kind === "interval";
+            const compact = block.slots.length === 1 && rounds > 1;
+            const expanded = !focus || showAll || (open[block.id] ?? block.id === currentId);
+            // Inside a button the heading has to be phrasing content.
+            const H = focus ? "span" : "div";
+            const heading = (
+              <>
+                <H className="block-title">
+                  {block.title}
+                  {KIND_LABEL[block.kind] ? (
+                    <span className={`kind-badge kind-${block.kind}`}>{KIND_LABEL[block.kind]}</span>
+                  ) : null}
+                </H>
+                <H className="block-meta">
+                  {focus && skipped ? (
+                    "Skipped"
+                  ) : focus && !expanded ? (
+                    `${doneCount}/${keys.length} done · ~${block.minutes} min`
+                  ) : (
+                    <>
+                      {rounds > 1 ? `${rounds} rounds` : "1 round"}
+                      {rounds !== block.rounds ? ` (plan: ${block.rounds})` : ""}
+                      {block.rest ? ` · rest ${block.rest}` : ""}
+                      {` · ~${block.minutes} min`}
+                    </>
+                  )}
+                </H>
+              </>
+            );
+
+            return (
+              <section
+                key={block.id}
+                id={`block-${block.id}`}
+                className={`block${blockDone ? " done" : ""}${skipped ? " skipped" : ""}${focus && block.id === currentId ? " current" : ""}${expanded ? "" : " folded"}`}
+              >
+                <div className="block-head">
+                  <div className="block-tag">{focus && blockDone ? "✓" : block.tag}</div>
+                  {focus ? (
+                    <button
+                      className="block-toggle"
+                      aria-expanded={expanded}
+                      onClick={() => setOpen((o) => ({ ...o, [block.id]: !expanded }))}
+                    >
+                      {heading}
+                    </button>
+                  ) : (
+                    <div style={{ flex: 1, minWidth: 0 }}>{heading}</div>
+                  )}
+                  {focus ? (
+                    <button
+                      className="round-step"
+                      aria-label={`Options for ${block.title}`}
+                      aria-expanded={menu === block.id}
+                      onClick={() => setMenu((m) => (m === block.id ? null : block.id))}
+                    >
+                      &#8943;
+                    </button>
+                  ) : (
+                    <div className="block-controls">
+                      <button
+                        className="round-step"
+                        aria-label={`One less round of ${block.title}`}
+                        disabled={skipped || rounds <= 1}
+                        onClick={() => stepRounds(block, -1)}
+                      >
+                        &minus;
+                      </button>
+                      <button
+                        className="round-step"
+                        aria-label={`One more round of ${block.title}`}
+                        disabled={skipped}
+                        onClick={() => stepRounds(block, 1)}
+                      >
+                        +
+                      </button>
+                      <button
+                        className="round-step"
+                        aria-label={skipped ? `Restore ${block.title}` : `Skip ${block.title}`}
+                        onClick={() => toggleSkip(block)}
+                      >
+                        {skipped ? "↺" : "✕"}
+                      </button>
                     </div>
+                  )}
+                </div>
+
+                {focus && menu === block.id ? (
+                  <div className="block-menu">
+                    <span className="block-menu-label">Rounds</span>
+                    <button
+                      className="round-step"
+                      aria-label={`One less round of ${block.title}`}
+                      disabled={skipped || rounds <= 1}
+                      onClick={() => stepRounds(block, -1)}
+                    >
+                      &minus;
+                    </button>
+                    <span className="mono block-menu-count">{rounds}</span>
+                    <button
+                      className="round-step"
+                      aria-label={`One more round of ${block.title}`}
+                      disabled={skipped}
+                      onClick={() => stepRounds(block, 1)}
+                    >
+                      +
+                    </button>
+                    <div className="spacer" />
+                    <button
+                      className={`btn sm${skipped ? "" : " danger"}`}
+                      onClick={() => {
+                        toggleSkip(block);
+                        setMenu(null);
+                      }}
+                    >
+                      {skipped ? "Restore block" : "Skip block"}
+                    </button>
                   </div>
-                ) : (
-                  Array.from({ length: rounds }, (_, ri) => ri + 1).map((round) => {
-                    const roundKeys = block.slots.map((_, i) => slotKey(block.id, round, i));
-                    const roundDone = roundKeys.every((k) => session.done[k]);
-                    return (
-                      <div key={round} className="round">
-                        {rounds > 1 ? (
-                          <div className="round-head">
-                            <span>Round {round}</span>
-                            <div className="spacer" />
-                            <button className="btn sm ghost" onClick={() => setMany(roundKeys, !roundDone)}>
-                              {roundDone ? "Clear" : "Check all"}
-                            </button>
-                          </div>
-                        ) : null}
-                        <div className={grouped && block.slots.length > 1 ? "superset-wrap" : undefined}>
-                          {block.slots.map((slot, i) => {
-                            const k = slotKey(block.id, round, i);
+                ) : null}
+
+                {skipped ? null : (
+                  // Folded with `hidden` rather than unmounted, so a running interval timer survives it.
+                  <div className="block-body" hidden={!expanded}>
+                    {block.note ? <div className="block-note">{block.note}</div> : null}
+                    {block.interval ? <IntervalTimer spec={{ ...block.interval, sets: rounds }} /> : null}
+                    {block.interval && settings.logHangboardWeight ? <LoadLog planId={plan.id} blockId={block.id} /> : null}
+
+                    {compact ? (
+                      <div className="round">
+                        <ExerciseRow
+                          slot={block.slots[0]}
+                          checked={keys.every((k) => session.done[k])}
+                          onToggle={() => setMany(keys, !keys.every((k) => session.done[k]))}
+                          onTimer={startTimer}
+                        />
+                        <div className="setdots">
+                          <span className="setdots-label">{block.unit ?? "Sets"}</span>
+                          {Array.from({ length: rounds }, (_, ri) => ri + 1).map((round) => {
+                            const k = slotKey(block.id, round, 0);
                             return (
-                              <ExerciseRow
+                              <button
                                 key={k}
-                                slot={slot}
-                                checked={!!session.done[k]}
-                                onToggle={() => toggle(k)}
-                                onTimer={startTimer}
-                              />
+                                className="setdot"
+                                aria-pressed={!!session.done[k]}
+                                aria-label={`${block.unit ?? "Set"} ${round}`}
+                                onClick={() => toggle(k)}
+                              >
+                                {round}
+                              </button>
                             );
                           })}
                         </div>
                       </div>
-                    );
-                  })
+                    ) : (
+                      Array.from({ length: rounds }, (_, ri) => ri + 1).map((round) => {
+                        const roundKeys = block.slots.map((_, i) => slotKey(block.id, round, i));
+                        const roundDone = roundKeys.every((k) => session.done[k]);
+                        return (
+                          <div key={round} className="round">
+                            {rounds > 1 ? (
+                              <div className="round-head">
+                                <span>Round {round}</span>
+                                <div className="spacer" />
+                                <button className="btn sm ghost" onClick={() => setMany(roundKeys, !roundDone)}>
+                                  {roundDone ? "Clear" : "Check all"}
+                                </button>
+                              </div>
+                            ) : null}
+                            <div className={grouped && block.slots.length > 1 ? "superset-wrap" : undefined}>
+                              {block.slots.map((slot, i) => {
+                                const k = slotKey(block.id, round, i);
+                                return (
+                                  <ExerciseRow
+                                    key={k}
+                                    slot={slot}
+                                    checked={!!session.done[k]}
+                                    onToggle={() => toggle(k)}
+                                    onTimer={startTimer}
+                                  />
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
                 )}
-              </div>
-            )}
-          </section>
-        );
-      })}
+              </section>
+            );
+          })}
 
-      <button className="btn good block" style={{ marginTop: 16 }} onClick={onFinish}>
-        Finish session
-      </button>
+          <button className="btn good block" style={{ marginTop: 16 }} onClick={onFinish}>
+            Finish session
+          </button>
 
-      <p className="footer">
-        {plan.equipment.join(" · ")}
-        <br />
-        Targets: {plan.focus.join(", ")}
-      </p>
+          <p className="footer">
+            {plan.equipment.join(" · ")}
+            <br />
+            Targets: {plan.focus.join(", ")}
+          </p>
+        </div>
+      </div>
 
       <RestTimer
         key={cue?.nonce ?? "idle"}

@@ -106,14 +106,21 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
     behind a "Before you start" fold, finished blocks collapsed, the next one opened and scrolled
     into view, and rounds and skip moved into a per-block menu so a slip cannot drop a block;
   - a timer bar that names the next item under a 44px countdown;
-  - 44px targets throughout, where Classic's checkboxes are 27px;
-  - a light theme that follows the phone or is set by hand, every color at 4.5:1 or better.
+  - 44px targets throughout, where Classic's checkboxes are 27px with a mouse and 32px on a touch
+    screen;
+  - "System" theme follows the phone's light or dark mode, where Classic's stays dark.
 
-  An inline script in `<head>` applies the stored style and theme before first paint, so a light
-  theme does not flash dark on open. Every Chalk rule is scoped to `data-style="chalk"` on the
-  document root, so Classic renders pixel-for-pixel as it did.
-- **Settings** for style and theme, density, weight logging and unit, timer sounds, screen wake lock and figure
-  animation.
+  Every Chalk rule is scoped to `data-style="chalk"` on the document root.
+- **Settings** for style, theme, density, text size, weight logging and unit, timer sounds, screen
+  wake lock and figure animation. See [Display settings](#display-settings).
+- **Foldables and tablets.** Checked at four sizes on every change: a OnePlus Open folded (about
+  425×946 CSS pixels) and unfolded (864×930), and a Galaxy Tab S Ultra in portrait (924×1480) and
+  landscape (1480×924). Up to 560px the top tabs wrap into a grid instead of scrolling out of sight;
+  from 1100px lists run in two columns, settings flow down two columns, and a session keeps its
+  clock and notes in a column beside the blocks. Unfolding or rotating mid-session is a live
+  resize: nothing reloads, and filters, open blocks and menus stay as they were. Overlays scroll
+  inside themselves on short screens. Settings shows "This screen", the device's own figures and
+  the layout chosen for them, for checking the test sizes against a real device.
 - **Backup and restore.** Export writes sessions, knee check-ins, the hangboard log, saved
   exercises and settings to `training-days-yyyyMMdd_HHmm.json`. Import merges rather than
   replaces: entries match by id, day or timestamp, the copy already on the device wins a clash,
@@ -132,7 +139,26 @@ Loads are left to the athlete. Plans prescribe reps, rest and intent only.
   Filter to a group or search across everything; search results are labelled with their group. The
   grouping is generated from the section comments in `lib/exercises.ts`, so it cannot drift from
   the file it describes, and a test asserts every exercise appears in exactly one group.
-- **Screen wake lock** while a session runs, so the phone does not sleep between sets.
+- **Screen wake lock** while a session runs and is not paused, so the phone does not sleep
+  between sets; taken again when you come back to the app. Browsers grant it only over HTTPS (or
+  on `localhost`), so a phone opening a laptop's LAN address over plain HTTP will still dim.
+
+## Display settings
+
+Three choices in Settings, each remembered on the device rather than synced, since a phone and a
+tablet want different ones:
+
+- **Theme**: System, Light, Dark, Black (true black for AMOLED screens, text dimmed a step) or High
+  contrast (black on white, black borders, a thick focus ring). Light and Black keep every text
+  color at 4.5:1 or better and High contrast at 7:1, which `tests/display.test.ts` checks against
+  `globals.css`.
+- **Element size**: compact, normal or comfortable. Comfortable raises touch targets to 44px on a
+  touch screen; every other size keeps them at 32px or more there.
+- **Text size**: 90%, 100%, 115% or 130%, the type alone, so larger text does not also mean fewer
+  rows on screen.
+
+An inline script in `<head>` applies all of them, and the browser toolbar color, before first
+paint, so the page never shows the defaults and then jumps.
 
 ## Stack
 
@@ -156,15 +182,22 @@ npm install
 npm run dev      # http://localhost:3000
 npm run build    # production build
 npm run check    # typecheck + lint + tests
+npm run test:e2e # browser tests against the production build; run npm run build first
 ```
 
-`npm test` runs 48 checks with `node --test` and no test framework. Most guard the data:
+`npm run test:e2e` runs Playwright at the four device sizes above: nothing scrolls sideways in any
+theme or style at comfortable and 130% text, the header and sheets fit, lists switch to two
+columns only in landscape, touch targets reach 32px (44px at comfortable), the screen readout is
+right, and unfolding mid-task keeps state. It also covers the display settings from the first
+paint, the wake lock with a fake `navigator.wakeLock`, and sheets on a 480px-tall screen.
+
+`npm test` runs 52 checks with `node --test` and no test framework. Most guard the data:
 unresolved exercise keys, duplicate ids, block minutes against the advertised session length,
 interval specs matching block rounds, image frames present on disk, and week templates never
 stacking two finger-intensive days. The rest cover duration parsing, the knee check-in rule,
 session progress counting, Chalk's current-block and next-item logic, the merge rules behind
-backup import, the pre-paint style script, the light theme's contrast, read straight from
-`globals.css`, and the changelog parser and file format.
+backup import, the pre-paint display script against bad and blocked storage, every theme's
+contrast, read straight from `globals.css`, and the changelog parser and file format.
 Editing `lib/plans.ts` by hand is the likely way this breaks, and a typo'd exercise key renders
 nothing at all — which you would discover standing at the hangboard.
 

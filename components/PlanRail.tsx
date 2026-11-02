@@ -3,6 +3,7 @@
 import { navigate } from "@/lib/navigation";
 import { PLANS } from "@/lib/plans";
 import { CATEGORIES } from "@/lib/types";
+import { textPx } from "@/lib/display";
 
 /**
  * Compact plan list shown beside a plan's detail on wide screens. Hidden by
@@ -36,7 +37,7 @@ export default function PlanRail({ currentId }: { currentId: string }) {
                   <span className="rail-name truncate">{p.name}</span>
                   <span className="rail-focus truncate">{p.focus.join(" · ")}</span>
                 </span>
-                <span className="mono faint" style={{ fontSize: 12.5 }}>
+                <span className="mono faint" style={{ fontSize: textPx(12.5) }}>
                   {p.minutes[0]}-{p.minutes[1]}
                 </span>
               </button>

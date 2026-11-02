@@ -29,3 +29,9 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+      - name: Install Chromium for the browser tests
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests (device sizes, display settings, wake lock, sheets)
+        run: npm run test:e2e

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  // No maximumScale: it would block pinch zoom for anyone who needs it.
   themeColor: "#0e1116",
 };
 

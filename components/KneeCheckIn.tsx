@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { dayKey, kneeVerdict, logCheckIn, PAIN_CEILING, removeCheckIn, type KneeCheckIn as Entry } from "@/lib/knee";
 import { useKneeLog } from "@/lib/use-knee";
+import { textPx } from "@/lib/display";
 
 const SHOWN = 7;
 
@@ -86,7 +87,7 @@ export default function KneeCheckIn() {
           <button className="btn good block" onClick={save}>
             Save for today
           </button>
-          <p className="faint" style={{ fontSize: 12, margin: "8px 0 0" }}>
+          <p className="faint" style={{ fontSize: textPx(12), margin: "8px 0 0" }}>
             One per day; saving again replaces today&apos;s. Stored on this device only.
           </p>
         </div>

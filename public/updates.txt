@@ -18,3 +18,4 @@
 2026-10-18T04:06:00Z - New look: lime on near-black, a large interval countdown, bigger buttons, and the plan list beside a plan on wide screens
 2026-10-18T13:32:00Z - Added the Chalk style: bottom navigation, a session folded to the current block, 44px buttons and a light theme
 2026-10-30T23:01:00Z - Added this changelog
+2026-11-02T11:56:00Z - Themes for any style (Black for AMOLED screens and High contrast), a text size setting, two-column layouts on a tablet in landscape, and 32px or larger buttons on touch screens

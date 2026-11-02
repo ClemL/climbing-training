@@ -32,6 +32,7 @@ import {
 import { navigate, type View } from "@/lib/navigation";
 import { useNav } from "@/lib/use-navigation";
 import type { Plan } from "@/lib/types";
+import { textPx } from "@/lib/display";
 
 export default function Home() {
   // The URL owns which view is showing, so the hardware back button walks back
@@ -192,7 +193,7 @@ export default function Home() {
           <div className="resume">
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="t">{activePlan.name} in progress</div>
-              <div className="when faint" style={{ fontSize: 12 }}>
+              <div className="when faint" style={{ fontSize: textPx(12) }}>
                 {formatClock(elapsedMs(active))} elapsed &middot; {progressOf(activePlan, active).checked} checked
                 {active.running ? "" : " · paused"}
               </div>
