@@ -83,8 +83,10 @@ for (const screen of SCREENS) {
 
     test(`lists run in ${wide ? "two columns" : "one column"}`, async ({ page }) => {
       await page.goto("/?v=library");
-      const [a, b] = await page
-        .locator(".cols > .lib-item")
+      // The directory renders on the client; measure once its rows exist.
+      const rows = page.locator(".cols > .lib-item");
+      await expect(rows.nth(1)).toBeVisible();
+      const [a, b] = await rows
         .evaluateAll((els) => els.slice(0, 2).map((el) => el.getBoundingClientRect().toJSON()));
       if (wide) {
         expect(b.top).toBeCloseTo(a.top, 0);
@@ -114,15 +116,19 @@ for (const screen of SCREENS) {
         await page.goto("/");
         await saveSettings(page, { style });
         await page.goto("/?v=settings");
+        await expect(page.locator(".screen-size")).not.toBeEmpty();
         await expectTargetsAtLeast(page, 32);
         await startSession(page);
+        await expect(page.locator(".block").first()).toBeVisible();
         await expectTargetsAtLeast(page, 32);
         await page.evaluate(() => localStorage.removeItem("ct.active.v2"));
 
         await saveSettings(page, { style, density: "comfortable" });
         await page.goto("/?v=settings");
+        await expect(page.locator(".screen-size")).not.toBeEmpty();
         await expectTargetsAtLeast(page, 44);
         await startSession(page);
+        await expect(page.locator(".block").first()).toBeVisible();
         await expectTargetsAtLeast(page, 44);
         await page.evaluate(() => localStorage.removeItem("ct.active.v2"));
       }
